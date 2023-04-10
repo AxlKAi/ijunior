@@ -23,11 +23,9 @@ namespace Strings
             Console.WriteLine("День добрый, мессир! Разрешите поинтересоваться...");
             Console.Write("Как к Вам обращаться ? Ваше имя? :");
             name = Console.ReadLine();
-
             Console.Write($"В каком городе Вы родились {name} ? :"); ;
             city = Console.ReadLine();            
             Console.WriteLine($"Замечательный город {city} !");
-
             Console.WriteLine("Сколько Вам лет ? :");
             age = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine($"{age} - это замечательный возраст что бы стать Геймдевом !");
