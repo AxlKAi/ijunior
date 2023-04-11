@@ -10,11 +10,15 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            int a = 0;
-            // вывод 516
-            Console.WriteLine(++a + 2 + 1 + a++ + "1" + ++a * 2);
-            //               (++a) + 2 + 1 + (a++) + "1" + (++a) * 2)
-            //            a=   1               1             3
+    int tryCount = 5;
+    Random rand = new Random();
+            
+    while (tryCount-- > 0)
+    {
+        Console.WriteLine(tryCount);
+    }
+    // тут tryCount = -1 а не 0 !!
+    Console.WriteLine(tryCount);
         }
     }
 }
