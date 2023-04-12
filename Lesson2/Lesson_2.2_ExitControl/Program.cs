@@ -15,7 +15,7 @@ namespace Lesson_2._2_ExitControl
 
             Console.WriteLine("Здравствуйте. Если Вас что-то тревожит, " +
                 "можете излить мне душу, путем ввода символьных строк.");
-            Console.WriteLine("Для завершения программы наберите exit");
+            Console.WriteLine($"Для завершения программы наберите {exitCommand}") ;
 
             while(userInput != exitCommand)
             {
