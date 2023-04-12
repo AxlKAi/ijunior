@@ -20,16 +20,17 @@ namespace CurrencyConverter
             float coefficientUsdToEur = .92f;
             int startMinimumCurrencyAmmount = 10;
             int startMaximumCurrencyAmmount = 1000;
-            Random rand;
             int userChoise;
+            bool mainLoopActive = true;
+            Random rand;
 
             Console.OutputEncoding = Encoding.UTF8;
             rand = new Random();
-            currencyRub = Convert.ToSingle(rand.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount));
+            currencyRub = Convert.ToSingle(rand.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount)/coefficientRubToUsd);
             currencyEur = Convert.ToSingle(rand.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount));
             currencyUsd = Convert.ToSingle(rand.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount));
             
-            while(true)
+            while(mainLoopActive)
             {
                 Console.Clear();
                 Console.Write("Рублей " + currencyRub.ToString("C", new CultureInfo("ru-RU"))+"  ");
@@ -42,62 +43,101 @@ namespace CurrencyConverter
                 Console.WriteLine("5.Поменять доллары на рубли");
                 Console.WriteLine("6.Поменять доллары на евро");
                 Console.WriteLine("7.Выход из программы");
-
                 userChoise = Convert.ToInt32(Console.ReadLine());
-                if (userChoise == 7)
-                    break;
-
-                Console.Write("Сколько хотите обменять ?: ");
-                currencyForExchange = Convert.ToSingle(Console.ReadLine());
 
                 switch (userChoise)
                 {
                     case 1:
-                        if (currencyRub>=currencyForExchange)
+                        Console.Write("Сколько РУБЛЕЙ на USD хотите обменять ?: ");
+                        currencyForExchange = Convert.ToSingle(Console.ReadLine());
+                        if (currencyRub >= currencyForExchange)
                         {
                             currencyRub -= currencyForExchange;
                             currencyUsd += currencyForExchange * coefficientRubToUsd;
                         }
+                        else
+                        {
+                            Console.WriteLine("У Вас не достаточно РУБЛЕЙ");
+                            Console.ReadLine();
+                        }
                         break;
 
                     case 2:
+                        Console.Write("Сколько РУБЛЕЙ на EURO хотите обменять ?: ");
+                        currencyForExchange = Convert.ToSingle(Console.ReadLine());
                         if (currencyRub >= currencyForExchange)
                         {
                             currencyRub -= currencyForExchange;
                             currencyEur += currencyForExchange * coefficientRubToEur;
                         }
+                        else
+                        {
+                            Console.WriteLine("У Вас не достаточно РУБЛЕЙ");
+                            Console.ReadLine();
+                        }
                         break;
 
                     case 3:
+                        Console.Write("Сколько EURO на USD хотите обменять ?: ");
+                        currencyForExchange = Convert.ToSingle(Console.ReadLine());
                         if (currencyEur >= currencyForExchange)
                         {
                             currencyEur -= currencyForExchange;
                             currencyUsd += currencyForExchange / coefficientUsdToEur;
                         }
+                        else
+                        {
+                            Console.WriteLine("У Вас не достаточно EUR");
+                            Console.ReadLine();
+                        }
                         break;
 
                     case 4:
+                        Console.Write("Сколько EURO на РУБЛИ хотите обменять ?: ");
+                        currencyForExchange = Convert.ToSingle(Console.ReadLine());
                         if (currencyEur >= currencyForExchange)
                         {
                             currencyEur -= currencyForExchange;
                             currencyRub += currencyForExchange / coefficientRubToEur;
                         }
+                        else
+                        {
+                            Console.WriteLine("У Вас не достаточно EUR");
+                            Console.ReadLine();
+                        }
                         break;
 
                     case 5:
+                        Console.Write("Сколько USD на РУБЛИ хотите обменять ?: ");
+                        currencyForExchange = Convert.ToSingle(Console.ReadLine());
                         if (currencyUsd >= currencyForExchange)
                         {
                             currencyUsd -= currencyForExchange;
                             currencyRub += currencyForExchange / coefficientRubToUsd;
                         }
+                        else
+                        {
+                            Console.WriteLine("У Вас не достаточно USD");
+                            Console.ReadLine();
+                        }
                         break;
 
                     case 6:
+                        Console.Write("Сколько USD на EUR хотите обменять ?: ");
+                        currencyForExchange = Convert.ToSingle(Console.ReadLine());
                         if (currencyUsd >= currencyForExchange)
                         {
                             currencyUsd -= currencyForExchange;
                             currencyEur += currencyForExchange * coefficientUsdToEur;
                         }
+                        else
+                        {
+                            Console.WriteLine("У Вас не достаточно USD");
+                            Console.ReadLine();
+                        }
+                        break;
+                    case 7:
+                        mainLoopActive = false;
                         break;
                 }
             }
