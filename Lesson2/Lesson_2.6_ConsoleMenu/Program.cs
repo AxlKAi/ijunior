@@ -15,27 +15,29 @@ namespace ConsoleMenu
             const string commandBlue = "blue";
             const string commandGreen = "green";
             const string commandWhite = "white";
-            const string commandBgBlue = "bgBlue";
-            const string commandBgRed = "bgRed";
-            const string commandBgDark = "bgDark";
+            const string commandBackgroundBlue = "bgBlue";
+            const string commandBackgroundRed = "bgRed";
+            const string commandBackgroundDark = "bgDark";
             const string commandAdultChannel = "XXX";
             const string commandChildChannel = "q";
             const string commandExit = "exit";
 
-            bool isItChannelForChildren = true;
-            bool mainLoopActive = true;
+            bool isChannelForChildren = true;
+            bool isMainLoopActive = true;
             ConsoleColor heartColor = ConsoleColor.White;
             ConsoleColor elefantColor = ConsoleColor.White;
-            ConsoleColor xxxBackgroundColor = ConsoleColor.Black;
+            ConsoleColor AdultBackgroundColor = ConsoleColor.Black;
+            ConsoleColor DefaultBackgroundColor = ConsoleColor.Black;
+            ConsoleColor DefaultForegroundColor = ConsoleColor.White;
             string userCommand = "";
 
             Console.OutputEncoding = Encoding.UTF8;
 
-            while (mainLoopActive)
+            while (isMainLoopActive)
             {
                 Console.Clear();
 
-                if (isItChannelForChildren)
+                if (isChannelForChildren)
                 {
                     Console.ForegroundColor = heartColor;
                     Console.WriteLine("░░▄███▄███▄");
@@ -58,12 +60,12 @@ namespace ConsoleMenu
                     Console.WriteLine("░▒░░▒░░░█▓▓▓█▓▓▓█▓▓▓▓█");
                     Console.WriteLine("░▒░░▒░░░█▓▓▓█░░░█▓▓▓█");
                     Console.WriteLine("░▒░░▒░░██▓██░░░██▓▓█");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = DefaultForegroundColor;
                     Console.WriteLine("Вы смотрите детский интерактивный ТВ канал.");
                 }
                 else
                 {
-                    Console.BackgroundColor = xxxBackgroundColor;
+                    Console.BackgroundColor = AdultBackgroundColor;
                     Console.WriteLine("⠄⠄⣿⣿⣿⣿⠘⡿⢛⣿⣿⣿⣿⣿⣧⢻⣿⣿⠃⠸⣿⣿⣿⠄⠄⠄⠄⠄");
                     Console.WriteLine("⠄⠄⣿⣿⣿⣿⢀⠼⣛⣛⣭⢭⣟⣛⣛⣛⠿⠿⢆⡠⢿⣿⣿⠄⠄⠄⠄⠄");
                     Console.WriteLine("⠄⠄⠸⣿⣿⢣⢶⣟⣿⣖⣿⣷⣻⣮⡿⣽⣿⣻⣖⣶⣤⣭⡉⠄⠄⠄⠄⠄");
@@ -75,13 +77,12 @@ namespace ConsoleMenu
                     Console.WriteLine("⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠣⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄");
                     Console.WriteLine("⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄");
                     Console.WriteLine("⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄\n");
-                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = DefaultBackgroundColor;
                     Console.WriteLine("Вы смотрите взрослый ТВ канал, уберите детей от экрана ! \n");                    
                 }
-
                 Console.WriteLine("Наберите команду");
 
-                if (isItChannelForChildren)
+                if (isChannelForChildren)
                 {
                     Console.WriteLine($"{commandYellow} - Сделать седречко слоника желтым");
                     Console.WriteLine($"{commandRed} - Сделать сердечко красным");
@@ -92,13 +93,12 @@ namespace ConsoleMenu
                 }
                 else
                 {                    
-                    Console.WriteLine($"{commandBgBlue} - сделать фон синим");
-                    Console.WriteLine($"{commandBgRed} - сделать фон красным");
-                    Console.WriteLine($"{commandBgDark} - сделать фон черным");
+                    Console.WriteLine($"{commandBackgroundBlue} - сделать фон синим");
+                    Console.WriteLine($"{commandBackgroundRed} - сделать фон красным");
+                    Console.WriteLine($"{commandBackgroundDark} - сделать фон черным");
                     Console.WriteLine($"{commandChildChannel} - Включить канал для детей");                    
                 }                    
                 Console.WriteLine("exit - Выйти из программы");
-
                 userCommand = Console.ReadLine();
 
                 switch (userCommand)
@@ -124,28 +124,28 @@ namespace ConsoleMenu
                         elefantColor = ConsoleColor.White;
                         break;
 
-                    case commandBgBlue:
-                        xxxBackgroundColor = ConsoleColor.Blue;
+                    case commandBackgroundBlue:
+                        AdultBackgroundColor = ConsoleColor.Blue;
                         break;
 
-                    case commandBgRed:
-                        xxxBackgroundColor = ConsoleColor.Red;
+                    case commandBackgroundRed:
+                        AdultBackgroundColor = ConsoleColor.Red;
                         break;
 
-                    case commandBgDark:
-                        xxxBackgroundColor = ConsoleColor.Black;
+                    case commandBackgroundDark:
+                        AdultBackgroundColor = ConsoleColor.Black;
                         break;                        
 
                     case commandAdultChannel:
-                        isItChannelForChildren = false;
+                        isChannelForChildren = false;
                         break;
 
                     case commandChildChannel:
-                        isItChannelForChildren = true;
+                        isChannelForChildren = true;
                         break;
 
                     case commandExit:
-                        mainLoopActive = false;
+                        isMainLoopActive = false;
                         break;
 
                     default:

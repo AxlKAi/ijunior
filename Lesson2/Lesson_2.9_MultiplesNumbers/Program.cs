@@ -16,14 +16,14 @@ namespace MultiplesNumbers
             int calculationMaxNumber = 999;
             int calculationMinNumber = 100;
             int multipliesSum = 0;
-            Random rand;
+            Random random;
 
-            rand = new Random();
-            multiplieNumber = rand.Next(minMultiplieNumber, maxMultiplieNumberPlusOne);
+            random = new Random();
+            multiplieNumber = random.Next(minMultiplieNumber, maxMultiplieNumberPlusOne);
             Console.WriteLine($"Программа выведет сумму чисел кратных {multiplieNumber} от {calculationMinNumber} до {calculationMaxNumber} не прибегая к умножению и делению.\n"); ;
-            Console.WriteLine("Ловкость рук, никакого мошенства!!!\n");
-            
+            Console.WriteLine("Ловкость рук, никакого мошенства!!!\n");            
             Console.WriteLine("Числа попадающие в подсчет : ");
+            
             for (int i = 0; i <= calculationMaxNumber; i = i + multiplieNumber)
             {
                 if (i >= calculationMinNumber)
