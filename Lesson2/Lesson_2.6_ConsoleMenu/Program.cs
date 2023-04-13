@@ -10,6 +10,18 @@ namespace ConsoleMenu
     {
         static void Main(string[] args)
         {
+            const string commandRed = "red";
+            const string commandYellow = "yellow";
+            const string commandBlue = "blue";
+            const string commandGreen = "green";
+            const string commandWhite = "white";
+            const string commandBgBlue = "bgBlue";
+            const string commandBgRed = "bgRed";
+            const string commandBgDark = "bgDark";
+            const string commandAdultChannel = "XXX";
+            const string commandChildChannel = "q";
+            const string commandExit = "exit";
+
             bool isItChannelForChildren = true;
             bool mainLoopActive = true;
             ConsoleColor heartColor = ConsoleColor.White;
@@ -71,19 +83,19 @@ namespace ConsoleMenu
 
                 if (isItChannelForChildren)
                 {
-                    Console.WriteLine("yellow - Сделать седречко слоника желтым");
-                    Console.WriteLine("red - Сделать сердечко красным");
-                    Console.WriteLine("green - Сделать слоника зеленым");
-                    Console.WriteLine("blue - Сделать слоника синим");
-                    Console.WriteLine("white - Сделать слоника и сердечко белым");
-                    Console.WriteLine("xxx - Включить канал для взрослых");
+                    Console.WriteLine($"{commandYellow} - Сделать седречко слоника желтым");
+                    Console.WriteLine($"{commandRed} - Сделать сердечко красным");
+                    Console.WriteLine($"{commandGreen} - Сделать слоника зеленым");
+                    Console.WriteLine($"{commandBlue} - Сделать слоника синим");
+                    Console.WriteLine($"{commandWhite} - Сделать слоника и сердечко белым");
+                    Console.WriteLine($"{commandAdultChannel} - Включить канал для взрослых");
                 }
                 else
                 {                    
-                    Console.WriteLine("bgBlue - сделать фон синим");
-                    Console.WriteLine("bgRed - сделать фон красным");
-                    Console.WriteLine("bgDark - сделать фон черным");
-                    Console.WriteLine("q - Включить канал для детей");                    
+                    Console.WriteLine($"{commandBgBlue} - сделать фон синим");
+                    Console.WriteLine($"{commandBgRed} - сделать фон красным");
+                    Console.WriteLine($"{commandBgDark} - сделать фон черным");
+                    Console.WriteLine($"{commandChildChannel} - Включить канал для детей");                    
                 }                    
                 Console.WriteLine("exit - Выйти из программы");
 
@@ -91,48 +103,48 @@ namespace ConsoleMenu
 
                 switch (userCommand)
                 {
-                    case "red":
+                    case commandRed:
                         heartColor = ConsoleColor.Red;
                         break;
 
-                    case "yellow":
+                    case commandYellow:
                         heartColor = ConsoleColor.Yellow;
                         break;
 
-                    case "blue":
+                    case commandBlue:
                         elefantColor = ConsoleColor.Blue;
                         break;
 
-                    case "green":
+                    case commandGreen:
                         elefantColor = ConsoleColor.Green;
                         break;
 
-                    case "white":
+                    case commandWhite:
                         heartColor = ConsoleColor.White;
                         elefantColor = ConsoleColor.White;
                         break;
 
-                    case "bgBlue":
+                    case commandBgBlue:
                         xxxBackgroundColor = ConsoleColor.Blue;
                         break;
 
-                    case "bgRed":
+                    case commandBgRed:
                         xxxBackgroundColor = ConsoleColor.Red;
                         break;
 
-                    case "bgDark":
+                    case commandBgDark:
                         xxxBackgroundColor = ConsoleColor.Black;
                         break;                        
 
-                    case "xxx":
+                    case commandAdultChannel:
                         isItChannelForChildren = false;
                         break;
 
-                    case "q" :
+                    case commandChildChannel:
                         isItChannelForChildren = true;
                         break;
 
-                    case "exit":
+                    case commandExit:
                         mainLoopActive = false;
                         break;
 
