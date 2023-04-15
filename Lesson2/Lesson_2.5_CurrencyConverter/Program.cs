@@ -34,8 +34,8 @@ namespace CurrencyConverter
             float coefficientRubToEur = .011145f; 
             float coefficientUsdToEur = .92f;
             float coefficientUsdToRub = 1/coefficientRubToUsd;
-            float coefficientEurToRub = 1/ coefficientRubToEur;
-            float coefficientEurToUsd = 1/ coefficientUsdToEur;
+            float coefficientEurToRub = 1/coefficientRubToEur;
+            float coefficientEurToUsd = 1/coefficientUsdToEur;
             int startMinimumCurrencyAmmount = 10;
             int startMaximumCurrencyAmmount = 1000;
             string userChoise;
@@ -69,6 +69,7 @@ namespace CurrencyConverter
                     case NumberCommandRubToUsd:
                         Console.Write("Сколько РУБЛЕЙ на USD хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceRub >= currencyForExchange)
                         {
                             balanceRub -= currencyForExchange;
@@ -79,12 +80,14 @@ namespace CurrencyConverter
                             Console.WriteLine("У Вас не достаточно РУБЛЕЙ");
                             Console.ReadLine();
                         }
+
                         break;
 
                     case CommandRubToEur:
                     case NumberCommandRubToEur:
                         Console.Write("Сколько РУБЛЕЙ на EURO хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceRub >= currencyForExchange)
                         {
                             balanceRub -= currencyForExchange;
@@ -95,12 +98,14 @@ namespace CurrencyConverter
                             Console.WriteLine("У Вас не достаточно РУБЛЕЙ");
                             Console.ReadLine();
                         }
+
                         break;
 
                     case CommandEurToUsd:
                     case NumberCommandEurToUsd:
                         Console.Write("Сколько EURO на USD хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceEur >= currencyForExchange)
                         {
                             balanceEur -= currencyForExchange;
@@ -111,12 +116,14 @@ namespace CurrencyConverter
                             Console.WriteLine("У Вас не достаточно EUR");
                             Console.ReadLine();
                         }
+
                         break;
 
                     case CommandEurToRub:
                     case NumberCommandEurToRub:
                         Console.Write("Сколько EURO на РУБЛИ хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceEur >= currencyForExchange)
                         {
                             balanceEur -= currencyForExchange;
@@ -127,28 +134,32 @@ namespace CurrencyConverter
                             Console.WriteLine("У Вас не достаточно EUR");
                             Console.ReadLine();
                         }
+
                         break;
 
                     case CommandUsdToRub:
                     case NumberCommandUsdToRub:
                         Console.Write("Сколько USD на РУБЛИ хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceUsd >= currencyForExchange)
                         {
                             balanceUsd -= currencyForExchange;
-                            balanceRub += currencyForExchange / coefficientUsdToRub;
+                            balanceRub += currencyForExchange * coefficientUsdToRub;
                         }
                         else
                         {
                             Console.WriteLine("У Вас не достаточно USD");
                             Console.ReadLine();
                         }
+
                         break;
 
                     case CommandUsdToEur:
                     case NumberCommandUsdToEur:
                         Console.Write("Сколько USD на EUR хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceUsd >= currencyForExchange)
                         {
                             balanceUsd -= currencyForExchange;
@@ -159,6 +170,7 @@ namespace CurrencyConverter
                             Console.WriteLine("У Вас не достаточно USD");
                             Console.ReadLine();
                         }
+
                         break;
                         
                     case CommandExit:
@@ -167,6 +179,7 @@ namespace CurrencyConverter
                         break;
                 }
             }
+
             Console.WriteLine("Завершение работы программы. Нажмите ENTER что бы закрыть окно");
             Console.ReadLine();
         }

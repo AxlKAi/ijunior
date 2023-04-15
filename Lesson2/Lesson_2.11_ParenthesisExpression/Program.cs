@@ -11,6 +11,7 @@ namespace ParenthesisExpression
         static void Main(string[] args)
         {
             int parenthesisNestingDegree = 0;
+            int maximumParenthesisNestingDegree = 0;
             string parenthesisExpression;
             bool isWrongParenthesisExpression = false;
 
@@ -35,6 +36,10 @@ namespace ParenthesisExpression
                     isWrongParenthesisExpression = true;
                     break;
                 }
+                else
+                {
+                    maximumParenthesisNestingDegree = parenthesisNestingDegree;
+                }
             }
 
             if (parenthesisNestingDegree > 0)
@@ -50,6 +55,8 @@ namespace ParenthesisExpression
             {
                 Console.WriteLine("Правильное выражение");
             }
+
+            Console.WriteLine($"Максимальная глубина вложенности {maximumParenthesisNestingDegree}");
             Console.WriteLine("Нажмите ENTER для завершения программы.");
             Console.ReadLine();
         }
