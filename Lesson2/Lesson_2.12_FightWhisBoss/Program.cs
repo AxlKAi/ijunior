@@ -13,17 +13,26 @@ namespace Lesson_2._12_FightWhisBoss
             const int ConsoleWindowLength = 100;
             const int ConsoleWindowHeight = 40;
             const int WindowBorderthick = 1;
-            const int LogsLineAppearenseDelay = 300;
-            const char WindowBorderSymbolHorizontal = '#';
-            const char WindowBorderSymbolVertical = '|';
-            const char WindowHeaderLine = '-';
-            const ConsoleColor WindowBorder = ConsoleColor.DarkGray;
-            const ConsoleColor DefaultText = ConsoleColor.White;
-            const ConsoleColor DefaultEnemyImage = ConsoleColor.DarkGray;
-            const ConsoleColor HigthLihtSpellText = ConsoleColor.Cyan;
+            const int LogsLineAppearenseDelay = 100;
+            const char WindowBorderSymbolHorizontal = '-';
+            const char WindowBorderSymbolVertical = ':';
+            const char WindowHeaderLine = '.';
+
+            const ConsoleColor WindowBorderColor = ConsoleColor.DarkGray;
+            const ConsoleColor WindowTitleColor = ConsoleColor.DarkGray;
+            const ConsoleColor DefaultTextColor = ConsoleColor.White;
+            const ConsoleColor DefaultEnemyImageColor = ConsoleColor.DarkGray;
+            const ConsoleColor HigthLihtSpellTextColor = ConsoleColor.Cyan;
             const ConsoleColor ShieldTextColor = ConsoleColor.Blue;
+            const ConsoleColor EnemyLogWindowFooterColor = ConsoleColor.DarkRed;
             const ConsoleColor PlayerCriricalHealthColor = ConsoleColor.Red;
             const ConsoleColor PlayerHealthColor = ConsoleColor.DarkRed;
+            const ConsoleColor EnemyImageCastSpellColor = ConsoleColor.Yellow;
+            const ConsoleColor EnemyWeaknessColor = ConsoleColor.Red;
+            const ConsoleColor EnemyAlmostDieColor = ConsoleColor.DarkRed;
+            const ConsoleColor EnemyVasiliskColor = ConsoleColor.DarkGreen;
+            const ConsoleColor FinalImageColor = ConsoleColor.DarkGray;
+
 
             const int EnemyWindowX = 1;
             const int EnemyWindowY = 16;
@@ -32,7 +41,12 @@ namespace Lesson_2._12_FightWhisBoss
             const int EnemyWindowTitleOffsetY = 1;
             const int EnemyWindowTitleOffsetX = 1;
             const string EnemyBossName = "Монтеск беспалый";
-            const int EnemyHealthMaximum = 350;
+            const int EnemyAnimationFramesDelay = 75;
+
+            const int EnemyImagePositionX = 2;
+            const int EnemyImagePositionY = 0;
+            const int VasiliskImagePositionX = 2;
+            const int VasiliskImagePositionY = 9;
 
             const int PlayerWindowX = 40;
             const int PlayerWindowY = 16;
@@ -40,7 +54,7 @@ namespace Lesson_2._12_FightWhisBoss
             const int PlayerWindowHeight = 13;
             const int PlayerWindowTitleOffsetY = 1;
             const int PlayerWindowTitleOffsetX = 1;
-            const int PlayerWindowTextOffsetX = 2; 
+            const int PlayerWindowTextOffsetX = 2;
             const string PlayerName = "Игрок";
 
             const int LogWindowX = 25;
@@ -51,6 +65,15 @@ namespace Lesson_2._12_FightWhisBoss
             const int LogWindowTextOffsetX = 2;
             const string LogWindowName = "=-  ХОД ИГРЫ  -=";
 
+            const int FinalWindowX = 5;
+            const int FinalWindowY = 3;
+            const int FinalWindowLength = 90;
+            const int FinalWindowHeight = 27;
+            const int FinalWindowTextOffsetY = 2;
+            const int FinalWindowTextOffsetX = 31;
+            const int FinalWindowImageOffsetY = 5;
+            const int FinalWindowImageOffsetX = 2;
+
             const string PlayerSpellPatronusCommand = "1";
             const string PlayerSpellImperioCommand = "2";
             const string PlayerSpellAvahtoCommand = "3";
@@ -60,6 +83,7 @@ namespace Lesson_2._12_FightWhisBoss
             const string PlayerSpellExpiliarmusCommand = "7";
             const string ExitCommand = "8";
 
+            const string ExitCommandTitle = "Порталиec-Драппа <Выход из игры>";
             const string PlayerLooseMoveTitle = "Игрок пропустил ход.";
             const string EnemyHealTitleMessage = "Гад вылечился!";
             const string PlayerInputCommandPrompt = "Выберите номер заклинания: ";
@@ -67,246 +91,486 @@ namespace Lesson_2._12_FightWhisBoss
             const string LogEnemyMoveTitle = "Ход монстра:";
             const string DamageToPlayerShieldMessage = "Урон щиту игрока:";
             const string DamageToPlayerHealthMessage = "Урон здоровью игрока:";
+            const string EnemyCantCastRoundsMessage = "Не колдует:";
+            const string VasiliskDamgeMessage = ">- из них Василиск >-";
+            const string PressKeyPrompt = "Нажмите любую кнопку для продолжения....";
 
             string[] intoText =
             {
-                "Игрок применил магию Иммобилюс, голубой лучь света вылетает",
-                "из палочки игрока, и создает вокруг него защитный купол.",
-                "Заклинание отнимает 75 Hp у противника",
-                "",
-                "Босс Мандрагора : применил магию Експилиармус -  олубой лучь света",
-                "применил магию Експилиармус -  олубой лучь света ",
-                "Заклинание отнимает 75 Hp у игрока "
+                "  Вы  управляете  молодым  магом, студентом  Волшебной  Семинарии.",
+                "Неожиданно возникший портал перенес  героя  в  большое  обведшалое",
+                "помещение подземного дворца.  В центре  колонного  зала расположен",
+                "алтарь, на котором хранится недостающая магу часть реликта.",
+                " Мунускрипт найденный в древлехранилище Семинарии таил неприятный",
+                "сюрприз.  Он  не только  указывал дорогу к последней части амулета",
+                "\"Здоровой Крови\" Античных, но и телепортировал поисковика к оному.",
+                " Артефакт стережет скелет, некогда крупного воина. Слабо заметное",
+                "алое свечение соединяет алтарь и стражника. Заметив гостя мертвяк",
+                "резким движением разворачивается и движется на Вас... "
             };
 
-            //Player Spell 1 Патронус - 30dmg
-            string PlayerSpellPatronusName = "Патронус";
-            int PlayerSpellPatronusPower = 30;
-            int PlayerSpellPatronusRechargeTime = 2;
-            int PlayerSpellPatronusTimeToCanCast = 0;
-            string PlayerSpellPatronusTitle = $"Урон {PlayerSpellPatronusPower}.";
-            string[] PlayerSpellPatronusText =
-            {//  ---------------------------------------------------------|
-                "Патронус учь ярко-бирюзового цвета врезается в грудь",
-                "противника, и  LKJDLKJFS:LKFJ:SLDKFJ",
-                "SDFJSLDKFJ:LSDKFJ:SLD"
-            };
-            string[] PlayerSpellPatronusWrongCast =
-            {//  ---------------------------------------------------------|
-                "Патронус НЕ СМОГ",
-                "Жди перезарядки",
-                "Патронус НЕ СМОГ"
-            };
-
-            //Player Spell 2 Империо - 30dmg
-            string PlayerSpellImperioName = "Империо";
-            int PlayerSpellImperioPower = 35;
-            int PlayerSpellImperioRechargeTime = 3;
-            int PlayerSpellImperioTimeToCanCast = 0;
-            string PlayerSpellImperioTitle = $"Урон {PlayerSpellImperioPower}.";
-            string[] PlayerSpellImperioText =
+            string[] bossWinFinalText =
             {
-                "Imperio, обезаруживает монстра на 2 раунда",
-                "полупрозрачный красный свет создает обвалакивает монстра,",
-                "и не позволяет ему колдовать 2 раунда"
-            };
-            string[] PlayerSpellImperioWrongCast =
-            {//  ---------------------------------------------------------|
-                "Imperio НЕ СМОГ",
-                "Жди перезарядки",
-                "Imperio НЕ СМОГ"
-            };
-
-            //Player Spell 3 Авахто (лечение)
-            string PlayerSpellAvahtoName = "Авахто";
-            string PlayerSpellAvahtoTitle = $"Лечение.";
-            int PlayerSpellAvahtoAmmount = 2;
-            string[] PlayerSpellAvahtoText =
-            {//  ---------------------------------------------------------|
-                "лечение ООО лечение РРР лечение ООО лечение РРР ",
-                "лечение ООО лечение РРР лечение ООО лечение РРР лечение ООО ",
-                "лечение ООО лечение РРР лечение ООО лечение РРР "
-            };
-            string[] PlayerSpellAvahtoWrongCast =
-            {//  ---------------------------------------------------------|
-                "Avahto НЕ СМОГ",
-                "Не осталось сили. нету маны",
-                "Avahto НЕ СМОГ"
+                "",
+                "",
+                "",
+                "",
+                "",
+                "  Силы  покидали  ворожея. Очередной удар подкосил героя.",
+                "Он  упал  и  долговязый   мертвяк  нанес  удар  в  спину.",
+                "  Неужели так все закончится!",
+                "  В  глазах темнело. Собственное тело перестало слушаться",
+                "и  опало  обмякши.   Сквозь  мглу  угасающего сознания Вы",
+                "видите  очертания  зала.  Скелет забирает часть реликта у",
+                "поверженного  мага,   и  кладет ее  на алтарь.  Очертания",
+                "становятся четче, видно как разрозненные части  артефакта",
+                "собираются в единый оберег.",
+                "  Тело  волшебника  вдруг начинает подниматься.  Сознание",
+                "парит по залу не в силах управлять  движеньем. Взгляд Ваш",
+                "прикован к алтарю  вокруг  которого  мертвецки  медленной",
+                "походкой теперь бродят два охранника.."
             };
 
-            //Player Spell 4 Иммобилус (щит)
-            string PlayerSpellImmobilusName = "Иммобилус";
-            string PlayerSpellImmobilusTitle = $"Щит.";
-            int PlayerSpellImmobilusAmmount = 2;
-            string[] PlayerSpellImmobilusText =
-            {//  ---------------------------------------------------------|
-                "Иммобилус ООО лечение РРР лечение ООО Иммобилус РРР ",
-                "лечение ООО лечение РРР Иммобилус ООО лечение РРР лечение ООО ",
-                "Иммобилус ООО лечение РРР лечение ООО Иммобилус РРР "
+            string[] playerWinFinalText =
+            {   "  Сильный  удар  магией  разносит  в  прах  ноги  изрядно",
+                "потрепанного схваткой мертвеца. Его  туловище  рушится на",
+                "мрамор пола, как  груда костей.  С  довольной  улыбкой на",
+                "лице, ворожей  наносит неспешный, но сильный удар магией,",
+                "которым разносит в щепки оставшееся тело скелета! ",
+                "  Бой кончен!  Вот  она,  сладость победы!  Настал момент ",
+                "соединить   во  едино  обломки  артефакта.    С  чувством ",
+                "восхищения, перемешанной с легкой  трепетом  предвкушения ",
+                "не  известности,  прихрамывая,  маг  подходит  к  алтарю.",
+                "С первых  лет  обучения  семинарист начал поиски  амулета",
+                "\"Здоровой  Крови\"  Античных.   И  вот  она,  долгожданная",
+                "последняя часть!  Разделенные половинки cлились во едино,",
+                "яркая вспышка  света  озарила  зал. Становятся видны души",
+                "проклятых, парящих по вокруг алтаря.  Слышен  гул голосов",
+                "Античных, они  произносят  разные  заклятия. Язык древних",
+                "ворожею не знаком, но несколько из них  ворожей  понимает",
+                "и запоминает.",
+                "  Амулет собран!  Сила  крови  великих  Античных пращуров",
+                "теперь течет в Ваших жилах! Физическое тело стало крепче,",
+                "и новые знания открылись Вам ..."
             };
+
+
+            string[] bothDeadFinalText =
+            {
+                "  Мучительно  долгое  сражение  подходило к концу.  Кости",
+                "скелета были сильно повреждены, а каркас маячило в разные",
+                "стороны.  Тяжело  дышавший  маг,  обессиленным  движением",
+                "выкинул самое мощное  заклятие  на которое  был способен.",
+                "Одновременно с этим, мертвяк  сотворил  свое  сильнейшее.",
+                "Оба  удара  достигли  цели. Последнее, что видел ворожей,",
+                "как  груда  костей  рухнула о  мраморный пол,  не подавая",
+                "признаков  жизни.  Сознание  помутнело,  но  позже  стали",
+                "различимы  очертания зала.  Взор был направлен на алтарь,",
+                "подле   которого   была  разбросана  груда костей, смутно",
+                "напоминавшее  некогда  грозного  врага. С  другой стороны",
+                "распласталось  тело  ворожея.  Словно поддаваемая легкому",
+                "бризу,   душа  мага  начала  парить  по  кругу,  в центре",
+                "которого был алтарь, с возложенной частью реликта. Спустя",
+                "некоторое время, тело, некогда принадлежавшее волшебнику,",
+                "стало  подниматься.  Бездушно-мертвецкими  движениями оно",
+                "подошло к алтарю, соединило части амулета в единое целое,",
+                "положило  артефакт на алтарь, и побрело по кругу, даже не",
+                "полюбовавшись столь желанной добычей."
+            };
+
+            string playerSpellPatronusName = "Патронус";
+            int playerSpellPatronusPower = 30;
+            int playerSpellPatronusRechargeTime = 2;
+            int playerSpellPatronusTimeToCanCast = 0;
+            string playerSpellPatronusTitle = $"Урон {playerSpellPatronusPower}.";
+            string[] playerSpellPatronusText =
+            {
+                "Храбрец   делает   короткий  взмах палочкой,  так хорошо",
+                "отточенный  еще  с первого  курса  Волшебной  Семинарии.",
+                "Из палочки вылетает яркий светлый шар и поражает нежить!"
+            };
+            string[] playerSpellPatronusWrongCast =
+            {
+                "В любом бою важно сохранять самообладание и концентрацию! Правило",
+                "настолько простое, на сколько его сложно выполнить в пылу схватки.",
+                "Маг засуетился, не сконцентрировался, и заклятие сорвалось..."
+            };
+
+            string playerSpellImperioName = "Империо";
+            int playerSpellImperioPower = 35;
+            int playerSpellImperioRechargeTime = 3;
+            int playerSpellImperioTimeToCanCast = 0;
+            string playerSpellImperioTitle = $"Урон {playerSpellImperioPower}.";
+            string[] playerSpellImperioText =
+            {
+                "Маг делает резкий выпад вперед, и  изрекает боевой клич - Империо!",
+                "В нежить  летит  большой  серебристый гладиус,  осеянный  брызгами",
+                "молний. Гладиус разбивается о недруга, и рассыпается снопом искр."
+            };
+            string[] playerSpellImperioWrongCast =
+            {
+                "Резкий выпад, но боевой клич срывается на кашель!  Ворожей слишком",
+                "спешит...  В сознании мелькает:  \"Не время! Наберись сил!\".  Помни,",
+                "самообладание и концентрация... Заклятие не получилось."
+            };
+
+            string playerSpellAvahtoName = "Авахто";
+            string playerSpellAvahtoTitle = $"Полное излечение.";
+            int playerSpellAvahtoAmmountMaximum = 2;
+            int playerHealthLevelIncrease = 50;
+            int playerSpellAvahtoAmmount = playerSpellAvahtoAmmountMaximum;
+            string[] playerSpellAvahtoText =
+            {
+                "Магик извлекает пузырёк алой жидкости, быстро чарует его и пьет.",
+                "Вокруг торса появляется яркий перелив цветов радуги, повторяющий",
+                "форму тела. Раны затягивает. Вы вновь полны сил и здоровья."
+            };
+            string[] playerSpellAvahtoSpecialText =
+            {
+                "Внезапно, обряд  лечения  вызвал яркую алую ауру, связавшую мага и",
+                "реликт с алтаря. Противники  применили заклятье Античных - Авахто.",
+                "Разрозненные части амулета усилили эфект. Запас здоровья увеличен,",
+                "склянки пополнены."
+            };
+            string[] playerSpellAvahtoWrongCast =
+            {
+                "Чародей шарится по карманам  камзола, но найти  сляночку не может.",
+                "Драгоценное время потеряно, ход за противником. Для восстановления",
+                "сил требуется врачевное зелье, которого увы нет.."
+            };
+
+            string playerSpellImmobilusName = "Иммобилус";
+            string playerSpellImmobilusTitle = "Щит.";
+            int playerSpellImmobilusAmmount = 2;
+            string[] playerSpellImmobilusText =
+            {
+                "Маг описывает палочкой литеру, призывая дух горной рыси.Прозрачный",
+                "торс кошки покрыт ярко-синими рунами,  изумрудные  глаза  светятся.",
+                "Хищник может сбить атакующие чары и враждебное магическое существо.",
+                "Не найдя жертвы, она растворяется создавая защитный купол."
+            };
+
+            string[] playerSpellImmobilusSpecialText =
+            {
+                "Дикая  кошка  кидается  на Василиска. Завязывается бой, в",
+                "котором   проворная   хищница  каждый   раз   оказывается",
+                "проворнее, и в конце-концов изводит Василиска."
+            };
+
             string[] PlayerSpellImmobilusWrongCast =
-            {//  ---------------------------------------------------------|
-                "Immobilus НЕ СМОГ",
-                "Не осталось сили. нету маны Immobilus",
-                "Immobilus НЕ СМОГ"
+            {
+                "Маг описывает палочкой литеру, призывая горную рысь. Но в",
+                "этот раз хищница не приходит на помощь. Духи хотят покоя.",
+                "Число вызовов кошки ограниченно. "
             };
 
-            //Player Spell 5 Конфундус 
-            string PlayerSpellKonfundusName = "Конфундус";
-            int PlayerSpellKonfundusAmmount = 0;
-            int PlayerSpellKonfundusEffectTime = 2;
-            int PlayerSpellKonfundusAdventChance = 30;
-            int PlayerSpellKonfundusCastReserv = 3;
-            string PlayerSpellKonfundusTitle = $"Лишает магии {PlayerSpellKonfundusEffectTime} раунда.";
-            string[] PlayerSpellKonfundusText =
-            {//  ---------------------------------------------------------|
-                "Иммобилус ООО лечение РРР лечение ООО Иммобилус РРР ",
-                "лечение ООО лечение РРР Иммобилус ООО лечение РРР лечение ООО ",
-                "Иммобилус ООО лечение РРР лечение ООО Иммобилус РРР "
+            string playerSpellKonfundusName = "Конфундус";
+            int playerSpellKonfundusAmmount = 0;
+            int playerSpellKonfundusEffectTime = 2;
+            int playerSpellKonfundusAdventChance = 30; 
+            int playerSpellKonfundusCastReserv = 3;
+            string playerSpellKonfundusTitle = $"Лишает магии {playerSpellKonfundusEffectTime} раунда.";
+            string[] playerSpellKonfundusText =
+            {
+                "Из палочки волшебника вылетают изумрудные молнии, попадая",
+                "в череп противника. Корпус скелета искрит, аура между ним",
+                "и артефактом спадает. Мертвяк не может колдовать 2 раунда"
             };
+
             string[] playerSpellKonfundusWrongCast =
-            {//  ---------------------------------------------------------|
-                "Конфундус НЕ СМОГ",
-                "Не осталось сили. нету маны Конфундус",
-                "Конфундус НЕ СМОГ"
+            {
+                "Лишь малая часть знаний Античных дошла до нашего времени.",
+                "Магия  крадущая силы  противника одна из них.  В этот раз",
+                "изумрудные молнии разбились об ореол  возникший из потока",
+                "силы между скелетом и артефактом. У Вас недостаточно сил."
             };
 
-            //Player Spell 6 Авада-Кедавра 
-            string PlayerSpellAvadaKedavraName = "Авада-Кедавра";
-            int PlayerSpellAvadaKedavraAmmount = 0;
-            int PlayerSpellAvadaKedavraPower = 100;
-            int PlayerSpellAvadaKedavraAdventChance = 30;
-            int PlayerSpellAvadaKedavraCastReserv = 3;
-            string PlayerSpellAvadaKedavraTitle = $"Мощьный урон {PlayerSpellAvadaKedavraPower} Hp";
-            string[] PlayerSpellAvadaKedavraText =
-            {//  ---------------------------------------------------------|
-                "Авада-Кедавра ООО Авада-Кедавра РРР          РРР ",
-                "Авада-Кедавра Ое ООО ",
-                "Авада-Кедавра  РРР "
+            string playerSpellAvadaKedavraName = "Авада-Кедавра";
+            int playerSpellAvadaKedavraAmmount = 0;
+            int playerSpellAvadaKedavraPower = 100;
+            int playerSpellAvadaKedavraAdventChance = 100;
+            int playerSpellAvadaKedavraCastReserv = 3;
+            int playerSpellAvadaKedavraEnhancementPower = playerSpellAvadaKedavraPower / 2;
+            bool wasLastEnemySpellAvadaKedavra = false;
+            string playerSpellAvadaKedavraTitle = $"Мощьный урон {playerSpellAvadaKedavraPower} Hp";
+            string[] playerSpellAvadaKedavraText =
+            {
+                "Маг вспоминает  мудреную  древнюю руну и выводит ее.  Над",
+                "скелетом появляется россыпь крупных льдин, которые падают",
+                "на мертвяка. По орбите зала летают частички льдинок."
             };
             string[] playerSpellAvadaKedavraWrongCast =
-            {//  ---------------------------------------------------------|
-                "Авада-Кедавра НЕ СМОГ",
-                "Не осталось сили. нету маны Авада-Кедавра",
-                "Авада-Кедавра НЕ СМОГ"
+            {
+                "Произнося \"Авада-Кедавра\", вдруг сильный кашель одолевает",
+                "мага. Заклинание Авада-Кедавра не получилось.",
+                ""
+            };
+            string[] playerSpellAvadaKedavraSpecialCast =
+            {
+                "Грохочущим  эхом  по залу разносится заклинание сказанное",
+                "магом.  Сотворенные  льдины  значительно крупнее обычных.",
+                $"Заклинание получает дополнительный урон в {playerSpellAvadaKedavraEnhancementPower} единиц."
             };
 
-            //Player Spell 7 Экспилиармус 
-            string PlayerSpellExpiliarmusName = "Экспилиармус";
-            int PlayerSpellExpiliarmusAmmount = 0;
-            int PlayerSpellExpiliarmusPower = 75;
-            int PlayerSpellExpiliarmusEffectTime = 1;
-            int PlayerSpellExpiliarmusAdventChance = 30;
-            int PlayerSpellExpiliarmusCastReserv = 3;
-            string PlayerSpellExpiliarmusTitle = $"Урон {PlayerSpellExpiliarmusPower} Hp, задержка ";
-            string[] PlayerSpellExpiliarmusText =
-                        {//  ---------------------------------------------------------|
-                "Экспилиармус ООО Экспилиармус РРР          РРР ",
-                "Экспилиармус   Ое ООО ",
-                "Экспилиармус  РРР "
+            string playerSpellExpiliarmusName = "Экспилиармус";
+            int playerSpellExpiliarmusAmmount = 0;
+            int playerSpellExpiliarmusPower = 75;
+            int playerSpellExpiliarmusEffectTime = 1;
+            int playerSpellExpiliarmusAdventChance = 30;
+            int playerSpellExpiliarmusCastReserv = 3;
+            string playerSpellExpiliarmusTitle = $"Урон {playerSpellExpiliarmusPower} Hp, задержка ";
+            string[] playerSpellExpiliarmusText =
+            {
+                "Воздух вокруг  нежити  сгущается,   словно  плавится, и происходит",
+                "звучных  хлопок!   Волшебник  применил антимагию, прием взрывающий",
+                "магическую энергию врага. ",
+               $"Скелет не сможет колдовать {playerSpellExpiliarmusEffectTime} ход " +
+               $"и получает урон в {playerSpellExpiliarmusPower} единиц."
             };
+
             string[] playerSpellExpiliarmusWrongCast =
-            {//  ---------------------------------------------------------|
-                "Экспилиармус НЕ СМОГ",
-                "Не осталось сили. нету маны Экспилиармус",
-                "Экспилиармус НЕ СМОГ"
+            {
+                "Юный  волшебник   произносит  сложное  заклинание  и  одновременно",
+                "вырисовывает  магическую  литеру,  как вдруг чувствует резкую боль",
+                "в спине.  Травма  полученная в фехтовальном  зале Семинарии, после",
+                "занятий с Осью Апполона сказалась так не вовремя. Магия сорвалась."
             };
 
-
-            // Enemy Spells
-            // Enemy Spells 1
-            string EnemySpellOneName = "Ближняя Атака ";
-            int EnemySpellOnePower = 20;
-            string EnemySpellOneTitle = $"Урон {EnemySpellOnePower}.";
-            string[] EnemySpellOneText =
-            {//  ---------------------------------------------------------|
-                "Ближняя Атака БОСС цвета врезается в грудь",
-                "противника, и  LKJDLKJFS:LKFJ:SLDKFJ",
-                "SDFJSLDKFJ:LSDKFJ:SLD"
+            int enemyPunchPower = 20;
+            string[] enemyPunchText =
+            {
+                "Мертвяк неожиданно  проворно бросается на мага, и наносит хлесткий",
+                "ощутимый  удар.  Проворность   ветхой   нежити вызывает изумление!",
+                "Многие молодые трюкачи позавидуют его ловкости."
             };
 
-            // Enemy Spells 2 молния
-            string EnemySpellTwoName = "Удар молнией";
-            int EnemySpellTwoPower = 40;
-            int EnemySpellTwoRechargeTime = 3;
-            int EnemySpellTwoTimeToCanCast = 0;
-            string EnemySpellTwoTitle = $"Урон {EnemySpellTwoPower}.";
-            string[] EnemySpellTwoText =
-            {//  ---------------------------------------------------------|
+            int enemySpellInflarmePower = 40;
+            int enemySpellInflarmeRechargeTime = 3;
+            int enemySpellInflarmeTimeToCanCast = 0;
+            string[] enemySpellInflarmeText =
+            {
                 "Удар молнией , БОСС монстра на 2 раунда",
                 "Удар молнией  красный свет создает обвалакивает монстра,",
                 " Удар молниейа т ему колдовать 2 раунда"
             };
 
             // Enemy Spells 3 Авахто (лечение)
-            int EnemySpellAvahtoAmmount = 1;
-            string EnemySpellAvahtoName = "Авахто";
-            string EnemySpellAvahtoTitle = $"Лечение.";
-            string[] EnemySpellAvahtoText =
-            {//  ---------------------------------------------------------|
-                "лечение Босса ",
-                "лечение Босса",
-                "лечение Босса"
-            };
-
-            // Enemy Spells 3 Сектрум-Семпра (урон 60)
-            // Enemy Spells 4 Волна-Расамента (дьявольские силки, игрок пропускает ход)
-            // Enemy Spells 5 Eнгоргио, дух Василиска (отрава)
-            // Enemy Spells 6 Авада-Кедавра (очень мощьное заклятие)
-
-
-            string[] enemyBossImage =  
+            int enemySpellAvahtoAmmount = 1;
+            string enemySpellAvahtoName = "Авахто";
+            string enemySpellAvahtoTitle = $"Лечение.";
+            string[] enemySpellAvahtoText =
             {
-                "  ░░░░░░▄▄▄░░  ▄▐",
-                "  ░░░░░▐▀█▀▌░░▄██▄",
-                "  ░░░░░▐█▄█▌░░░░░▀█▄",
-                "  ░░░░░░▀▄▀░░░▄▄▄▄▀▀",
-                "  ░░░░▄▄▄██▀▀▀▀",
-                "  ░░░█▀▄▄▄█░▀▀",
-                "  ░░░▌░▄▄▄▐▌▀▀▀",
-                "  ▄░▐░░░▄▄░█░▀▀",
-                "  ▀█▌░░░▄░▀█▀░▀",
-                "  ░░░░░░░▄▄▐▌▄▄",
-                "  ░░░░░░░▀███▀█░▄",
-                "  ░░░░░░▐▌▀▄▀▄▀▐▄",
-                "  ░░░░░░▐▀░░░░░░▐▌",
-                "  ░░░░░░█░░░░░░░░█",
-                "  ░░░░░▐▌░░░░░░░░░█"
+                "Ходячие мощи  вскидывают руки  вверх, взывая  Античных  о  помощи.",
+                "Реликт на алтаре вспыхивает, и наполняет скелет светящейся формой.",
+                "Кости врага воссоздаются. Вам хочется сотворить АВАХТО самому!"
             };
+
+            int enemySpellSektrumSempraPower = 60;
+            int enemySpellSektrumSempraRechargeTime = 3; 
+            int enemySpellSektrumSempraTimeToCanCast = 0; 
+            int enemySpellSektrumSempraAdventChance = 30; 
+            int enemySpellSektrumSempraCastReserv = 2;
+            int enemySpellSektrumSempraAmmount = 0;
+            string[] enemySpellSektrumSempraText =
+            {
+                "Сжигающий все на своем пути луч света падает на вас.",
+                "От него не убежать. Вы чувствуете запах палёной кожи, ",
+                "и понимаете что это кажется ваша кожа..."
+            };
+
+            int enemySpellEngorgioPower = 20;
+            int enemySpellEngorgioRechargeTime = 3;
+            int enemySpellEngorgioTimeToCanCast = 0;
+            int enemySpellEngorgioAdventChance = 30;
+            int enemySpellEngorgioCastReserv = 2;
+            int enemySpellEngorgioAmmount = 0;
+            int enemyVasilisklAliveRounds = 0;
+            int enemyVasilisklAliveRoundsMaximum = 3;
+            string[] enemySpellEngorgioText =
+            {
+                "В набедренных  лохмотьях  скелет  берет  склянку болотной",
+                "жидкости и бросает ее.  Возникает тучка яда из которой на",
+                "мага бросается ВАСИЛИСК, смесь змеи и дракона. "
+            };
+
+            // Enemy Spells 6 Авада-Кедавра
+            int enemySpellAvadaKedavraPower = 75;
+            int enemySpellAvadaKedavraRechargeTime = 5;
+            int enemySpellAvadaKedavraTimeToCanCast = 0;
+            int enemySpellAvadaKedavraAdventChance = 100; 
+            int enemySpellAvadaKedavraCastReserv = 2;
+            int enemySpellAvadaKedavraAmmount = 0;
+            string[] EnemySpellAvadaKedavraText =
+            {
+                "Льдины рушатся на мага нанося сильный урон. По залу парят",
+                "частички льдинок, словно снежинки. Игроку знакомо древнее",
+                "заклинание Авада-Кедавра! Что если произнести его сейчас?"
+            };
+
+            string[] enemyBossImage =
+            {
+                "      ▄▄▄    ▄▐    ",
+                "     ▐▀█▀▌  ▄██▄   ",
+                "     ▐█▄█▌     ▀█▄ ",
+                "      ▀▄▀   ▄▄▄▄▀▀ ",
+                "    ▄▄▄██▀▀▀▀    ",
+                "   █▀▄▄▄█ ▀▀ ",
+                "   ▌ ▄▄▄▐▌▀▀▀ ",
+                "▄ ▐   ▄▄ █ ▀▀ ",
+                "▀█▌   ▄ ▀█▀ ▀ ",
+                "       ▄▄▐▌▄▄ ",
+                "       ▀███▀█ ▄ ",
+                "      ▐▌▀▄▀▄▀▐▄ ",
+                "      ▐▀      ▐▌",
+                "      █        █",
+                "     ▐▌         █"
+            };
+
+            string[][] enemyArmAnimation = new string[4][];
+            enemyArmAnimation[0] = new string[] {
+                "         " ,
+                " ▄▐      " ,
+                "▄██▄▄▄   " ,
+                "▄▄▄▄▀▀   " ,
+                 "        " 
+                    };
+
+            enemyArmAnimation[1] = new string[] 
+            {
+                 "   ▄    " ,
+                 " ▄▀░▀▄  ",
+                 "▄█▀▄█▄  ",
+                 "▄▄▄▄▀▀  ",
+                 "        "
+            };
+
+            enemyArmAnimation[2] = new string[] 
+            {
+                " ▄ ▄ ▄   ",
+                " ▄▀░▀▄   ",
+                "▄█░ ░█   ",
+                "▄▄▀▄▀▄   "
+            };
+
+            enemyArmAnimation[3] = new string[]
+            {
+                "▀▄ ▄▄ ▄▀",
+                " ▄▀░░▀▄",
+                "▄█░▄▀░█",
+                "▄▄▀▄▄▀▄",
+                "▀      ▀"
+            };
+
+            string[] enemyVasiliskImage = 
+            { 
+                "█████████",
+                "█▄█████▄█",
+                "█ ▼▼▼▼▼ █",
+                "██▌    ██",
+                "█ ▲▲▲▲▲ █",
+                "█████████"
+            };
+
+            string[] playerDeadImage =
+            {
+                "██░└┐░░░░░░░░░░░░░░░░░┌┘░██",
+                "██░░└┐░░░░░░░░░░░░░░░┌┘░░██",
+                "██░░┌┘▄▄▄▄▄░░░░░▄▄▄▄▄└┐░░██",
+                "██▌░│██████▌░░░▐██████│░▐██",
+                "███░│▐███▀▀░░▄░░▀▀███▌│░███",
+                "██▀─┘░░░░░░░▐█▌░░░░░░░└─▀██",
+                "██▄░░░▄▄▄▓░░▀█▀░░▓▄▄▄░░░▄██",
+                "████▄─┘██▌░░░░░░░▐██└─▄████",
+                "█████░░▐█─┬┬┬┬┬┬┬─█▌░░█████",
+                "████▌░░░▀┬┼┼┼┼┼┼┼┬▀░░░▐████",
+                "█████▄░░░└┴┴┴┴┴┴┴┘░░░▄█████"
+            };
+
+            string[] playerWinImage =
+            {
+                "            █ █ ",
+                "             █",
+                "          ███████ ",
+                "        ███  █  ███ ",
+                "       ██ █     █ ██  ",
+                "      ██   █   █   ██ ",
+                "      ██    ███    ██ ",
+                "      ██   █   █   ██ ",
+                "       ██ ██   ██ ██  ",
+                "        ███  █  ███   ",
+                "          ███████     "
+            };
+
+
+
+
+
+            int[][] enemyDieAnimationFrames = new int[4][];
+            enemyDieAnimationFrames[0] = new int[] { 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14 };
+            enemyDieAnimationFrames[1] = new int[] { 2, 3, 4, 5, 7, 9, 10, 11, 12, 13 };
+            enemyDieAnimationFrames[2] = new int[] { 2, 3, 4, 5, 9, 10, 13 };
+            enemyDieAnimationFrames[3] = new int[] { 2, 4, 5, 9 };
+
+            int[][] enemyAttackAnimationFrames = new int[3][];
+            enemyAttackAnimationFrames[0] = new int[] { 1, 1, 1, 1 };
+            enemyAttackAnimationFrames[1] = new int[] { 2, 2, 2, 2, 1, 1, 1, 1, 1 };
+            enemyAttackAnimationFrames[2] = new int[] { 3, 3, 3, 3, 2, 2, 2 };
+            string[] reverceAnimation;
+            int reverceAnimationNumberOfExtraFrames = 1;
+            string[] finalOutputImage;
+            string[] finalOutputText;
+
 
             int enemyWindowCursorPositionY;
             int playerWindowCursorPositionY;
             int logWindowCursorPositionY;
+            int enemyImageCursorPositionY;
+            int finalWindowCursorPositionY;
             bool isIntro = true;
             bool isBattleActive = true;
+            bool canShowEnemyCastAnimation = true;
             string enemyWindowMessageCaсhe = "";
             string enemyWindowMessage1 = "";
             string enemyWindowMessage2 = "";
             string enemyWindowMessage3 = "";
             string enemyLogWindowFooterText = "";
             string logWindowClearLine = "";
+            string playerWindowClearLine = "";
+            string enemyWindowClearLine = "";
+            string enemyImageClearLine = "";
+            string finalWindowClearLine = "";
+
 
             //параметры Player
-            int playerHealthMaximum = 100;
-            int PlayerHealth = playerHealthMaximum;
-            int PlayerCriricalHealth = playerHealthMaximum / 3;
-            int PlayerShieldMaximum = 100;
-            int PlayerShield = 0;
+            int playerHealthMaximum = 150;
+            int playerHealth = playerHealthMaximum;
+            int playerCriricalHealth = playerHealthMaximum / 3;
+            int playerShieldMaximum = 100;
+            int playerShield = 0;
+            bool isPlayerDead = false;
             string inputCommand;
-            string[] PlayerLooseMove =
-            {//  ---------------------------------------------------------|
+            string[] playerLooseMove =
+            {
                 "Игрок пропускает ход ",
                 "PlayerLooseMove PlayerLooseMove",
                 "PlayerLooseMove PlayerLooseMove"
             };
 
             //параметры Enemy
-            int enemyHealth = EnemyHealthMaximum;
+            int enemyHealthMaximum = 450;
+            int enemyHealth = enemyHealthMaximum;
             int enemyCriticalHealth = 85;
             int enemyWeaknessHealth = 130;
             int enemyDealDamageToPlayer = 0;
-            ConsoleColor enemyWeakness = ConsoleColor.Red;
-            ConsoleColor enemyAlmostDieColor = ConsoleColor.DarkRed;
+            int enemyCantCastSpellsRounds = 0;
+            int enemyImageArmPositionX = EnemyImagePositionX + 14;
+            int enemyImageArmPositionY = EnemyImagePositionY;
+            int enemyImageClearLineLength = LogWindowX - EnemyImagePositionX - 1;
+            bool isEnemyDie = false;
+            bool canEnemyCastSpells = true;
+            bool isVasiliskActive = false;
+            bool wasLastEnemvySpellAvahto = false;
+            ConsoleColor currentEnemyImageColor = DefaultEnemyImageColor;
 
             string[] playerLogsOutput = new string[3];
             string[] enemyLogsOutput = new string[3];
@@ -316,53 +580,111 @@ namespace Lesson_2._12_FightWhisBoss
             Console.SetWindowSize(ConsoleWindowLength, ConsoleWindowHeight);
             random = new Random();
 
-            for (int i = 0; i < (LogWindowLength -LogWindowTextOffsetX - WindowBorderthick * 2); i++)
+            for (int i = 0; i < LogWindowLength -LogWindowTextOffsetX - WindowBorderthick; i++)
                 logWindowClearLine += " ";
+            for (int i = 0; i < (PlayerWindowLength - PlayerWindowTextOffsetX - WindowBorderthick * 2); i++)
+                playerWindowClearLine += " ";
+            for (int i = 0; i < EnemyWindowLength - LogWindowTextOffsetX - WindowBorderthick * 2; i++)
+                enemyWindowClearLine += " ";
+            for (int i = 0; i < enemyImageClearLineLength; i++)
+                enemyImageClearLine += " ";
+            for (int i = 0; i < FinalWindowLength - WindowBorderthick * 2; i++)
+                finalWindowClearLine += " ";
 
             while (isBattleActive)
             {
-                // Console.Clear();
-                Console.ForegroundColor = DefaultEnemyImage;
-
-                // восстановление магий игрока
-                if (PlayerSpellPatronusTimeToCanCast > 0)
-                    PlayerSpellPatronusTimeToCanCast--;
-                if (PlayerSpellImperioTimeToCanCast > 0)
-                    PlayerSpellImperioTimeToCanCast--;
-                if (PlayerSpellKonfundusCastReserv > 0)
+                if (playerSpellPatronusTimeToCanCast > 0)
+                    playerSpellPatronusTimeToCanCast--;
+                if (playerSpellImperioTimeToCanCast > 0)
+                    playerSpellImperioTimeToCanCast--;
+                if (playerSpellKonfundusCastReserv > 0)
                 {                    
                     int adventChance = random.Next(0, persentageCoefficient);
-                    bool haveAdventSpell = (adventChance <= PlayerSpellKonfundusAdventChance);
+                    bool haveAdventSpell = (adventChance <= playerSpellKonfundusAdventChance);
                     if (haveAdventSpell)
                     {
-                        PlayerSpellKonfundusAmmount++;
-                        PlayerSpellKonfundusCastReserv--;
+                        playerSpellKonfundusAmmount++;
+                        playerSpellKonfundusCastReserv--;
                     }                        
                 }
-                if (PlayerSpellAvadaKedavraCastReserv > 0)
+                if (playerSpellAvadaKedavraCastReserv > 0)
                 {
                     int adventChance = random.Next(0, persentageCoefficient);
-                    bool haveAdventSpell = (adventChance <= PlayerSpellAvadaKedavraAdventChance);
+                    bool haveAdventSpell = (adventChance <= playerSpellAvadaKedavraAdventChance);
                     if (haveAdventSpell)
                     {
-                        PlayerSpellAvadaKedavraAmmount++;
-                        PlayerSpellAvadaKedavraCastReserv--;
+                        playerSpellAvadaKedavraAmmount++;
+                        playerSpellAvadaKedavraCastReserv--;
                     }
                 }
-                if (PlayerSpellExpiliarmusCastReserv > 0)
+                if (playerSpellExpiliarmusCastReserv > 0)
                 {
                     int adventChance = random.Next(0, persentageCoefficient);
-                    bool haveAdventSpell = (adventChance <= PlayerSpellExpiliarmusAdventChance);
+                    bool haveAdventSpell = (adventChance <= playerSpellExpiliarmusAdventChance);
                     if (haveAdventSpell)
                     {
-                        PlayerSpellExpiliarmusAmmount++;
-                        PlayerSpellExpiliarmusCastReserv--;
+                        playerSpellExpiliarmusAmmount++;
+                        playerSpellExpiliarmusCastReserv--;
                     }
                 }
 
                 // восстановление магий Enemy
-                if (EnemySpellTwoTimeToCanCast > 0)
-                    EnemySpellTwoTimeToCanCast--;
+                if (enemySpellInflarmeTimeToCanCast > 0)
+                    enemySpellInflarmeTimeToCanCast--;
+                
+                if (enemyVasilisklAliveRounds > 0)
+                    enemyVasilisklAliveRounds--;
+
+                if (enemySpellEngorgioTimeToCanCast > 0)
+                    enemySpellEngorgioTimeToCanCast--;
+
+                if (enemySpellSektrumSempraTimeToCanCast > 0)
+                    enemySpellSektrumSempraTimeToCanCast--;
+
+                if (enemySpellAvadaKedavraTimeToCanCast > 0)
+                    enemySpellAvadaKedavraTimeToCanCast--;
+
+
+                if (canEnemyCastSpells)
+                {
+                    if (enemySpellEngorgioCastReserv > 0 && enemySpellEngorgioTimeToCanCast <= 0)
+                    {
+                        int adventChance = random.Next(0, persentageCoefficient);
+                        bool haveAdventSpell = (adventChance <= enemySpellEngorgioAdventChance);
+                        if (haveAdventSpell)
+                        {
+                            enemySpellEngorgioAmmount++;
+                            enemySpellEngorgioCastReserv--;
+                        }
+                    }
+
+                    if (enemySpellSektrumSempraCastReserv > 0 && enemySpellSektrumSempraTimeToCanCast <= 0)
+                    {
+                        int adventChance = random.Next(0, persentageCoefficient);
+                        bool haveAdventSpell = (adventChance <= enemySpellSektrumSempraAdventChance);
+                        if (haveAdventSpell)
+                        {
+                            enemySpellSektrumSempraAmmount++;
+                            enemySpellSektrumSempraCastReserv--;
+                        }
+                    }
+
+                    if (enemySpellAvadaKedavraCastReserv > 0 && enemySpellAvadaKedavraTimeToCanCast <= 0)
+                    {
+                        int adventChance = random.Next(0, persentageCoefficient);
+                        bool haveAdventSpell = (adventChance <= enemySpellAvadaKedavraAdventChance);
+                        if (haveAdventSpell)
+                        {
+                            enemySpellAvadaKedavraAmmount++;
+                            enemySpellAvadaKedavraCastReserv--;
+                        }
+                    }
+                } else
+                {
+                    canEnemyCastSpells = true;
+                }
+
+
                 // прокрутка логов Enemy
                 if (enemyWindowMessage2 != "")
                     enemyWindowMessage3 = enemyWindowMessage2;
@@ -383,30 +705,53 @@ namespace Lesson_2._12_FightWhisBoss
 
 
 
-
-                Console.SetCursorPosition(0, 0);
+                // draw enemy image
+                Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY);
                 if (enemyHealth <= enemyCriticalHealth)
-                    Console.ForegroundColor = enemyAlmostDieColor;
-                else if(enemyHealth <= enemyWeaknessHealth)
-                    Console.ForegroundColor = enemyWeakness;
+                    currentEnemyImageColor = EnemyAlmostDieColor;
+                else if (enemyHealth <= enemyWeaknessHealth)
+                    currentEnemyImageColor = EnemyWeaknessColor;
+                else
+                    currentEnemyImageColor = DefaultEnemyImageColor;
 
-
+                Console.ForegroundColor = currentEnemyImageColor;
+                enemyImageCursorPositionY = 0;
                 foreach (string line in enemyBossImage)
+                {
+                    Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY + enemyImageCursorPositionY);
                     Console.WriteLine(line);
+                    enemyImageCursorPositionY++;
+                }
 
-                Console.ForegroundColor = DefaultText;
+                // draw vasilisk
+                if (isVasiliskActive)
+                {
+                    Console.ForegroundColor = EnemyVasiliskColor;
+                    enemyImageCursorPositionY = 0;
+                    foreach (string line in enemyVasiliskImage)
+                    {
+                        Console.SetCursorPosition(VasiliskImagePositionX, VasiliskImagePositionY + enemyImageCursorPositionY);
+                        Console.WriteLine(line);
+                        enemyImageCursorPositionY++;
+                    }
+                }
+
+
+
+
+                Console.ForegroundColor = DefaultTextColor;
 
 
 
 
 
 
+                //TODO вынести прорисовку окон из цикла
 
-
-
+                
                 // Logs
                 // Log window 
-                Console.ForegroundColor = WindowBorder;
+                Console.ForegroundColor = WindowBorderColor;
                 Console.SetCursorPosition(LogWindowX, LogWindowY);
                 // Log window title
                 // --------------------------------------------
@@ -429,7 +774,7 @@ namespace Lesson_2._12_FightWhisBoss
 
                 // Log text            
                 logWindowCursorPositionY = LogWindowTitleOffsetY;
-                Console.ForegroundColor = DefaultText;
+                Console.ForegroundColor = DefaultTextColor;
                 //Clear Log Window
                 for(int i=0; i<LogWindowHeight-WindowBorderthick*2; i++)
                 {
@@ -466,6 +811,78 @@ namespace Lesson_2._12_FightWhisBoss
                         System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
                     }
                     logWindowCursorPositionY++;
+
+
+
+                    // draw enemy attack animation
+
+                    Console.ForegroundColor = currentEnemyImageColor;
+                    foreach (int[] animationFrames in enemyAttackAnimationFrames)
+                    {
+                        System.Threading.Thread.Sleep(EnemyAnimationFramesDelay);
+       
+                        for(int line = 0; line<animationFrames.Length; line++)
+                        {
+                            Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY + line);
+                            for (int i = 0; i < animationFrames[line]; i++)
+                            {
+                                Console.Write(" ");
+                            }
+                            Console.Write(enemyBossImage[line]);                                
+                        }
+                    }
+
+                    if (canShowEnemyCastAnimation) 
+                    { 
+                        // enemy animation cast spell 
+                        Console.ForegroundColor = EnemyImageCastSpellColor;
+                        foreach (string[] armImageFrame in enemyArmAnimation)
+                        {
+                            for (int lineNumber=0; lineNumber < armImageFrame.Length; lineNumber++)
+                            {
+                                Console.SetCursorPosition(enemyImageArmPositionX, enemyImageArmPositionY+ lineNumber);
+                                Console.WriteLine(armImageFrame[lineNumber]);                            
+                            }
+                            System.Threading.Thread.Sleep(EnemyAnimationFramesDelay);
+                        }
+                        // enemy reverse animation cast spell 
+                        for (int frameNumber = enemyArmAnimation.Length - 1; frameNumber >= 0; frameNumber--)
+                        {
+                            for (int lineNumber = 0; lineNumber < enemyArmAnimation[frameNumber].Length; lineNumber++)
+                            {
+                                Console.SetCursorPosition(enemyImageArmPositionX, enemyImageArmPositionY + lineNumber);
+                                Console.WriteLine(enemyArmAnimation[frameNumber][lineNumber]);
+                            }
+                            System.Threading.Thread.Sleep(EnemyAnimationFramesDelay);
+                        }
+                    }
+                    else
+                    {
+                        canShowEnemyCastAnimation = true;
+                    }
+
+
+                    // enemy reverse animation
+                    Console.ForegroundColor = currentEnemyImageColor;
+
+                    for(int frameNumber = enemyAttackAnimationFrames.Length - 1; frameNumber>=0; frameNumber--)  
+                    {
+                        System.Threading.Thread.Sleep(EnemyAnimationFramesDelay);
+
+                        for (int numberOfAnimationLine = 0; numberOfAnimationLine < enemyAttackAnimationFrames[frameNumber].Length; numberOfAnimationLine++)
+                        {
+                            Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY + numberOfAnimationLine);
+                            for (int i = 0; i < enemyAttackAnimationFrames[frameNumber][numberOfAnimationLine] -1; i++)
+                            {
+                                Console.Write(" ");
+                            }
+                            Console.Write(enemyBossImage[numberOfAnimationLine]);
+                        }
+                    }
+
+
+                    Console.ForegroundColor = DefaultTextColor;
+
                     // Log enemy text
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
                     Console.Write(LogEnemyMoveTitle);
@@ -478,6 +895,7 @@ namespace Lesson_2._12_FightWhisBoss
                         System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
                     }
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
+                    Console.ForegroundColor = EnemyLogWindowFooterColor;
                     Console.Write(enemyLogWindowFooterText);                    
                 }
 
@@ -490,7 +908,7 @@ namespace Lesson_2._12_FightWhisBoss
 
                 // Draw Enemi window
                 // Enemy window
-                Console.ForegroundColor = WindowBorder;
+                Console.ForegroundColor = WindowBorderColor;
                 Console.SetCursorPosition(EnemyWindowX, EnemyWindowY);
                 for (int i = 0; i < EnemyWindowLength; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
@@ -505,7 +923,16 @@ namespace Lesson_2._12_FightWhisBoss
                 for (int i = 0; i < EnemyWindowLength; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
 
-                Console.ForegroundColor = DefaultText;
+                //Clear Enemy Window
+                enemyWindowCursorPositionY = EnemyWindowTitleOffsetY;
+                for (int i = 0; i < EnemyWindowHeight - WindowBorderthick * 2; i++)
+                {
+                    Console.SetCursorPosition(EnemyWindowX + LogWindowTextOffsetX, EnemyWindowY + enemyWindowCursorPositionY);
+                    Console.Write(enemyWindowClearLine);
+                    enemyWindowCursorPositionY++;
+                }
+                //Enemy window write title
+                Console.ForegroundColor = WindowTitleColor;
                 enemyWindowCursorPositionY = EnemyWindowTitleOffsetY;
                 Console.SetCursorPosition(EnemyWindowX + EnemyWindowTitleOffsetX, EnemyWindowY + enemyWindowCursorPositionY);
                 Console.Write($" {EnemyBossName} | Здоровье: {enemyHealth}");
@@ -515,8 +942,10 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.Write(WindowHeaderLine);
 
 
-                //enemy Текущий ход
-                if(enemyWindowMessage1 != "")
+
+                //enemy windows Текущий ход
+                Console.ForegroundColor = DefaultTextColor;
+                if (enemyWindowMessage1 != "")
                 {
                     enemyWindowCursorPositionY++;
                     Console.SetCursorPosition(EnemyWindowX + LogWindowTextOffsetX, EnemyWindowY + enemyWindowCursorPositionY);
@@ -551,7 +980,7 @@ namespace Lesson_2._12_FightWhisBoss
 
                 // Player window draw
 
-                Console.ForegroundColor = WindowBorder;
+                Console.ForegroundColor = WindowBorderColor;
                 Console.SetCursorPosition(PlayerWindowX, PlayerWindowY);
                 // Player window title
                 // --------------------------------------------
@@ -571,76 +1000,90 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.Write(WindowBorderSymbolHorizontal);
 
 
+                //Clear Player Window Text
+                playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
+                for (int i = 0; i < PlayerWindowHeight - WindowBorderthick * 2; i++)
+                {
+                    Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
+                    Console.Write(playerWindowClearLine);
+                    playerWindowCursorPositionY++;
+                }
+
                 // Player text
+                Console.ForegroundColor = WindowTitleColor;
                 playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($" {PlayerName} | ");
-                if (PlayerHealth < PlayerCriricalHealth)
+                if (playerHealth < playerCriricalHealth)
                     Console.ForegroundColor = PlayerCriricalHealthColor; 
                 else
                     Console.ForegroundColor = PlayerHealthColor;
-                Console.Write($"Здоровье: {PlayerHealth}");
-                Console.ForegroundColor = DefaultText;
+                Console.Write($"Здоровье: {playerHealth}");
+                Console.ForegroundColor = WindowTitleColor;
                 Console.Write($" | ");
-                if(PlayerShield > 0)
+                if(playerShield > 0)
                     Console.ForegroundColor = ShieldTextColor;
-                Console.Write($"Щит: {PlayerShield}");
-                Console.ForegroundColor = DefaultText;
+                Console.Write($"Щит: {playerShield}");
+                Console.ForegroundColor = WindowTitleColor;
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 for (int i = WindowBorderthick; i < PlayerWindowLength - WindowBorderthick; i++)
                     Console.Write(WindowHeaderLine);
 
-                Console.ForegroundColor = DefaultText;
+                Console.ForegroundColor = DefaultTextColor;
                 // Player menu text 
                 // Write Spell 1 menu
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                Console.Write($"{PlayerSpellPatronusCommand}. {PlayerSpellPatronusName} - {PlayerSpellPatronusTitle} " +
-                             $"Перезарядка {PlayerSpellPatronusTimeToCanCast}.");
+                Console.Write($"{PlayerSpellPatronusCommand}. {playerSpellPatronusName} - {playerSpellPatronusTitle} " +
+                             $"Перезарядка {playerSpellPatronusTimeToCanCast}.");
                 // Write Spell 2 menu
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                Console.Write($"{PlayerSpellImperioCommand}. {PlayerSpellImperioName} - {PlayerSpellImperioTitle} " +
-                              $"Перезарядка {PlayerSpellImperioTimeToCanCast}.");
+                Console.Write($"{PlayerSpellImperioCommand}. {playerSpellImperioName} - {playerSpellImperioTitle} " +
+                              $"Перезарядка {playerSpellImperioTimeToCanCast}.");
                 // Write Spell 3 menu Авахто (лечение)
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                Console.Write($"{PlayerSpellAvahtoCommand}. {PlayerSpellAvahtoName} - {PlayerSpellAvahtoTitle} " +
-                              $"Кол-во {PlayerSpellAvahtoAmmount}.");
+                Console.Write($"{PlayerSpellAvahtoCommand}. {playerSpellAvahtoName} - {playerSpellAvahtoTitle} " +
+                              $"Кол-во {playerSpellAvahtoAmmount}.");
                 // Write Spell 4 menu Иммобилус
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                Console.Write($"{PlayerSpellImmobilusCommand}. {PlayerSpellImmobilusName} - {PlayerSpellImmobilusTitle} " +
-                              $"Кол-во {PlayerSpellImmobilusAmmount}.");
+                Console.Write($"{PlayerSpellImmobilusCommand}. {playerSpellImmobilusName} - {playerSpellImmobilusTitle} " +
+                              $"Кол-во {playerSpellImmobilusAmmount}.");
                 // Write Spell 5 menu Конфундус
-                Console.ForegroundColor = HigthLihtSpellText;
-                if (PlayerSpellKonfundusAmmount > 0)
+                Console.ForegroundColor = HigthLihtSpellTextColor;
+                if (playerSpellKonfundusAmmount > 0)
                 {
 
                     playerWindowCursorPositionY++;
                     Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                    Console.Write($"{PlayerSpellKonfundusCommand}. {PlayerSpellKonfundusName} - {PlayerSpellKonfundusTitle} " +
-                                  $"Кол-во {PlayerSpellKonfundusAmmount}.");
+                    Console.Write($"{PlayerSpellKonfundusCommand}. {playerSpellKonfundusName} - {playerSpellKonfundusTitle} " +
+                                  $"Кол-во {playerSpellKonfundusAmmount}.");
                 }
                 // Write Spell 6 menu Авада-Кедавра
-                if (PlayerSpellAvadaKedavraAmmount > 0)
+                if (playerSpellAvadaKedavraAmmount > 0)
                 {
                     playerWindowCursorPositionY++;
                     Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                    Console.Write($"{PlayerSpellAvadaKedavraCommand}. {PlayerSpellAvadaKedavraName} - {PlayerSpellAvadaKedavraTitle} " +
-                                  $"Кол-во {PlayerSpellAvadaKedavraAmmount}.");
+                    Console.Write($"{PlayerSpellAvadaKedavraCommand}. {playerSpellAvadaKedavraName} - {playerSpellAvadaKedavraTitle} " +
+                                  $"Кол-во {playerSpellAvadaKedavraAmmount}.");
                 }
                 // Write Spell 7 menu Экспилиармус
-                if (PlayerSpellExpiliarmusAmmount > 0)
+                if (playerSpellExpiliarmusAmmount > 0)
                 {
                     playerWindowCursorPositionY++;
                     Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                    Console.Write($"{PlayerSpellExpiliarmusCommand}. {PlayerSpellExpiliarmusName} - {PlayerSpellExpiliarmusTitle} " +
-                                  $"Кол-во {PlayerSpellExpiliarmusAmmount}.");
+                    Console.Write($"{PlayerSpellExpiliarmusCommand}. {playerSpellExpiliarmusName} - {playerSpellExpiliarmusTitle} " +
+                                  $"Кол-во {playerSpellExpiliarmusAmmount}.");
                 }
 
-                Console.ForegroundColor = DefaultText;
+                Console.ForegroundColor = DefaultTextColor;
+                playerWindowCursorPositionY++;
+                Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
+                Console.Write($"{ExitCommand}. {ExitCommandTitle}");
+
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + PlayerWindowHeight - WindowBorderthick*2);
                 Console.Write(PlayerInputCommandPrompt);
                 inputCommand = Console.ReadLine();
@@ -653,89 +1096,129 @@ namespace Lesson_2._12_FightWhisBoss
                 switch (inputCommand)
                 {
                     case PlayerSpellPatronusCommand:
-                        if (PlayerSpellPatronusTimeToCanCast > 0)
+                        if (playerSpellPatronusTimeToCanCast > 0)
                         {
-                            playerLogsOutput = PlayerSpellPatronusWrongCast;
+                            playerLogsOutput = playerSpellPatronusWrongCast;
                         }
                         else
                         {
-                            PlayerSpellPatronusTimeToCanCast = PlayerSpellPatronusRechargeTime;
-                            playerLogsOutput = PlayerSpellPatronusText;
-                            enemyHealth -= PlayerSpellPatronusPower;
-                            enemyWindowMessageCaсhe = $"{PlayerSpellPatronusName} -{PlayerSpellPatronusPower}. Осталось {enemyHealth}";
+                            playerSpellPatronusTimeToCanCast = playerSpellPatronusRechargeTime;
+                            playerLogsOutput = playerSpellPatronusText;
+                            enemyHealth -= playerSpellPatronusPower;
+                            enemyWindowMessageCaсhe = $"{playerSpellPatronusName} -{playerSpellPatronusPower}. Осталось {enemyHealth}";
                         }                            
                         break;
 
                     case PlayerSpellImperioCommand:
-                        if (PlayerSpellImperioTimeToCanCast > 0)
+                        if (playerSpellImperioTimeToCanCast > 0)
                         {
-                            playerLogsOutput = PlayerSpellImperioWrongCast;
+                            playerLogsOutput = playerSpellImperioWrongCast;
                         }
                         else
                         {
-                            PlayerSpellImperioTimeToCanCast = PlayerSpellImperioRechargeTime;
-                            playerLogsOutput = PlayerSpellImperioText;
-                            enemyHealth -= PlayerSpellImperioPower;
-                            enemyWindowMessageCaсhe = $"{PlayerSpellImperioName} -{PlayerSpellImperioPower}. Осталось {enemyHealth}";
+                            playerSpellImperioTimeToCanCast = playerSpellImperioRechargeTime;
+                            playerLogsOutput = playerSpellImperioText;
+                            enemyHealth -= playerSpellImperioPower;
+                            enemyWindowMessageCaсhe = $"{playerSpellImperioName} -{playerSpellImperioPower}. Осталось {enemyHealth}";
                         }
                         break;
 
                     case PlayerSpellAvahtoCommand:
-                        if (PlayerSpellAvahtoAmmount <= 0)
+                        if (playerSpellAvahtoAmmount <= 0)
                         {
-                            playerLogsOutput = PlayerSpellAvahtoWrongCast;
+                            playerLogsOutput = playerSpellAvahtoWrongCast;
                             break;
-                        }                            
-                        PlayerSpellAvahtoAmmount--;
-                        playerLogsOutput = PlayerSpellAvahtoText;
-                        enemyWindowMessageCaсhe = $"{PlayerSpellAvahtoName}. Игрок вылечился.";
+                        }
+
+                        if (wasLastEnemvySpellAvahto)
+                        {
+                            playerSpellAvahtoAmmount = playerSpellAvahtoAmmountMaximum;
+                            playerHealthMaximum += playerHealthLevelIncrease;
+                            playerHealth = playerHealthMaximum;
+                            playerLogsOutput = playerSpellAvahtoSpecialText;
+                            enemyWindowMessageCaсhe = $"{playerSpellAvahtoName}. Игрок прокачался.";
+                        }
+                        else
+                        {
+                            playerSpellAvahtoAmmount--;
+                            playerLogsOutput = playerSpellAvahtoText;
+                            enemyWindowMessageCaсhe = $"{playerSpellAvahtoName}. Игрок вылечился.";
+                        }
+
+                        playerHealth = playerHealthMaximum;
+                        
                         break;
 
                     case PlayerSpellImmobilusCommand:
-                        if (PlayerSpellImmobilusAmmount <= 0)
+                        if (playerSpellImmobilusAmmount <= 0)
                         {
                             playerLogsOutput = PlayerSpellImmobilusWrongCast;
+                            enemyVasilisklAliveRounds = 0;
                             break;
                         }
-                        PlayerShield = PlayerShieldMaximum;
-                        PlayerSpellImmobilusAmmount--;
-                        playerLogsOutput = PlayerSpellImmobilusText;
-                        enemyWindowMessageCaсhe = $"{PlayerSpellImmobilusName}. Игрок поставил щит.";
+                        playerShield = playerShieldMaximum;
+                        playerSpellImmobilusAmmount--;
+
+                        if (isVasiliskActive)
+                        {
+                            isVasiliskActive = false;
+                            playerLogsOutput = playerSpellImmobilusSpecialText;
+                        }
+                        else
+                        {
+                            playerLogsOutput = playerSpellImmobilusText;
+                        }                        
+
+                        enemyWindowMessageCaсhe = $"{playerSpellImmobilusName}. Игрок поставил щит.";
                         break;
 
                     case PlayerSpellKonfundusCommand:
-                        if (PlayerSpellKonfundusAmmount <= 0)
+                        if (playerSpellKonfundusAmmount <= 0)
                         {
                             playerLogsOutput = playerSpellKonfundusWrongCast;
                             break;
                         }
-                        PlayerSpellKonfundusAmmount--;
-                        playerLogsOutput = PlayerSpellKonfundusText;
-                        enemyWindowMessageCaсhe = $"{PlayerSpellKonfundusName} - Игрок сбил заклятья.";
+                        playerSpellKonfundusAmmount--;
+                        enemyCantCastSpellsRounds += playerSpellKonfundusEffectTime;
+                        playerLogsOutput = playerSpellKonfundusText;
+                        enemyWindowMessageCaсhe = $"{playerSpellKonfundusName} - Игрок сбил заклятья.";
                         break;
 
                     case PlayerSpellAvadaKedavraCommand:
-                        if (PlayerSpellAvadaKedavraAmmount <= 0)
+                        if (playerSpellAvadaKedavraAmmount <= 0)
                         {
                             playerLogsOutput = playerSpellAvadaKedavraWrongCast;
                             break;
                         }
-                        PlayerSpellAvadaKedavraAmmount--;
-                        playerLogsOutput = PlayerSpellAvadaKedavraText;
-                        enemyHealth -= PlayerSpellAvadaKedavraPower;
-                        enemyWindowMessageCaсhe = $"{PlayerSpellAvadaKedavraName} -{PlayerSpellAvadaKedavraPower}. Осталось {enemyHealth}";
+                        playerSpellAvadaKedavraAmmount--;
+
+                        int power = playerSpellAvadaKedavraPower;
+
+                        if (wasLastEnemySpellAvadaKedavra)
+                        {
+                            power += playerSpellAvadaKedavraEnhancementPower;
+                            playerLogsOutput = playerSpellAvadaKedavraSpecialCast;
+                        }
+                        else
+                        {
+                            playerLogsOutput = playerSpellAvadaKedavraText;
+                        }
+
+                        enemyHealth -= power;
+                        enemyWindowMessageCaсhe = $"{playerSpellAvadaKedavraName} -{power}. Осталось {enemyHealth}";
                         break;
 
                     case PlayerSpellExpiliarmusCommand:
-                        if (PlayerSpellExpiliarmusAmmount <= 0)
+                        if (playerSpellExpiliarmusAmmount <= 0)
                         {
                             playerLogsOutput = playerSpellExpiliarmusWrongCast;
                             break;
                         }
-                        PlayerSpellExpiliarmusAmmount--;
-                        playerLogsOutput = PlayerSpellExpiliarmusText;
-                        enemyHealth -= PlayerSpellExpiliarmusPower;
-                        enemyWindowMessageCaсhe = $"{PlayerSpellExpiliarmusName} -{PlayerSpellExpiliarmusPower}. Осталось {enemyHealth}";
+                        playerSpellExpiliarmusAmmount--;
+                        enemyCantCastSpellsRounds += playerSpellExpiliarmusEffectTime;
+                        playerLogsOutput = playerSpellExpiliarmusText;
+                        enemyHealth -= playerSpellExpiliarmusPower;
+                        enemyWindowMessageCaсhe = $"{playerSpellExpiliarmusName} -{playerSpellExpiliarmusPower}. Осталось {enemyHealth}";
                         break;
 
                     case ExitCommand:
@@ -743,78 +1226,302 @@ namespace Lesson_2._12_FightWhisBoss
                         break;
 
                     default:
-                        playerLogsOutput = PlayerLooseMove;
+                        playerLogsOutput = playerLooseMove;
                         enemyWindowMessageCaсhe = PlayerLooseMoveTitle;
                         break;
                 }
 
+                // Player window text output second time
+                playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
+                Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
+                Console.Write($" {PlayerName} | ");
+                if (playerHealth < playerCriricalHealth)
+                    Console.ForegroundColor = PlayerCriricalHealthColor;
+                else
+                    Console.ForegroundColor = PlayerHealthColor;
+                Console.Write($"Здоровье: {playerHealth}");
+                Console.ForegroundColor = DefaultTextColor;
+                Console.Write($" | ");
+                if (playerShield > 0)
+                    Console.ForegroundColor = ShieldTextColor;
+                Console.Write($"Щит: {playerShield}     ");
+                Console.ForegroundColor = DefaultTextColor;
 
 
 
                 // ENEMY MOOVE
                 // ENEMY MOOVE
                 // ENEMY MOOVE
-                if (enemyHealth < enemyCriticalHealth && EnemySpellAvahtoAmmount>0)
+                if (wasLastEnemvySpellAvahto)
+                    wasLastEnemvySpellAvahto = false;
+
+                if (wasLastEnemySpellAvadaKedavra)
+                    wasLastEnemySpellAvadaKedavra = false;
+
+                if (enemyCantCastSpellsRounds > 0)
                 {
-                    EnemySpellAvahtoAmmount--;
-                    enemyLogsOutput = EnemySpellAvahtoText;
-                    enemyHealth = EnemyHealthMaximum;
+                    enemyDealDamageToPlayer = enemyPunchPower;
+                    enemyLogsOutput = enemyPunchText;
+                    enemyCantCastSpellsRounds--;
+                    canEnemyCastSpells = false;
+                    canShowEnemyCastAnimation = false;
+                }
+                else if (enemyHealth < enemyCriticalHealth && enemySpellAvahtoAmmount > 0 && enemyHealth > 0)
+                {
+                    enemySpellAvahtoAmmount--;
+                    enemyLogsOutput = enemySpellAvahtoText;
+                    enemyHealth = enemyHealthMaximum;
+                    wasLastEnemvySpellAvahto = true;
                     enemyWindowMessageCaсhe = $"{EnemyHealTitleMessage} Осталось {enemyHealth}";
                 }
-                else if (EnemySpellTwoTimeToCanCast <= 0)
+                else if (enemySpellAvadaKedavraTimeToCanCast <= 0 && enemySpellAvadaKedavraAmmount > 0) 
+                {
+                    wasLastEnemySpellAvadaKedavra = true;
+                    enemyDealDamageToPlayer = enemySpellAvadaKedavraPower;
+                    enemyLogsOutput = EnemySpellAvadaKedavraText;
+                    enemySpellAvadaKedavraTimeToCanCast = enemySpellAvadaKedavraRechargeTime;
+                }
+                else if (enemySpellSektrumSempraTimeToCanCast <= 0 && enemySpellSektrumSempraAmmount > 0)
+                {
+                    enemyDealDamageToPlayer = enemySpellSektrumSempraPower;
+                    enemyLogsOutput = enemySpellSektrumSempraText;
+                    enemySpellSektrumSempraTimeToCanCast = enemySpellSektrumSempraRechargeTime;
+                }
+                else if (enemySpellEngorgioTimeToCanCast <= 0 && enemySpellEngorgioAmmount > 0)
+                {
+                    isVasiliskActive = true;
+                    enemySpellEngorgioAmmount--;
+                    enemySpellEngorgioTimeToCanCast = enemySpellEngorgioRechargeTime;
+                    enemyVasilisklAliveRounds = enemyVasilisklAliveRoundsMaximum;
+                    enemyLogsOutput = enemySpellEngorgioText;
+                }
+                else if (enemySpellInflarmeTimeToCanCast <= 0)
                 {
                     // enemy spell 2 
-                    enemyDealDamageToPlayer = EnemySpellTwoPower;
-                    enemyLogsOutput = EnemySpellTwoText;
-                    EnemySpellTwoTimeToCanCast = EnemySpellTwoRechargeTime;
+                    enemyDealDamageToPlayer = enemySpellInflarmePower;
+                    enemyLogsOutput = enemySpellInflarmeText;
+                    enemySpellInflarmeTimeToCanCast = enemySpellInflarmeRechargeTime;
                 }
                 else
                 {
                     // enemy spell 1                
-                    enemyDealDamageToPlayer = EnemySpellOnePower;
-                    enemyLogsOutput = EnemySpellOneText;
+                    enemyDealDamageToPlayer = enemyPunchPower;
+                    enemyLogsOutput = enemyPunchText;
+                    canShowEnemyCastAnimation = false;
                 }
 
+                //enemy apply damage to player
+                //enemy log boss status line (health, mov, etc)
                 enemyLogWindowFooterText = "";
+
+                if (isVasiliskActive && enemyVasilisklAliveRounds==0)
+                {
+                    isVasiliskActive = false;
+                }
+
+                if (isVasiliskActive && enemyVasilisklAliveRounds>0)
+                {
+                    enemyDealDamageToPlayer += enemySpellEngorgioPower;
+                }
+
                 if (enemyDealDamageToPlayer > 0)
                 {
-                    if(PlayerShield>0 && PlayerShield >= enemyDealDamageToPlayer)
+                    if(playerShield>0 && playerShield >= enemyDealDamageToPlayer)
                     {
-                        PlayerShield -= enemyDealDamageToPlayer;
+                        playerShield -= enemyDealDamageToPlayer;
                         enemyLogWindowFooterText = $"{DamageToPlayerShieldMessage} {enemyDealDamageToPlayer} "; 
                     }   
-                    else if(PlayerShield > 0 && PlayerShield < enemyDealDamageToPlayer)
+                    else if(playerShield > 0 && playerShield < enemyDealDamageToPlayer)
                     {
-                        enemyDealDamageToPlayer -= PlayerShield;
-                        enemyLogWindowFooterText = $"{DamageToPlayerShieldMessage} {PlayerShield} ";
-                        PlayerShield = 0;
-                        PlayerHealth -= enemyDealDamageToPlayer;
-                        enemyLogWindowFooterText += $"{DamageToPlayerHealthMessage} {enemyDealDamageToPlayer}"; 
+                        enemyDealDamageToPlayer -= playerShield;
+                        enemyLogWindowFooterText = $"{DamageToPlayerShieldMessage} {playerShield} ";
+                        playerShield = 0;
+                        playerHealth -= enemyDealDamageToPlayer;
+                        enemyLogWindowFooterText += $"{DamageToPlayerHealthMessage} {enemyDealDamageToPlayer} "; 
                     }
                     else
                     {
-                        PlayerHealth -= enemyDealDamageToPlayer;
-                        enemyLogWindowFooterText += $"{DamageToPlayerHealthMessage} {enemyDealDamageToPlayer}";
+                        playerHealth -= enemyDealDamageToPlayer;
+                        enemyLogWindowFooterText += $"{DamageToPlayerHealthMessage} {enemyDealDamageToPlayer} ";
                     }
                     enemyDealDamageToPlayer = 0;
+
+                    if (enemyCantCastSpellsRounds > 0)
+                    {
+                        enemyLogWindowFooterText += $"{EnemyCantCastRoundsMessage} {enemyCantCastSpellsRounds}";
+                    }
+
+                    if (isVasiliskActive)
+                    {
+                        enemyLogWindowFooterText += $"{VasiliskDamgeMessage} {enemySpellEngorgioPower}";
+                    }
+                }
+
+                
+                if (playerHealth <= 0)
+                {
+                    isBattleActive = false;
+                    isPlayerDead = true;
+                }
+
+                if (enemyHealth <= 0)
+                {
+                    isBattleActive = false;
+                    isEnemyDie = true;
                 }
 
             }
 
+            if (isEnemyDie)
+            {
+                // draw enemy animation dead
+                Console.ForegroundColor = currentEnemyImageColor;
+                foreach (int[] animationFrames in enemyDieAnimationFrames)
+                {
+                    System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
+
+                    for (enemyImageCursorPositionY = 0; enemyImageCursorPositionY < enemyBossImage.Length - animationFrames.Length; enemyImageCursorPositionY++)
+                    {
+                        Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY + enemyImageCursorPositionY);
+                        Console.WriteLine(enemyImageClearLine);
+                    }
+
+                    foreach (int index in animationFrames)
+                    {
+                        enemyImageCursorPositionY++;
+                        Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY + enemyImageCursorPositionY);
+                        Console.WriteLine(enemyBossImage[index]);
+                    }
+                }
+                Console.ForegroundColor = DefaultTextColor;
+            }
+
+            if (enemyHealth <= 0 && playerHealth <= 0)
+            {
+                finalOutputText = bothDeadFinalText;
+                finalOutputImage = playerDeadImage;
+            }
+            else if (playerHealth <= 0)
+            {
+                finalOutputText = bossWinFinalText;
+                finalOutputImage = playerDeadImage;
+            }
+            else 
+            {
+                finalOutputText = playerWinFinalText;
+                finalOutputImage = playerWinImage;
+            }
 
 
 
+            if(isPlayerDead || isEnemyDie)
+            {
+
+                // Output player move last time
+                logWindowCursorPositionY = LogWindowTitleOffsetY;
+                Console.ForegroundColor = DefaultTextColor;
+                //Clear Log Window
+                for (int i = 0; i < LogWindowHeight - WindowBorderthick * 2; i++)
+                {
+                    Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
+                    Console.Write(logWindowClearLine);
+                    logWindowCursorPositionY++;
+                }
+
+                logWindowCursorPositionY = LogWindowTitleOffsetY;
+                Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
+                Console.Write(LogPlayerMoveTitle);
+                logWindowCursorPositionY++;
+                // Log player text
+                foreach (string textLine in playerLogsOutput)
+                {
+                    Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
+                    Console.Write(textLine);
+                    logWindowCursorPositionY++;
+                    System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
+                }
+                logWindowCursorPositionY++;
+
+                // Output last enemy move....
+                Console.ForegroundColor = DefaultTextColor;
+
+                // Log enemy text
+                Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
+                Console.Write(LogEnemyMoveTitle);
+                logWindowCursorPositionY++;
+                foreach (string textLine in enemyLogsOutput)
+                {
+                    Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
+                    Console.Write(textLine);
+                    logWindowCursorPositionY++;
+                    System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
+                }
+                Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
+                Console.ForegroundColor = EnemyLogWindowFooterColor;
+                Console.Write(enemyLogWindowFooterText);
 
 
+                // Press any key to continue....
+                Console.ForegroundColor = HigthLihtSpellTextColor;
+                Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + PlayerWindowHeight - WindowBorderthick * 2);
+                Console.Write(PressKeyPrompt);
+                Console.ReadKey();
 
+                Console.ForegroundColor = WindowBorderColor;
+                Console.SetCursorPosition(FinalWindowX, FinalWindowY);
 
+                for (int i = 0; i < FinalWindowLength; i++)
+                    Console.Write(WindowBorderSymbolHorizontal);
 
+                for (int i = 1; i < FinalWindowHeight - WindowBorderthick; i++)
+                {
+                    Console.SetCursorPosition(FinalWindowX, FinalWindowY + i);
+                    Console.Write(WindowBorderSymbolVertical);
+                    Console.SetCursorPosition(FinalWindowX + FinalWindowLength - WindowBorderthick, FinalWindowY + i);
+                    Console.Write(WindowBorderSymbolVertical);
+                }
 
+                Console.SetCursorPosition(FinalWindowX, FinalWindowY + FinalWindowHeight - WindowBorderthick);
 
+                for (int i = 0; i < FinalWindowLength; i++)
+                    Console.Write(WindowBorderSymbolHorizontal);
 
-            Console.ReadLine();
+                Console.ForegroundColor = DefaultTextColor;
 
+                for (int i = 1; i < FinalWindowHeight - WindowBorderthick; i++)
+                {
+                    Console.SetCursorPosition(FinalWindowX + WindowBorderthick, FinalWindowY + i);
+                    Console.Write(finalWindowClearLine);
+                }
 
+                finalWindowCursorPositionY = FinalWindowImageOffsetY;
+                Console.ForegroundColor = FinalImageColor;
+
+                foreach (string textLine in finalOutputImage)
+                {
+                    Console.SetCursorPosition(FinalWindowX + FinalWindowImageOffsetX, FinalWindowY + finalWindowCursorPositionY);
+                    Console.Write(textLine);
+                    finalWindowCursorPositionY++;
+                }
+
+                finalWindowCursorPositionY = FinalWindowTextOffsetY;
+                Console.ForegroundColor = DefaultTextColor;
+
+                // Final text
+                finalWindowCursorPositionY = FinalWindowTextOffsetY;
+                Console.ForegroundColor = DefaultTextColor;
+
+                foreach (string textLine in finalOutputText)
+                {
+                    Console.SetCursorPosition(FinalWindowX + FinalWindowTextOffsetX, FinalWindowY + finalWindowCursorPositionY);
+                    Console.Write(textLine);
+                    finalWindowCursorPositionY++;
+                }
+
+                Console.ReadKey();
+            }
+
+            
         }
     }
 }
