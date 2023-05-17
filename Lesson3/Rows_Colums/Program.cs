@@ -8,19 +8,19 @@ namespace Rows_Colums
         {
 
             int[,] array = { 
-                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                { 2, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                { 3, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
             };
 
             int rowSum = 0;
             int rowForSumCalculation = 1;
 
             int columnMultiplication = 1;
-            int columnForMultiplication = 2;
+            int columnForMultiplication = 0;
 
             for (int i=0; i<array.GetLength(0); i++)
             {
@@ -37,14 +37,14 @@ namespace Rows_Colums
                 rowSum += array[rowForSumCalculation, i];
             }
 
-            Console.WriteLine($"Сумма {rowForSumCalculation} ряда {rowSum}");
+            Console.WriteLine($"Сумма {(rowForSumCalculation+1)} ряда {rowSum}");
 
             for (int i = 0; i < array.GetLength(0); i++)
             {
                 columnMultiplication *= array[i, columnForMultiplication];
             }
 
-            Console.WriteLine($"Произведение {columnForMultiplication} столбца {columnMultiplication}");
+            Console.WriteLine($"Произведение {(columnForMultiplication+1)} столбца {columnMultiplication}");
         }
     }
 }
