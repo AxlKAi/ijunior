@@ -7,7 +7,7 @@ namespace Rows_Colums
         static void Main(string[] args)
         {
 
-            int[,] array = { 
+            int[,] numbers = { 
                 { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 { 2, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
@@ -17,34 +17,34 @@ namespace Rows_Colums
             };
 
             int rowSum = 0;
-            int rowForSumCalculation = 1;
+            int rowForSumCalculation = 2;
 
             int columnMultiplication = 1;
-            int columnForMultiplication = 0;
+            int columnForMultiplication = 1;
 
-            for (int i=0; i<array.GetLength(0); i++)
+            for (int i=0; i<numbers.GetLength(0); i++)
             {
-                for(int j = 0; j<array.GetLength(1); j++)
+                for(int j = 0; j<numbers.GetLength(1); j++)
                 {
-                    Console.Write(array[i,j] + " ");
+                    Console.Write(numbers[i,j] + " ");
                 }
 
                 Console.WriteLine();
             }
 
-            for (int i = 0; i < array.GetLength(1); i++)
+            for (int i = 0; i < numbers.GetLength(1); i++)
             {
-                rowSum += array[rowForSumCalculation, i];
+                rowSum += numbers[rowForSumCalculation-1, i];
             }
 
-            Console.WriteLine($"Сумма {(rowForSumCalculation+1)} ряда {rowSum}");
+            Console.WriteLine($"Сумма {rowForSumCalculation} ряда {rowSum}");
 
-            for (int i = 0; i < array.GetLength(0); i++)
+            for (int i = 0; i < numbers.GetLength(0); i++)
             {
-                columnMultiplication *= array[i, columnForMultiplication];
+                columnMultiplication *= numbers[i, columnForMultiplication-1];
             }
 
-            Console.WriteLine($"Произведение {(columnForMultiplication+1)} столбца {columnMultiplication}");
+            Console.WriteLine($"Произведение {columnForMultiplication} столбца {columnMultiplication}");
         }
     }
 }
