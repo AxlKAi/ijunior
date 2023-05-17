@@ -24,7 +24,7 @@ namespace Lesson_2._12_FightWhisBoss
             const ConsoleColor DefaultEnemyImageColor = ConsoleColor.DarkGray;
             const ConsoleColor HigthLihtSpellTextColor = ConsoleColor.Cyan;
             const ConsoleColor ShieldTextColor = ConsoleColor.Blue;
-            const ConsoleColor EnemyLogWindowFooterColor = ConsoleColor.DarkRed;
+            const ConsoleColor LogWindowEnemyFooterColor = ConsoleColor.DarkRed;
             const ConsoleColor PlayerCriricalHealthColor = ConsoleColor.Red;
             const ConsoleColor PlayerHealthColor = ConsoleColor.DarkRed;
             const ConsoleColor EnemyImageCastSpellColor = ConsoleColor.Yellow;
@@ -32,7 +32,6 @@ namespace Lesson_2._12_FightWhisBoss
             const ConsoleColor EnemyAlmostDieColor = ConsoleColor.DarkRed;
             const ConsoleColor EnemyVasiliskColor = ConsoleColor.DarkGreen;
             const ConsoleColor FinalImageColor = ConsoleColor.DarkGray;
-
 
             const int EnemyWindowX = 1;
             const int EnemyWindowY = 16;
@@ -85,7 +84,7 @@ namespace Lesson_2._12_FightWhisBoss
 
             const string ExitCommandTitle = "Порталиec-Драппа <Выход из игры>";
             const string PlayerLooseMoveTitle = "Игрок пропустил ход.";
-            const string EnemyHealTitleMessage = "Гад вылечился!";
+            const string EnemyHealTitleMessage = EnemyBossName + " вылечился!";
             const string PlayerInputCommandPrompt = "Выберите номер заклинания: ";
             const string LogPlayerMoveTitle = "Ход игрока:";
             const string LogEnemyMoveTitle = "Ход монстра:";
@@ -101,7 +100,7 @@ namespace Lesson_2._12_FightWhisBoss
                 "Неожиданно возникший портал перенес  героя  в  большое  обведшалое",
                 "помещение подземного дворца.  В центре  колонного  зала расположен",
                 "алтарь, на котором хранится недостающая магу часть реликта.",
-                " Мунускрипт найденный в древлехранилище Семинарии таил неприятный",
+                "  Мунускрипт найденный в древлехранилище Семинарии таил неприятный",
                 "сюрприз.  Он  не только  указывал дорогу к последней части амулета",
                 "\"Здоровой Крови\" Античных, но и телепортировал поисковика к оному.",
                 " Артефакт стережет скелет, некогда крупного воина. Слабо заметное",
@@ -117,7 +116,7 @@ namespace Lesson_2._12_FightWhisBoss
                 "",
                 "",
                 "  Силы  покидали  ворожея. Очередной удар подкосил героя.",
-                "Он  упал  и  долговязый   мертвяк  нанес  удар  в  спину.",
+                "Он оступился  и  долговязый  мертвяк нанес удар  в спину.",
                 "  Неужели так все закончится!",
                 "  В  глазах темнело. Собственное тело перестало слушаться",
                 "и  опало  обмякши.   Сквозь  мглу  угасающего сознания Вы",
@@ -128,7 +127,7 @@ namespace Lesson_2._12_FightWhisBoss
                 "  Тело  волшебника  вдруг начинает подниматься.  Сознание",
                 "парит по залу не в силах управлять  движеньем. Взгляд Ваш",
                 "прикован к алтарю  вокруг  которого  мертвецки  медленной",
-                "походкой теперь бродят два охранника.."
+                "походкой теперь бродят два стражника.."
             };
 
             string[] playerWinFinalText =
@@ -139,14 +138,14 @@ namespace Lesson_2._12_FightWhisBoss
                 "которым разносит в щепки оставшееся тело скелета! ",
                 "  Бой кончен!  Вот  она,  сладость победы!  Настал момент ",
                 "соединить   во  едино  обломки  артефакта.    С  чувством ",
-                "восхищения, перемешанной с легкой  трепетом  предвкушения ",
+                "восхищения, перемешанной с легким  трепетом  предвкушения ",
                 "не  известности,  прихрамывая,  маг  подходит  к  алтарю.",
                 "С первых  лет  обучения  семинарист начал поиски  амулета",
                 "\"Здоровой  Крови\"  Античных.   И  вот  она,  долгожданная",
                 "последняя часть!  Разделенные половинки cлились во едино,",
                 "яркая вспышка  света  озарила  зал. Становятся видны души",
-                "проклятых, парящих по вокруг алтаря.  Слышен  гул голосов",
-                "Античных, они  произносят  разные  заклятия. Язык древних",
+                "проклятых, парящих вокруг алтаря.     Слышен  гул голосов",
+                "Античных, они  произносят разные заклинания. Язык древних",
                 "ворожею не знаком, но несколько из них  ворожей  понимает",
                 "и запоминает.",
                 "  Амулет собран!  Сила  крови  великих  Античных пращуров",
@@ -161,13 +160,13 @@ namespace Lesson_2._12_FightWhisBoss
                 "скелета были сильно повреждены, а каркас маячило в разные",
                 "стороны.  Тяжело  дышавший  маг,  обессиленным  движением",
                 "выкинул самое мощное  заклятие  на которое  был способен.",
-                "Одновременно с этим, мертвяк  сотворил  свое  сильнейшее.",
+                "Одновременно с этим, мертвяк  сотворил  свое  сильнейшее.", // акцентировать что это магия у мертвяка
                 "Оба  удара  достигли  цели. Последнее, что видел ворожей,",
-                "как  груда  костей  рухнула о  мраморный пол,  не подавая",
+                "как  груда  костей  рухнула на мраморный пол,  не подавая",
                 "признаков  жизни.  Сознание  помутнело,  но  позже  стали",
                 "различимы  очертания зала.  Взор был направлен на алтарь,",
                 "подле   которого   была  разбросана  груда костей, смутно",
-                "напоминавшее  некогда  грозного  врага. С  другой стороны",
+                "напоминавшая  некогда  грозного  врага. С  другой стороны",
                 "распласталось  тело  ворожея.  Словно поддаваемая легкому",
                 "бризу,   душа  мага  начала  парить  по  кругу,  в центре",
                 "которого был алтарь, с возложенной частью реликта. Спустя",
@@ -182,30 +181,30 @@ namespace Lesson_2._12_FightWhisBoss
             int playerSpellPatronusPower = 30;
             int playerSpellPatronusRechargeTime = 2;
             int playerSpellPatronusTimeToCanCast = 0;
-            string playerSpellPatronusTitle = $"Урон {playerSpellPatronusPower}.";
+            string playerSpellPatronusLog = $"Урон {playerSpellPatronusPower}.";
             string[] playerSpellPatronusText =
             {
-                "Храбрец   делает   короткий  взмах палочкой,  так хорошо",
-                "отточенный  еще  с первого  курса  Волшебной  Семинарии.",
-                "Из палочки вылетает яркий светлый шар и поражает нежить!"
+                "Храбрец делает короткий  взмах палочкой, так хорошо отточенный еще",
+                "с первого курса  Волшебной  Семинарии. Из  палочки  вылетает яркий",
+                "светлый шар и поражает нежить!"
             };
             string[] playerSpellPatronusWrongCast =
             {
-                "В любом бою важно сохранять самообладание и концентрацию! Правило",
-                "настолько простое, на сколько его сложно выполнить в пылу схватки.",
-                "Маг засуетился, не сконцентрировался, и заклятие сорвалось..."
+                "В любом бою важно сохранять самообладание и концентрацию!  Правило",
+                "настолько же простое, на сколько  сложно его выполнить в пылу боя.",
+                "Маг поспешил, не сконцентрировался, и заклятие сорвалось..."
             };
 
             string playerSpellImperioName = "Империо";
             int playerSpellImperioPower = 35;
             int playerSpellImperioRechargeTime = 3;
             int playerSpellImperioTimeToCanCast = 0;
-            string playerSpellImperioTitle = $"Урон {playerSpellImperioPower}.";
+            string playerSpellImperioLog = $"Урон {playerSpellImperioPower}.";
             string[] playerSpellImperioText =
             {
                 "Маг делает резкий выпад вперед, и  изрекает боевой клич - Империо!",
                 "В нежить  летит  большой  серебристый гладиус,  осеянный  брызгами",
-                "молний. Гладиус разбивается о недруга, и рассыпается снопом искр."
+                "молний. Чары разбиваются о недруга, и рассыпаются снопом искр."
             };
             string[] playerSpellImperioWrongCast =
             {
@@ -215,22 +214,22 @@ namespace Lesson_2._12_FightWhisBoss
             };
 
             string playerSpellAvahtoName = "Авахто";
-            string playerSpellAvahtoTitle = $"Полное излечение.";
+            string playerSpellAvahtoLog = $"Полное излечение.";
             int playerSpellAvahtoAmmountMaximum = 2;
             int playerHealthLevelIncrease = 50;
             int playerSpellAvahtoAmmount = playerSpellAvahtoAmmountMaximum;
             string[] playerSpellAvahtoText =
             {
                 "Магик извлекает пузырёк алой жидкости, быстро чарует его и пьет.",
-                "Вокруг торса появляется яркий перелив цветов радуги, повторяющий",
-                "форму тела. Раны затягивает. Вы вновь полны сил и здоровья."
+                "Вокруг тела появляется яркий перелив цветов радуги.",
+                "Раны затягивает. Вы вновь полны сил и здоровья."
             };
             string[] playerSpellAvahtoSpecialText =
             {
-                "Внезапно, обряд  лечения  вызвал яркую алую ауру, связавшую мага и",
-                "реликт с алтаря. Противники  применили заклятье Античных - Авахто.",
-                "Разрозненные части амулета усилили эфект. Запас здоровья увеличен,",
-                "склянки пополнены."
+                "Внезапно, обряд  лечения  вызвал  ярко-алую ауру, связавшую мага и",
+                "реликт с алтаря. Оба противника применили древнее заклятье Авахто.",
+                "Разделенные части амулета \"Здоровой Крови\" Античных усилили эфект.",
+                "Здоровье героя выросло, склянки с врачевным зельем пополнены."
             };
             string[] playerSpellAvahtoWrongCast =
             {
@@ -895,7 +894,7 @@ namespace Lesson_2._12_FightWhisBoss
                         System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
                     }
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
-                    Console.ForegroundColor = EnemyLogWindowFooterColor;
+                    Console.ForegroundColor = LogWindowEnemyFooterColor;
                     Console.Write(enemyLogWindowFooterText);                    
                 }
 
@@ -1035,17 +1034,17 @@ namespace Lesson_2._12_FightWhisBoss
                 // Write Spell 1 menu
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                Console.Write($"{PlayerSpellPatronusCommand}. {playerSpellPatronusName} - {playerSpellPatronusTitle} " +
+                Console.Write($"{PlayerSpellPatronusCommand}. {playerSpellPatronusName} - {playerSpellPatronusLog} " +
                              $"Перезарядка {playerSpellPatronusTimeToCanCast}.");
                 // Write Spell 2 menu
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                Console.Write($"{PlayerSpellImperioCommand}. {playerSpellImperioName} - {playerSpellImperioTitle} " +
+                Console.Write($"{PlayerSpellImperioCommand}. {playerSpellImperioName} - {playerSpellImperioLog} " +
                               $"Перезарядка {playerSpellImperioTimeToCanCast}.");
                 // Write Spell 3 menu Авахто (лечение)
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
-                Console.Write($"{PlayerSpellAvahtoCommand}. {playerSpellAvahtoName} - {playerSpellAvahtoTitle} " +
+                Console.Write($"{PlayerSpellAvahtoCommand}. {playerSpellAvahtoName} - {playerSpellAvahtoLog} " +
                               $"Кол-во {playerSpellAvahtoAmmount}.");
                 // Write Spell 4 menu Иммобилус
                 playerWindowCursorPositionY++;
@@ -1457,7 +1456,7 @@ namespace Lesson_2._12_FightWhisBoss
                     System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
                 }
                 Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
-                Console.ForegroundColor = EnemyLogWindowFooterColor;
+                Console.ForegroundColor = LogWindowEnemyFooterColor;
                 Console.Write(enemyLogWindowFooterText);
 
 
