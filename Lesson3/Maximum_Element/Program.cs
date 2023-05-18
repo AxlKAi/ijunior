@@ -10,6 +10,7 @@ namespace Maximum_Element
             int numbersMatrixHeight = 10;
             int maximumRandomNumber = 9;
             int minimumRandomNumber = 0;
+            int zeroElement = 0;
             int maximumNumber = int.MinValue;
 
             int[,] numbersMatrix = new int[numbersMatrixHeight, numbersMatrixLength];
@@ -23,14 +24,20 @@ namespace Maximum_Element
                 {
                     numbersMatrix[i, j] = random.Next(minimumRandomNumber, maximumRandomNumber);
                     Console.Write(numbersMatrix[i,j]+" ");
+                }
 
+                Console.WriteLine();
+            }
+
+            for (int i = 0; i < numbersMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < numbersMatrix.GetLength(1); j++)
+                {
                     if (maximumNumber < numbersMatrix[i, j])
                     {
                         maximumNumber = numbersMatrix[i, j];
                     }
                 }
-
-                Console.WriteLine();
             }
 
             Console.WriteLine($"\nМаксимальный элемент = {maximumNumber} \n\n");
@@ -43,7 +50,7 @@ namespace Maximum_Element
                 {
                     if (numbersMatrix[i, j] == maximumNumber)
                     {
-                        numbersMatrix[i, j] = 0;
+                        numbersMatrix[i, j] = zeroElement;
                     }
 
                     Console.Write(numbersMatrix[i, j] + " ");
