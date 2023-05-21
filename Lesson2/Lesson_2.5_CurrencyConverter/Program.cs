@@ -44,7 +44,7 @@ namespace CurrencyConverter
 
             Console.OutputEncoding = Encoding.UTF8;
             random = new Random();
-            balanceRub = Convert.ToSingle(random.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount)/coefficientRubToUsd);
+            balanceRub = Convert.ToSingle(random.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount)* coefficientUsdToRub);
             balanceEur = Convert.ToSingle(random.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount));
             balanceUsd = Convert.ToSingle(random.Next(startMinimumCurrencyAmmount, startMaximumCurrencyAmmount));
             
@@ -176,6 +176,7 @@ namespace CurrencyConverter
                     case CommandExit:
                     case NumberCommandExit:
                         isMainLoopActive = false;
+
                         break;
                 }
             }
