@@ -6,13 +6,14 @@ namespace Local_Maximum
     {
         static void Main(string[] args)
         {
-            uint numbersArrayLength = 10;
+            int numbersArrayLength = 10;
+            int[] numbers = new int[numbersArrayLength];
+            int firstIndex = 0;
+            int lastIndex = numbersArrayLength - 1;
             int minimumRandomNumber = 0;
             int maximumRandomNumber = 9;
             int previousElement;
             int nextElement;
-
-            int[] numbers = new int[numbersArrayLength];
 
             Random random = new Random();
 
@@ -45,10 +46,10 @@ namespace Local_Maximum
             {
                 Console.WriteLine();
 
-                if(numbers[numbers.GetLowerBound(0)] > numbers[numbers.GetLowerBound(0)+1])
-                    Console.WriteLine($"Первый элемент массива с индексом {numbers.GetLowerBound(0)} равный {numbers[numbers.GetLowerBound(0)]} локальный максимум");
+                if(numbers[firstIndex] > numbers[firstIndex+1])
+                    Console.WriteLine($"Первый элемент массива с индексом {firstIndex} равный {numbers[firstIndex]} локальный максимум");
 
-                for (int i = 1; i < numbers.Length - 1; i++)
+                for (int i = 1; i < lastIndex; i++)
                 {
                     previousElement = numbers[i - 1];
                     nextElement = numbers[i + 1];
@@ -57,8 +58,8 @@ namespace Local_Maximum
                         Console.WriteLine($"Элемент массива с индексом {i} равный {numbers[i]} локальный максимум");
                 }
 
-                if (numbers[numbers.GetUpperBound(0)] > numbers[numbers.GetUpperBound(0) - 1])
-                    Console.WriteLine($"Последний элемент массива с индексом {numbers.GetUpperBound(0)} равный {numbers[numbers.GetUpperBound(0)]} локальный максимум");
+                if (numbers[lastIndex] > numbers[lastIndex - 1])
+                    Console.WriteLine($"Последний элемент массива с индексом {lastIndex} равный {numbers[lastIndex]} локальный максимум");
             }
         }
     }
