@@ -17,7 +17,11 @@ namespace Local_Maximum
 
             Random random = new Random();
 
-            if (numbersArrayLength > 0) 
+            if (numbersArrayLength == 0)
+            {
+                Console.WriteLine("Массив 0-вой величины.");
+            }
+            else
             {
                 Console.WriteLine("Массив:");
 
@@ -34,15 +38,11 @@ namespace Local_Maximum
                 Console.WriteLine();
             }
 
-            if (numbersArrayLength == 0)
-            {
-                Console.WriteLine("Массив 0-вой величины.");
-            }
-            else if (numbersArrayLength == 1)
+            if (numbersArrayLength == 1)
             {
                 Console.WriteLine("В массиве один элемент, он является локальным максимумом.");
             }
-            else         
+            else if (numbersArrayLength > 1)
             {
                 Console.WriteLine();
 
