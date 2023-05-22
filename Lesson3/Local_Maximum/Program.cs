@@ -6,12 +6,11 @@ namespace Local_Maximum
     {
         static void Main(string[] args)
         {
-            uint numbersArrayLength = 5;
-            int maximumRandomNumber = 9;
+            uint numbersArrayLength = 1;
             int minimumRandomNumber = 0;
+            int maximumRandomNumber = 9;
             int previousElement;
             int nextElement;
-            int currentElement;
 
             int[] numbers = new int[numbersArrayLength];
 
@@ -33,20 +32,18 @@ namespace Local_Maximum
 
                 for (int i = 0; i < numbers.Length; i++)
                 {
-                    currentElement = numbers[i];
-
-                    if (i > 0)
-                        previousElement = numbers[i - 1];
+                    if (i == 0)
+                        previousElement = int.MinValue;
                     else
-                        previousElement = 0;
+                        previousElement = numbers[i - 1];                    
 
-                    if (i < (numbers.Length - 1))
+                    if (i == (numbers.Length - 1))
+                        nextElement = int.MinValue;                    
+                    else
                         nextElement = numbers[i + 1];
-                    else
-                        nextElement = 0;
 
-                    if (currentElement > previousElement && currentElement > nextElement)
-                        Console.WriteLine($"Элемент массива с индексом {i} равный {currentElement} локальный максимум");
+                    if (numbers[i] > previousElement && numbers[i] > nextElement)
+                        Console.WriteLine($"Элемент массива с индексом {i} равный {numbers[i]} локальный максимум");
                 }
             } 
             else
