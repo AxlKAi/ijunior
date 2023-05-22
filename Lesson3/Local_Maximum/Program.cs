@@ -45,28 +45,21 @@ namespace Local_Maximum
             {
                 Console.WriteLine();
 
-                if(numbers[0] > numbers[1])
-                    Console.WriteLine($"Первый элемент массива с индексом 0 равный {numbers[0]} локальный максимум");
-
-                if (numbers[numbers.Length-1] > numbers[numbers.Length - 2])
-                    Console.WriteLine($"Последний элемент массива с индексом {numbers.Length - 1} равный {numbers[numbers.Length - 1]} локальный максимум");
+                if(numbers[numbers.GetLowerBound(0)] > numbers[numbers.GetLowerBound(0)+1])
+                    Console.WriteLine($"Первый элемент массива с индексом {numbers.GetLowerBound(0)} равный {numbers[numbers.GetLowerBound(0)]} локальный максимум");
 
                 for (int i = 1; i < numbers.Length - 1; i++)
                 {
-                    if (i == 0)
-                        previousElement = int.MinValue;
-                    else
-                        previousElement = numbers[i - 1];
-
-                    if (i == (numbers.Length - 1))
-                        nextElement = int.MinValue;
-                    else
-                        nextElement = numbers[i + 1];
+                    previousElement = numbers[i - 1];
+                    nextElement = numbers[i + 1];
 
                     if (numbers[i] > previousElement && numbers[i] > nextElement)
                         Console.WriteLine($"Элемент массива с индексом {i} равный {numbers[i]} локальный максимум");
                 }
-            }            
+
+                if (numbers[numbers.GetUpperBound(0)] > numbers[numbers.GetUpperBound(0) - 1])
+                    Console.WriteLine($"Последний элемент массива с индексом {numbers.GetUpperBound(0)} равный {numbers[numbers.GetUpperBound(0)]} локальный максимум");
+            }
         }
     }
 }
