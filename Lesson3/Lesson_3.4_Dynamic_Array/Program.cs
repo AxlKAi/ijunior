@@ -11,10 +11,7 @@ namespace Lesson_3._4_Dynamic_Array
 
             string userInput;
             bool isMainLoopActive = true;
-            int numbersSum;
-            int inputNumber;
             int[] numbers = new int[0];
-            int[] tempArray;
 
             Console.WriteLine("Введите:");
             Console.WriteLine("число - для добавления в массив");
@@ -34,7 +31,7 @@ namespace Lesson_3._4_Dynamic_Array
                 }
                 else if (userInput == SumCommand)
                 {
-                    numbersSum = 0;
+                    int numbersSum = 0;
 
                     foreach (int number in numbers)
                         numbersSum += number;
@@ -43,14 +40,13 @@ namespace Lesson_3._4_Dynamic_Array
                 }
                 else
                 {
-                    int newArrayLength = numbers.Length + 1;
-                    inputNumber = Convert.ToInt32(userInput);                    
-                    tempArray = new int[newArrayLength];
+                    int newArrayLength = numbers.Length + 1;                  
+                    int[] tempArray = new int[newArrayLength];
 
                     for(int i=0; i<numbers.Length; i++)
                         tempArray[i] = numbers[i];
 
-                    tempArray[newArrayLength - 1] = inputNumber;
+                    tempArray[newArrayLength - 1] = Convert.ToInt32(userInput);
                     numbers = tempArray;
                 }
             }
