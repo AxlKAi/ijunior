@@ -13,6 +13,7 @@ namespace ParenthesisExpression
             int parenthesisNestingDegree = 0;
             int maximumParenthesisNestingDegree = 0;
             int normalNestingLevel = 0;
+            bool isWrongParenthesisExpression = false;
             string parenthesisExpression;
 
             Console.WriteLine("Программа определит, является ли строка корректным скобочным выражением.");
@@ -35,16 +36,27 @@ namespace ParenthesisExpression
                 {
                     maximumParenthesisNestingDegree = parenthesisNestingDegree;
                 }
+
+                if (parenthesisNestingDegree < normalNestingLevel)
+                {
+                    isWrongParenthesisExpression = true;
+                    break;
+                }
             }
 
-            if (parenthesisNestingDegree == normalNestingLevel)
+            if (parenthesisNestingDegree > normalNestingLevel)
             {
-                Console.WriteLine("Правильное выражение");
-                Console.WriteLine($"Максимальная глубина вложенности {maximumParenthesisNestingDegree}");
+                isWrongParenthesisExpression = true;
+            }
+
+            if (isWrongParenthesisExpression)
+            {
+                Console.WriteLine("Ошибочное выражение");
             }
             else
             {
-                Console.WriteLine("Ошибочное выражение");
+                Console.WriteLine("Правильное выражение");
+                Console.WriteLine($"Максимальная глубина вложенности {maximumParenthesisNestingDegree}");
             }
 
             Console.WriteLine("Нажмите ENTER для завершения программы.");

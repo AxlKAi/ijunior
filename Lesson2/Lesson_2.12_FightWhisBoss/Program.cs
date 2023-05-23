@@ -266,7 +266,7 @@ namespace Lesson_2._12_FightWhisBoss
             string playerSpellKonfundusName = "Конфундус";
             int playerSpellKonfundusAmmount = 0;
             int playerSpellKonfundusEffectTime = 2;
-            int playerSpellKonfundusAdventChance = 30; 
+            int playerSpellKonfundusAdventChance = 20; 
             int playerSpellKonfundusCastReserv = 3;
             string playerSpellKonfundusTitle = $"Лишает магии {playerSpellKonfundusEffectTime} раунда.";
             string[] playerSpellKonfundusText =
@@ -287,7 +287,7 @@ namespace Lesson_2._12_FightWhisBoss
             string playerSpellAvadaKedavraName = "Авада-Кедавра";
             int playerSpellAvadaKedavraAmmount = 0;
             int playerSpellAvadaKedavraPower = 100;
-            int playerSpellAvadaKedavraAdventChance = 100;
+            int playerSpellAvadaKedavraAdventChance = 25;
             int playerSpellAvadaKedavraCastReserv = 3;
             int playerSpellAvadaKedavraEnhancementPower = playerSpellAvadaKedavraPower / 2;
             bool wasLastEnemySpellAvadaKedavra = false;
@@ -315,7 +315,7 @@ namespace Lesson_2._12_FightWhisBoss
             int playerSpellExpiliarmusAmmount = 0;
             int playerSpellExpiliarmusPower = 75;
             int playerSpellExpiliarmusEffectTime = 1;
-            int playerSpellExpiliarmusAdventChance = 30;
+            int playerSpellExpiliarmusAdventChance = 25;
             int playerSpellExpiliarmusCastReserv = 3;
             string playerSpellExpiliarmusTitle = $"Урон {playerSpellExpiliarmusPower} Hp, задержка ";
             string[] playerSpellExpiliarmusText =
