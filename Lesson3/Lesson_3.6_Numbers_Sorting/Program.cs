@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lesson_3._5_Numbers_Sorting
+namespace Lesson_3._6_Numbers_Sorting
 {
     class Program
     {
@@ -47,7 +47,7 @@ namespace Lesson_3._5_Numbers_Sorting
 
             for (int i = 0; i < numbers.Length; i++)
             {
-                Console.Write(numbers[i]+ "  ");
+                Console.Write(numbers[i] + "  ");
             }
 
             Console.ReadLine();

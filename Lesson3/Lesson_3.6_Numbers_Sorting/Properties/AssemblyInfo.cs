@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанные с этой сборкой.
-[assembly: AssemblyTitle("Lesson_3.5_Numbers_Sorting")]
+[assembly: AssemblyTitle("Lesson_3.6_Numbers_Sorting")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Lesson_3.5_Numbers_Sorting")]
+[assembly: AssemblyProduct("Lesson_3.6_Numbers_Sorting")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID представляет идентификатор typelib, если этот проект доступен из модели COM
-[assembly: Guid("691602ec-53e4-4c3b-8307-0d6e06b9c63a")]
+[assembly: Guid("7d314fe0-a45e-471d-9b34-2a29633ff1b1")]
 
 // Сведения о версии сборки состоят из указанных ниже четырех значений:
 //
