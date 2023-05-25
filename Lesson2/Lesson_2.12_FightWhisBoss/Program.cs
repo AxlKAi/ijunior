@@ -112,9 +112,6 @@ namespace Lesson_2._12_FightWhisBoss
             {
                 "",
                 "",
-                "",
-                "",
-                "",
                 "  Силы  покидали  ворожея. Очередной удар подкосил героя.",
                 "Он оступился  и  долговязый  мертвяк нанес удар  в спину.",
                 "  Неужели так все закончится!",
@@ -160,7 +157,7 @@ namespace Lesson_2._12_FightWhisBoss
                 "скелета были сильно повреждены, а каркас маячило в разные",
                 "стороны.  Тяжело  дышавший  маг,  обессиленным  движением",
                 "выкинул самое мощное  заклятие  на которое  был способен.",
-                "Одновременно с этим, мертвяк  сотворил  свое  сильнейшее.", // акцентировать что это магия у мертвяка
+                "Одновременно с этим, мертвяк  сотворил  свое  сильнейшее.", 
                 "Оба  удара  достигли  цели. Последнее, что видел ворожей,",
                 "как  груда  костей  рухнула на мраморный пол,  не подавая",
                 "признаков  жизни.  Сознание  помутнело,  но  позже  стали",
@@ -178,7 +175,7 @@ namespace Lesson_2._12_FightWhisBoss
             };
 
             string playerSpellPatronusName = "Патронус";
-            int playerSpellPatronusPower = 30;
+            int playerSpellPatronusPower = 35;
             int playerSpellPatronusRechargeTime = 2;
             int playerSpellPatronusTimeToCanCast = 0;
             string playerSpellPatronusLog = $"Урон {playerSpellPatronusPower}.";
@@ -196,7 +193,7 @@ namespace Lesson_2._12_FightWhisBoss
             };
 
             string playerSpellImperioName = "Империо";
-            int playerSpellImperioPower = 35;
+            int playerSpellImperioPower = 45;
             int playerSpellImperioRechargeTime = 3;
             int playerSpellImperioTimeToCanCast = 0;
             string playerSpellImperioLog = $"Урон {playerSpellImperioPower}.";
@@ -216,7 +213,7 @@ namespace Lesson_2._12_FightWhisBoss
             string playerSpellAvahtoName = "Авахто";
             string playerSpellAvahtoLog = $"Полное излечение.";
             int playerSpellAvahtoAmmountMaximum = 2;
-            int playerHealthLevelIncrease = 50;
+            int playerHealthLevelIncrease = 75;
             int playerSpellAvahtoAmmount = playerSpellAvahtoAmmountMaximum;
             string[] playerSpellAvahtoText =
             {
@@ -240,82 +237,82 @@ namespace Lesson_2._12_FightWhisBoss
 
             string playerSpellImmobilusName = "Иммобилус";
             string playerSpellImmobilusTitle = "Щит.";
-            int playerSpellImmobilusAmmount = 2;
+            int playerSpellImmobilusAmmount = 3;
             string[] playerSpellImmobilusText =
             {
-                "Маг описывает палочкой литеру, призывая дух горной рыси.Прозрачный",
-                "торс кошки покрыт ярко-синими рунами,  изумрудные  глаза  светятся.",
-                "Хищник может сбить атакующие чары и враждебное магическое существо.",
-                "Не найдя жертвы, она растворяется создавая защитный купол."
+                "Маг  описывает  палочкой литеру, призывая дух горной рыси. Крупный",
+                "прозрачный торс волшебной кошки  покрыт ярко-синими рунами. Хищник",
+                "может  атаковать  мелкое  враждебное магическое существо. Не найдя",
+                "жертвы, она растворяется создавая защитный купол.",
             };
 
             string[] playerSpellImmobilusSpecialText =
             {
-                "Дикая  кошка  кидается  на Василиска. Завязывается бой, в",
-                "котором   проворная   хищница  каждый   раз   оказывается",
-                "проворнее, и в конце-концов изводит Василиска."
+                "Ворожей  призывает дух горной рыси.  Волшебная  кошка находит себе",
+                "развлечение.  Она  играючи  кидается на Василиска, уворачиваясь от",
+                "его атак. В конце-концов  руническая рысь изводит Василиска, после",
+                "чего кастует магу защитный барьер и исчезает.",
             };
 
             string[] PlayerSpellImmobilusWrongCast =
             {
-                "Маг описывает палочкой литеру, призывая горную рысь. Но в",
-                "этот раз хищница не приходит на помощь. Духи хотят покоя.",
-                "Число вызовов кошки ограниченно. "
+                "Маг описывает палочкой литеру, призывая горную рысь. Но в этот раз",
+                "хищница  не  приходит на помощь.  Духи хотят покоя.  Число вызовов",
+                "кошки ограниченно.",
             };
 
             string playerSpellKonfundusName = "Конфундус";
             int playerSpellKonfundusAmmount = 0;
-            int playerSpellKonfundusEffectTime = 2;
-            int playerSpellKonfundusAdventChance = 20; 
+            int playerSpellKonfundusEffectTime = 3;
+            int playerSpellKonfundusAdventChance = 12; 
             int playerSpellKonfundusCastReserv = 3;
             string playerSpellKonfundusTitle = $"Лишает магии {playerSpellKonfundusEffectTime} раунда.";
             string[] playerSpellKonfundusText =
             {
-                "Из палочки волшебника вылетают изумрудные молнии, попадая",
-                "в череп противника. Корпус скелета искрит, аура между ним",
-                "и артефактом спадает. Мертвяк не может колдовать 2 раунда"
+                "Из палочки волшебника вылетают изумрудные молнии,  попадая в череп",
+                "противника.   Корпус  скелета  искрит,  аура  между  ним и алтерем",
+               $"пропадает. Мертвяк не может колдовать {playerSpellKonfundusEffectTime} раунда.",
             };
 
             string[] playerSpellKonfundusWrongCast =
             {
-                "Лишь малая часть знаний Античных дошла до нашего времени.",
-                "Магия  крадущая силы  противника одна из них.  В этот раз",
-                "изумрудные молнии разбились об ореол  возникший из потока",
-                "силы между скелетом и артефактом. У Вас недостаточно сил."
+                "Лишь малая часть знаний  Античных дошла до  нашего  времени. Магия",
+                "крадущая силы противника одна из них. В этот раз изумрудные молнии",
+                "разбились  об ореол  возникший  из  потока  силы  между скелетом и",
+                "артефактом. У Вас недостаточно сил.",
             };
 
             string playerSpellAvadaKedavraName = "Авада-Кедавра";
             int playerSpellAvadaKedavraAmmount = 0;
             int playerSpellAvadaKedavraPower = 100;
-            int playerSpellAvadaKedavraAdventChance = 25;
+            int playerSpellAvadaKedavraAdventChance = 12;
             int playerSpellAvadaKedavraCastReserv = 3;
             int playerSpellAvadaKedavraEnhancementPower = playerSpellAvadaKedavraPower / 2;
             bool wasLastEnemySpellAvadaKedavra = false;
             string playerSpellAvadaKedavraTitle = $"Мощьный урон {playerSpellAvadaKedavraPower} Hp";
             string[] playerSpellAvadaKedavraText =
             {
-                "Маг вспоминает  мудреную  древнюю руну и выводит ее.  Над",
-                "скелетом появляется россыпь крупных льдин, которые падают",
-                "на мертвяка. По орбите зала летают частички льдинок."
+                "Маг  вспоминает  мудреную  древнюю руну и выводит ее. Над скелетом",
+                "появляется россыпь крупных льдин, которые рушатся на мертвяка. Зал",
+                "наполнился ледяными снежинками, повеяло холодом.",
             };
             string[] playerSpellAvadaKedavraWrongCast =
             {
-                "Произнося \"Авада-Кедавра\", вдруг сильный кашель одолевает",
-                "мага. Заклинание Авада-Кедавра не получилось.",
-                ""
+                "При  произношенни   заклятия   \"Авада-Кедавра\",  чародеем  овладел",
+                "приступ сильного кашля. Заклинание Авада-Кедавра не получилось.",
             };
             string[] playerSpellAvadaKedavraSpecialCast =
             {
-                "Грохочущим  эхом  по залу разносится заклинание сказанное",
-                "магом.  Сотворенные  льдины  значительно крупнее обычных.",
-                $"Заклинание получает дополнительный урон в {playerSpellAvadaKedavraEnhancementPower} единиц."
+                "Грохочущим  эхом  по залу  разносится  заклинание сказанное магом.",
+                "Сотворенные  льдины  значительно  крупнее   обычных.    Заклинание",
+                $"получает дополнительный урон в {playerSpellAvadaKedavraEnhancementPower} единиц.",
             };
 
             string playerSpellExpiliarmusName = "Экспилиармус";
             int playerSpellExpiliarmusAmmount = 0;
             int playerSpellExpiliarmusPower = 75;
             int playerSpellExpiliarmusEffectTime = 1;
-            int playerSpellExpiliarmusAdventChance = 25;
+            int playerSpellExpiliarmusAdventChance = 12;
             int playerSpellExpiliarmusCastReserv = 3;
             string playerSpellExpiliarmusTitle = $"Урон {playerSpellExpiliarmusPower} Hp, задержка ";
             string[] playerSpellExpiliarmusText =
@@ -346,16 +343,16 @@ namespace Lesson_2._12_FightWhisBoss
             int enemySpellInflarmePower = 40;
             int enemySpellInflarmeRechargeTime = 3;
             int enemySpellInflarmeTimeToCanCast = 0;
+
             string[] enemySpellInflarmeText =
             {
-                "Удар молнией , БОСС монстра на 2 раунда",
-                "Удар молнией  красный свет создает обвалакивает монстра,",
-                " Удар молниейа т ему колдовать 2 раунда"
+                "Из  темноты  колонного  зала  вылетает  несколько  крупных злобных",
+                "фантомов  летучих  мышей, которые атакуют героя звуковыми ударами.",
+                "Маг применяет контрудар, но все же несколько волн достигают цели.",
             };
 
             // Enemy Spells 3 Авахто (лечение)
             int enemySpellAvahtoAmmount = 1;
-            string enemySpellAvahtoName = "Авахто";
             string enemySpellAvahtoTitle = $"Лечение.";
             string[] enemySpellAvahtoText =
             {
@@ -367,43 +364,45 @@ namespace Lesson_2._12_FightWhisBoss
             int enemySpellSektrumSempraPower = 60;
             int enemySpellSektrumSempraRechargeTime = 3; 
             int enemySpellSektrumSempraTimeToCanCast = 0; 
-            int enemySpellSektrumSempraAdventChance = 30; 
+            int enemySpellSektrumSempraAdventChance = 60; 
             int enemySpellSektrumSempraCastReserv = 2;
             int enemySpellSektrumSempraAmmount = 0;
+            
             string[] enemySpellSektrumSempraText =
             {
-                "Сжигающий все на своем пути луч света падает на вас.",
-                "От него не убежать. Вы чувствуете запах палёной кожи, ",
-                "и понимаете что это кажется ваша кожа..."
+                "Скелет  щелкает  костяшками   пальцев,    раздается  мощный  рокот",
+                "камнепада  и  с  колон  зала  на ворожея начинают сыпаться крупные",
+                "булыжники, причиняя сильные травмы герою.",
             };
 
             int enemySpellEngorgioPower = 20;
             int enemySpellEngorgioRechargeTime = 3;
             int enemySpellEngorgioTimeToCanCast = 0;
-            int enemySpellEngorgioAdventChance = 30;
+            int enemySpellEngorgioAdventChance = 60;
             int enemySpellEngorgioCastReserv = 2;
             int enemySpellEngorgioAmmount = 0;
             int enemyVasilisklAliveRounds = 0;
             int enemyVasilisklAliveRoundsMaximum = 3;
             string[] enemySpellEngorgioText =
             {
-                "В набедренных  лохмотьях  скелет  берет  склянку болотной",
-                "жидкости и бросает ее.  Возникает тучка яда из которой на",
-                "мага бросается ВАСИЛИСК, смесь змеи и дракона. "
+                "Из  набедренных  лохмотьев  скелет  достает  склянку и бросает ее.",
+                "Возникает тучка яда из которой на мага бросается ВАСИЛИСК, мелкая",
+                "тварь, смесь змеи и дракона. Что если накастовать щит ?",
             };
 
             // Enemy Spells 6 Авада-Кедавра
             int enemySpellAvadaKedavraPower = 75;
             int enemySpellAvadaKedavraRechargeTime = 5;
             int enemySpellAvadaKedavraTimeToCanCast = 0;
-            int enemySpellAvadaKedavraAdventChance = 100; 
+            int enemySpellAvadaKedavraAdventChance = 60; 
             int enemySpellAvadaKedavraCastReserv = 2;
             int enemySpellAvadaKedavraAmmount = 0;
+            //TODO написать
             string[] EnemySpellAvadaKedavraText =
             {
-                "Льдины рушатся на мага нанося сильный урон. По залу парят",
-                "частички льдинок, словно снежинки. Игроку знакомо древнее",
-                "заклинание Авада-Кедавра! Что если произнести его сейчас?"
+                "Костяной воин бормочет странным  говором знакомые выражения...  По",
+                "залу грохочет Авада-Кедавра! Льдины рушатся на мага! Игроку знаком",
+                "этот древний трюк... Что если произнести его сейчас?",
             };
 
             string[] enemyBossImage =
@@ -514,8 +513,6 @@ namespace Lesson_2._12_FightWhisBoss
             enemyAttackAnimationFrames[0] = new int[] { 1, 1, 1, 1 };
             enemyAttackAnimationFrames[1] = new int[] { 2, 2, 2, 2, 1, 1, 1, 1, 1 };
             enemyAttackAnimationFrames[2] = new int[] { 3, 3, 3, 3, 2, 2, 2 };
-            string[] reverceAnimation;
-            int reverceAnimationNumberOfExtraFrames = 1;
             string[] finalOutputImage;
             string[] finalOutputText;
 
@@ -541,7 +538,7 @@ namespace Lesson_2._12_FightWhisBoss
 
 
             //параметры Player
-            int playerHealthMaximum = 150;
+            int playerHealthMaximum = 175;
             int playerHealth = playerHealthMaximum;
             int playerCriricalHealth = playerHealthMaximum / 3;
             int playerShieldMaximum = 100;
@@ -550,16 +547,16 @@ namespace Lesson_2._12_FightWhisBoss
             string inputCommand;
             string[] playerLooseMove =
             {
-                "Игрок пропускает ход ",
-                "PlayerLooseMove PlayerLooseMove",
-                "PlayerLooseMove PlayerLooseMove"
+                "Страх и оцепенение овладело ворожеем! Он пропускает ход. Аккуратее",
+                "вводите команды, пожалуйста!!! Он - один из лучших выпускников! Не",
+                "ввергайте в шок его разум. Он искусственный.",
             };
 
             //параметры Enemy
             int enemyHealthMaximum = 450;
             int enemyHealth = enemyHealthMaximum;
-            int enemyCriticalHealth = 85;
-            int enemyWeaknessHealth = 130;
+            int enemyCriticalHealth = 150;
+            int enemyWeaknessHealth = 150;
             int enemyDealDamageToPlayer = 0;
             int enemyCantCastSpellsRounds = 0;
             int enemyImageArmPositionX = EnemyImagePositionX + 14;
@@ -1271,7 +1268,7 @@ namespace Lesson_2._12_FightWhisBoss
                     enemyLogsOutput = enemySpellAvahtoText;
                     enemyHealth = enemyHealthMaximum;
                     wasLastEnemvySpellAvahto = true;
-                    enemyWindowMessageCaсhe = $"{EnemyHealTitleMessage} Осталось {enemyHealth}";
+                    enemyWindowMessageCaсhe = $"{EnemyHealTitleMessage}";
                 }
                 else if (enemySpellAvadaKedavraTimeToCanCast <= 0 && enemySpellAvadaKedavraAmmount > 0) 
                 {
@@ -1356,7 +1353,23 @@ namespace Lesson_2._12_FightWhisBoss
                     }
                 }
 
-                
+                // Player window text output third time
+                playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
+                Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
+                Console.Write($" {PlayerName} | ");
+                if (playerHealth < playerCriricalHealth)
+                    Console.ForegroundColor = PlayerCriricalHealthColor;
+                else
+                    Console.ForegroundColor = PlayerHealthColor;
+                Console.Write($"Здоровье: {playerHealth}");
+                Console.ForegroundColor = DefaultTextColor;
+                Console.Write($" | ");
+                if (playerShield > 0)
+                    Console.ForegroundColor = ShieldTextColor;
+                Console.Write($"Щит: {playerShield}     ");
+                Console.ForegroundColor = DefaultTextColor;
+
+
                 if (playerHealth <= 0)
                 {
                     isBattleActive = false;
