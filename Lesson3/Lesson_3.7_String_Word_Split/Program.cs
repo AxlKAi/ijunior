@@ -10,9 +10,10 @@ namespace Lesson_3._7_String_Word_Split
     {
         static void Main(string[] args)
         {
-            string textLine = "Хочу создать крутую игру. Fly-экшон в стиле Star Wars.";
+            string[] words;
 
-            string[] words = textLine.Split(' ');
+            string textLine = "Хочу создать крутую игру. Fly-экшон в стиле Star Wars.";
+            words = textLine.Split(' ');
 
             foreach (var word in words)
             {
