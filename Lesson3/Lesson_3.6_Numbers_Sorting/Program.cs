@@ -11,8 +11,7 @@ namespace Lesson_3._6_Numbers_Sorting
         static void Main(string[] args)
         {
             int numbersArrayLength = 100;
-            //int[] numbers = new int[numbersArrayLength];
-            int[] numbers = { 7, 6, 5, 9, 3};
+            int[] numbers = new int[numbersArrayLength];
             int minimumRandomNumber = 0;
             int maximumRandomNumber = 100;
 
@@ -20,12 +19,12 @@ namespace Lesson_3._6_Numbers_Sorting
             random = new Random();
 
             Console.WriteLine("Генерируем массив:");
-            /*
+
             for (int i = 0; i < numbersArrayLength; i++)
             {
                 numbers[i] = random.Next(minimumRandomNumber, maximumRandomNumber);
             }
-            */
+
             for (int i = 0; i < numbers.Length; i++)
             {
                 Console.Write(numbers[i] + "  ");
