@@ -11,10 +11,10 @@ namespace Lesson_4._5_Shuffle
         static void Main(string[] args)
         {
             string[] words = { "раз", "два", "три", "четыре", "пять" };
+            int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            
             ShowArray<string>(words);
-
             Console.WriteLine();
-            int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9};
             ShowArray<int>(numbers);
 
             Console.WriteLine("\n\n перемешанные массивы.....");
