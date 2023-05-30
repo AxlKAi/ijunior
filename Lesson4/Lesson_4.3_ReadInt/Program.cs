@@ -13,23 +13,23 @@ namespace Lesson_4._3_ReadInt
             int enteredNumber;
 
             Console.WriteLine("Введите целочисленное значение");
-            enteredNumber = ValidateIntEnter();
+            enteredNumber = GetNumber();
             Console.WriteLine($"Введено значение {enteredNumber}. Нажмите для завершения программы...");
             Console.ReadKey();
         }
 
-        static int ValidateIntEnter()
+        static int GetNumber()
         {
             bool isValidateCheckProcess = true;
             string textInput = "";
-            int convertedInt = 0;
+            int number = 0;
 
             while (isValidateCheckProcess)
             {
                 Console.Write(":");
                 textInput = Console.ReadLine();
-                // нужно ли делать принудительно первый символ заглавным ?
-                if (Int32.TryParse(textInput, out convertedInt))
+                
+                if (Int32.TryParse(textInput, out number))
                 {
                     isValidateCheckProcess = false;
                 }
@@ -41,7 +41,7 @@ namespace Lesson_4._3_ReadInt
                 }
             }
 
-            return convertedInt;
+            return number;
         }
     }
 }
