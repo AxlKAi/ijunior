@@ -10,11 +10,13 @@ namespace Lesson_4._2_HealthBar
     {
         static void Main(string[] args)
         {
-            ShowHealthBar(.33f, 3, 3);
+            ShowBar(.3f, 3, 3);
+            ShowBar(.5f, 3, 4);
+            ShowBar(.7f, 3, 5, '$');
             Console.ReadKey();
         }
 
-        static void ShowHealthBar(float normalizedHealth, int x = 0, int y = 0, char fillSymbol = '#')
+        static void ShowBar(float normalizedHealth, int positionX = 0, int positionY = 0, char fillSymbol = '#')
         {
             char leftBorder = '[';
             char rightBorder = ']';
@@ -26,21 +28,21 @@ namespace Lesson_4._2_HealthBar
 
             if (normalizedHealth > 1)
                 normalizedHealth = 1;
-
-            if (normalizedHealth < 0)
+            else if (normalizedHealth < 0)
                 normalizedHealth = 0;
 
             normalizedHealth = (float)Math.Round(normalizedHealth, 1);
 
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(positionX, positionY);
             Console.Write(leftBorder);
+
             for (float i = 0; i < normalizedHealth; i = i + persentageStep)
             {
                 Console.Write(fillSymbol);
                 filledToEmptyFrontier = i;
             }            
 
-            for (float i = filledToEmptyFrontier + persentageStep; i < normalizedСoefficient; i = i + persentageStep)
+            for (float i = filledToEmptyFrontier + persentageStep; i < normalizedСoefficient; i += persentageStep)
             {
                 Console.Write(emptySymbol);
             }
