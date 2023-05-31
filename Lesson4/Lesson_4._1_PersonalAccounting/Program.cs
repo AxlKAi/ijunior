@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -9,61 +8,53 @@ namespace Lesson_4._1_PersonalAccounting
 {
     class Program
     {
-        const string AddToDossierMenuText = "Добавить в досье.";
-        const int AddCommand = 1;
-        const string ShowDossierMenuText = "Показать все досье.";
-        const int ShowCommand = 2;
-        const string DeletePersonMenuText = "Удалить запись из досье.";
-        const int DeletePersonCommand = 3;
-        const string FindByFamilyMenuText = "Найти по фамилии.";
-        const int FindByFamilyCommand = 4;
-        const string ExitMenuText = "Выход.";
-        const int ExitCommand = 5;
+        const string AddCommand = "1";
+        const string ShowCommand = "2";
+        const string DeletePersonCommand = "3";
+        const string FindByFamilyCommand = "4";
+        const string ExitCommand = "5";
         const string CancelEnterTextCommand = "no";
 
-        //можно я разобью данные на 4 разных массива, которые связаны по index, он же id
-        static string[] personsFamily = {"Петров", "Иванов", "Сидоров", "Иванкин"};
-        static string[] personsName = {"Петр", "Иван", "Сидор", "Иванок"};
-        static string[] personsPatronymic = {"Петрович", "Иванович", "Сидорович", "Иванкович"};
-        static string[] personsPosition = {"Дилехтор", "Водитель приятеля", "Фантазёр", "Звездочет"};
+        const char WordsSeparator = ' ';
 
         static void Main(string[] args)
         {
+            string[] personsFullName = { "Петров Петр Петрович", "Иванов Иван Иванович", "Сидоров Сидор Сидорович", "Иванкин Иванок Иванкович" };
+            string[] personsPosition = { "Дилехтор", "Водитель приятеля", "Фантазёр", "Звездочет" };
+
             bool isMainLoopActive = true;
 
             while (isMainLoopActive)
             {
                 ShowMainMenu();
-                string userInput = Console.ReadLine(); // Нам религия позволяет вот так инициализировать переменную после вывода меню ? 
-                int choiseNumber;
 
-                if (Int32.TryParse(userInput, out choiseNumber)) //? в if я поставлю парсинг импута, это норм ?
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
                 {
-                    switch (choiseNumber)
-                    {
-                        case 1:
-                            AddToDossier();
-                            break;
+                    case AddCommand:
+                        AddToDossier(ref personsFullName, ref personsPosition);
+                        WaitToPressKey();
+                        break;
 
-                        case 2:
-                            ShowAllDosier();
-                            WaitToPressKey();
-                            break;
+                    case ShowCommand:
+                        ShowAllDosier(personsFullName, personsPosition);
+                        WaitToPressKey();
+                        break;
 
-                        case 3:
-                            DeletePersonByIndex();
-                            WaitToPressKey();
-                            break;
+                    case DeletePersonCommand:
+                        DeletePersonByIndex(ref personsFullName, ref personsPosition);
+                        WaitToPressKey();
+                        break;
 
-                        case 4:
-                            FindByFamily();
-                            WaitToPressKey();
-                            break;
+                    case FindByFamilyCommand:
+                        FindByFamily(personsFullName);
+                        WaitToPressKey();
+                        break;
 
-                        case 5:
-                            isMainLoopActive = false;
-                            break;
-                    }
+                    case ExitCommand:
+                        isMainLoopActive = false;
+                        break;
                 }
             }
 
@@ -77,13 +68,13 @@ namespace Lesson_4._1_PersonalAccounting
             Console.ReadKey();
         }
 
-        static void ShowAllDosier()
+        static void ShowAllDosier(string[] personsFullName, string[] personsPosition)
         {
-            if (personsFamily.Length > 0)
+            if (personsFullName.Length > 0)
             {
-                for (int i = 0; i < personsFamily.Length; i++)
+                for (int i = 0; i < personsFullName.Length; i++)
                 {
-                    Console.WriteLine($" [{i}] {personsFamily[i]} {personsName[i]} {personsPatronymic[i]} --> {personsPosition[i]}");
+                    Console.WriteLine($" [{i}] {personsFullName[i]} --> {personsPosition[i]}");
                 }
             }
             else
@@ -92,150 +83,101 @@ namespace Lesson_4._1_PersonalAccounting
             }
         }
 
-        static void AddToDossier()
+        static void AddToDossier(ref string[] personsFullName, ref string[] personsPosition)
         {
-            string family = "";
-            string name = "";
-            string patronymic = "";
-            string personPosition = "";
+            string personFullName;
+            string personPosition;
+            bool isValidateName;
+            bool isValidatePosition;
 
-            Console.WriteLine($"Введите фамилию (или \"{CancelEnterTextCommand}\" для выхода)");
-            family = ValidateEnter();
+            Console.WriteLine($"Введите Фамилию Имя и Отчество сотрудника.");
+            isValidateName = IsUserInputValidateText(out personFullName);
 
-            // вот тут казалось бы дублирующийся код
-            // 
-            // не вижу особого смысла что-то уменьшать
-            // это можно все в функцию ValidateEnter запихать, что-бы она возвращала bool 
-            // но проблема что на каждом шаге мне все равно надо проверять не ввел ли 
-            // пользователь команду выхода
-            if (family == CancelEnterTextCommand)
+            Console.WriteLine($"Введите должность сотрудника.");
+            isValidatePosition = IsUserInputValidateText(out personPosition);
+
+            if (isValidatePosition && isValidateName)
             {
-                return;
+                Console.WriteLine($"Добавляем в базу: {personFullName} на должности {personPosition}");
+                AddToArray(ref personsFullName, personFullName);
+                AddToArray(ref personsPosition, personPosition);
             }
-
-            Console.WriteLine($"Введите имя (или \"{CancelEnterTextCommand}\" для выхода)");
-            name = ValidateEnter();
-
-            if (name == CancelEnterTextCommand)
+            else
             {
-                return;
+                Console.WriteLine("Ошибка ввода данных, поля не могут быть пустыми или содержать только пробелы.");
             }
-
-            Console.WriteLine($"Введите отчество (или \"{CancelEnterTextCommand}\" для выхода)");
-            patronymic = ValidateEnter();
-
-            if (patronymic == CancelEnterTextCommand)
-            {
-                return;
-            }
-
-            Console.WriteLine($"Введите должность (или \"{CancelEnterTextCommand}\" для выхода)");
-            personPosition = ValidateEnter();
-
-            if (personPosition == CancelEnterTextCommand)
-            {
-                return;
-            }
-
-            Console.WriteLine($"Добавляем в базу: {family} {name} {patronymic} на должности {personPosition}");
-            AddToArrays(family,name,patronymic,personPosition);
         }
 
-        static string ValidateEnter()
+        static void AddToArray(ref string[] array, string addingElement)
         {
-            bool isTextCheckProcess = true;
-            string textLine = "";
-
-            while (isTextCheckProcess)
+            string[] bufferArray = new string[array.Length + 1];
+            for (int i = 0; i < array.Length; i++)
             {
-                Console.Write(":");
-                textLine = Console.ReadLine();
-                // нужно ли делать принудительно первый символ заглавным ?
-                if (ValidateName(textLine))
-                {
-                    return textLine;
-                }
-                else
-                {
-                    Console.WriteLine("Вводимое значение должно содержать только символы русского или аглицкого алфавитов.");
-                    Console.WriteLine("Строка не может быть пустой.");
-                    Console.WriteLine($"Для выхода в предидущее меню наберите {CancelEnterTextCommand}");
-                }
+                bufferArray[i] = array[i];
             }
-
-            return textLine;
+            bufferArray[bufferArray.Length - 1] = addingElement;
+            array = bufferArray;
         }
 
-        static bool ValidateName(string name)
+        static bool IsUserInputValidateText(out string textInput)
         {
-            if (name == "")
+            Console.Write(":");
+            textInput = Console.ReadLine();
+            textInput = System.Text.RegularExpressions.Regex.Replace(textInput, @"\s+", " ");
+
+            if (textInput == "" || textInput == " ")
                 return false;
-            // надо ли добавлять проверки на фамилии и имена из нескольких слов или через дефис
-            // надо ли делать отчечтво не обязательным ?
-            return Regex.IsMatch(name, @"^[a-zA-Zа-яА-Я]+$");
-        }
-
-        static void AddToArrays(string family, string name, string patronymic, string personPosition)
-        {
-            AddToArray(ref personsFamily, family);
-            AddToArray(ref personsName, name);
-            AddToArray(ref personsPatronymic, patronymic);
-            AddToArray(ref personsPosition, personPosition);
-        }
-
-        static void AddToArray(ref string[] oldArray, string newElement)
-        {
-            string[] newArray = new string[oldArray.Length + 1];
-            for(int i=0; i<oldArray.Length; i++)
-            {
-                newArray[i] = oldArray[i];
-            }
-            newArray[newArray.Length - 1] = newElement;
-            oldArray = newArray;
+            else
+                return true;
         }
 
         static void ShowMainMenu()
         {
+            string addToDossierMenuText = "Добавить в досье.";
+            string showDossierMenuText = "Показать все досье.";
+            string deletePersonMenuText = "Удалить запись из досье.";
+            string findByFamilyMenuText = "Найти по фамилии.";
+            string exitMenuText = "Выход.";
+
             Console.Clear();
-            Console.WriteLine($"{AddCommand}. {AddToDossierMenuText}");
-            Console.WriteLine($"{ShowCommand}. {ShowDossierMenuText}");
-            Console.WriteLine($"{DeletePersonCommand}. {DeletePersonMenuText}");
-            Console.WriteLine($"{FindByFamilyCommand}. {FindByFamilyMenuText}");
-            Console.WriteLine($"{ExitCommand}. {ExitMenuText}");
+            Console.WriteLine($"{AddCommand}. {addToDossierMenuText}");
+            Console.WriteLine($"{ShowCommand}. {showDossierMenuText}");
+            Console.WriteLine($"{DeletePersonCommand}. {deletePersonMenuText}");
+            Console.WriteLine($"{FindByFamilyCommand}. {findByFamilyMenuText}");
+            Console.WriteLine($"{ExitCommand}. {exitMenuText}");
             Console.WriteLine();
         }
 
-        static void DeletePersonByIndex()
+        static void DeletePersonByIndex(ref string[] personsFullName, ref string[] personsPosition)
         {
-            string userInput;
-            int deleteId;
-
-            if (personsFamily.Length == 0)
+            if (personsPosition.Length == 0 || personsFullName.Length == 0)
             {
                 Console.WriteLine("Досье пусто...");
                 return;
             }
 
-            ShowAllDosier();
+            ShowAllDosier(personsFullName, personsPosition);
+
             Console.WriteLine($"Введите id сотрудника для удаления (или \"{CancelEnterTextCommand}\" для выхода)");
-            userInput = Console.ReadLine();
+            string userInput = Console.ReadLine();
 
             if (userInput == CancelEnterTextCommand)
             {
                 return;
             }
 
-            if (Int32.TryParse(userInput, out deleteId))
+            int deleteId;
+            bool isUserInputNumber = Int32.TryParse(userInput, out deleteId);
+
+            if (isUserInputNumber && deleteId < personsFullName.Length)
             {
-                if (deleteId < personsFamily.Length)
-                {
-                    Console.WriteLine($"Удаляю элемент {deleteId} из базы...");
-                    DeleteFromArraysByIndex(deleteId);
-                }
-                else
-                {
-                    Console.WriteLine($"id = {deleteId} больше выходит за пределы массива. Введите число меньше.");
-                }
+                Console.WriteLine($"Удаляю элемент {deleteId} из базы...");
+                DeleteFromArrayByIndex(ref personsFullName, deleteId);
+                DeleteFromArrayByIndex(ref personsPosition, deleteId);
+            }
+            else if (isUserInputNumber && deleteId >= personsFullName.Length)
+            {
+                Console.WriteLine($"id = {deleteId} больше выходит за пределы массива. Введите число меньше.");
             }
             else
             {
@@ -243,56 +185,55 @@ namespace Lesson_4._1_PersonalAccounting
             }
         }
 
-        static void DeleteFromArraysByIndex(int index)
+        static void DeleteFromArrayByIndex(ref string[] array, int index)
         {
-            DeleteFromArray(ref personsFamily, index);
-            DeleteFromArray(ref personsName, index);
-            DeleteFromArray(ref personsPatronymic, index);
-            DeleteFromArray(ref personsPosition, index);
-        }
-
-        static void DeleteFromArray(ref string[] array, int index)
-        {
-            int newArraySize = array.Length - 1;
-
-            if (index >= array.Length)
+            if (index >= array.Length || index < 0)
                 return;
 
-            // объявление переменной после проверок, норм ?
-            string[] newArray = new string[newArraySize];
+            int bufferArraySize = array.Length - 1;
+            string[] bufferArray = new string[bufferArraySize];
 
             for (int i = 0; i < index; i++)
             {
-                newArray[i] = array[i];
+                bufferArray[i] = array[i];
             }
 
-            for (int i = index; i < newArray.Length; i++)
+            for (int i = index; i < bufferArray.Length; i++)
             {
-                newArray[i] = array[i+1];
+                bufferArray[i] = array[i + 1];
             }
 
-            array = newArray;
+            array = bufferArray;
         }
 
-        static void FindByFamily()
+        static void FindByFamily(string[] personsFullName)
         {
+            bool isValidateInputSearch;
             string searchString; // так сделать ??? string searchString = ValidateEnter();
             Console.WriteLine($"Введите символы, без учета регистра, для поиска в строке по фамилии (или \"{CancelEnterTextCommand}\" для выхода)");
-            searchString = ValidateEnter();
+            isValidateInputSearch = IsUserInputValidateText(out searchString);
 
-            if (searchString == CancelEnterTextCommand)
+            if (!isValidateInputSearch)
             {
+                Console.WriteLine("Строка для поиска не может быть пустой или содержать только пробелы.");
                 return;
             }
 
-            for(int i=0; i<personsFamily.Length; i++)
+            string[] familyArray = new string[personsFullName.Length];
+
+            for (int i = 0; i < personsFullName.Length; i++)
             {
-                int containedPosition = personsFamily[i].IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
+                familyArray[i] = personsFullName[i].Split(WordsSeparator)[0];
+            }
+
+            for (int i = 0; i < familyArray.Length; i++)
+            {
+                int containedPosition = familyArray[i].IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
                 bool isContained = containedPosition >= 0;
 
                 if (isContained)
-                    Console.WriteLine($"id =[{i}] Фамилия: {personsFamily[i]} содержит подстроку начиная с символа {containedPosition}.");
-            }            
+                    Console.WriteLine($"id =[{i}] Фамилия: {familyArray[i]} содержит подстроку начиная с символа {containedPosition}.");
+            }
         }
     }
 }
