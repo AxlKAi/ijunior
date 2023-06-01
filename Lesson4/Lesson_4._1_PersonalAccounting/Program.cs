@@ -1,13 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Lesson_4._1_PersonalAccounting
 {
     class Program
     {
+        /*         
+        Доработать. 
+        1) - Если возвращается одно значение, то нужно использовать return, а не ref или out. [исправил метод AddToArray]
+        2) - пустые строки исправил 
+        3) - bool isUserInputNumber , я с названием перемудрил, переименовал в isNumber 
+        4) - ?? if (index >= array.Length || index < 0) - логичнее эту проверку вынесите в метод - DeletePersonByIndex. 
+        5) - Если using не используется, то его следует удалить.
+        */
+
         const string AddCommand = "1";
         const string ShowCommand = "2";
         const string DeletePersonCommand = "3";
@@ -99,8 +104,8 @@ namespace Lesson_4._1_PersonalAccounting
             if (isValidatePosition && isValidateName)
             {
                 Console.WriteLine($"Добавляем в базу: {personFullName} на должности {personPosition}");
-                AddToArray(ref personsFullName, personFullName);
-                AddToArray(ref personsPosition, personPosition);
+                personsFullName = AddToArray(personsFullName, personFullName);
+                personsPosition = AddToArray(personsPosition, personPosition);
             }
             else
             {
@@ -108,15 +113,17 @@ namespace Lesson_4._1_PersonalAccounting
             }
         }
 
-        static void AddToArray(ref string[] array, string addingElement)
+        static string[] AddToArray(string[] array, string addingElement)
         {
             string[] bufferArray = new string[array.Length + 1];
+
             for (int i = 0; i < array.Length; i++)
             {
                 bufferArray[i] = array[i];
             }
+
             bufferArray[bufferArray.Length - 1] = addingElement;
-            array = bufferArray;
+            return bufferArray;
         }
 
         static bool IsUserInputValidateText(out string textInput)
@@ -167,15 +174,15 @@ namespace Lesson_4._1_PersonalAccounting
             }
 
             int deleteId;
-            bool isUserInputNumber = Int32.TryParse(userInput, out deleteId);
+            bool isNumber = Int32.TryParse(userInput, out deleteId);
 
-            if (isUserInputNumber && deleteId < personsFullName.Length)
+            if (isNumber && deleteId < personsFullName.Length)
             {
                 Console.WriteLine($"Удаляю элемент {deleteId} из базы...");
                 DeleteFromArrayByIndex(ref personsFullName, deleteId);
                 DeleteFromArrayByIndex(ref personsPosition, deleteId);
             }
-            else if (isUserInputNumber && deleteId >= personsFullName.Length)
+            else if (isNumber && deleteId >= personsFullName.Length)
             {
                 Console.WriteLine($"id = {deleteId} больше выходит за пределы массива. Введите число меньше.");
             }
