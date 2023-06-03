@@ -18,8 +18,8 @@ namespace Lesson_4._5_Shuffle
             ShowArray<int>(numbers);
 
             Console.WriteLine("\n\n перемешанные массивы.....");
-            Shuffle<string>(ref words);
-            Shuffle<int>(ref numbers);
+            Shuffle<string>(words);
+            Shuffle<int>(numbers);
 
             Console.WriteLine();
             ShowArray<string>(words);
@@ -40,16 +40,16 @@ namespace Lesson_4._5_Shuffle
             }
         }
 
-        static void Shuffle<T>(ref T[] array)
+        static void Shuffle<T>(T[] array)
         {
             Random random = new Random();
 
             for (int i = 0; i < array.Length; i++)
             {
-                int j = random.Next(array.Length);
-                T oldElement = array[j];
-                array[j] = array[i];
-                array[i] = oldElement;
+                int randomIndex = random.Next(array.Length);
+                T randomElement = array[randomIndex];
+                array[randomIndex] = array[i];
+                array[i] = randomElement;
             }
         }
     }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lesson_4._3_ReadInt
 {
@@ -12,22 +8,22 @@ namespace Lesson_4._3_ReadInt
         {
             int enteredNumber;
 
-            Console.WriteLine("Введите целочисленное значение");
-            enteredNumber = GetNumber();
+            Console.WriteLine("Введите целочисленное значение.");
+            Console.WriteLine("Вводимое значение должно содержать целочисленное значение.");
+            Console.WriteLine("Строка не может быть пустой.");
+            enteredNumber = ReadInt();
 
             Console.WriteLine($"Введено значение {enteredNumber}. Нажмите для завершения программы...");
             Console.ReadKey();
         }
 
-        static int GetNumber()
+        static int ReadInt()
         {
-            int number = 0;
+            int number;
 
             do
             {
-                Console.WriteLine("Вводимое значение должно содержать целочисленное значение.");
-                Console.WriteLine("Строка не может быть пустой.");
-                Console.Write(":");
+                Console.Write("Введите число:");
             } while (!Int32.TryParse(Console.ReadLine(), out number));
 
             return number;
