@@ -14,32 +14,21 @@ namespace Lesson_4._3_ReadInt
 
             Console.WriteLine("Введите целочисленное значение");
             enteredNumber = GetNumber();
+
             Console.WriteLine($"Введено значение {enteredNumber}. Нажмите для завершения программы...");
             Console.ReadKey();
         }
 
         static int GetNumber()
         {
-            bool isValidateCheckProcess = true;
-            string textInput = "";
             int number = 0;
 
-            while (isValidateCheckProcess)
+            do
             {
+                Console.WriteLine("Вводимое значение должно содержать целочисленное значение.");
+                Console.WriteLine("Строка не может быть пустой.");
                 Console.Write(":");
-                textInput = Console.ReadLine();
-                
-                if (Int32.TryParse(textInput, out number))
-                {
-                    isValidateCheckProcess = false;
-                }
-                else
-                {
-                    Console.WriteLine("Вводимое значение должно содержать целочисленное значение.");
-                    Console.WriteLine("Строка не может быть пустой.");
-                    Console.WriteLine("Пожалуйста, введите еще раз.");
-                }
-            }
+            } while (!Int32.TryParse(Console.ReadLine(), out number));
 
             return number;
         }
