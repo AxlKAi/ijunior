@@ -24,7 +24,7 @@ namespace Lesson_4._3_ReadInt
             do
             {
                 Console.Write("Введите число:");
-            } while (!Int32.TryParse(Console.ReadLine(), out number));
+            } while (Int32.TryParse(Console.ReadLine(), out number) == false);
 
             return number;
         }

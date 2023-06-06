@@ -96,10 +96,10 @@ namespace Lesson_4._1_PersonalAccounting
             bool isValidatePosition;
 
             Console.WriteLine($"Введите Фамилию Имя и Отчество сотрудника.");
-            isValidateName = IsUserInputValidateText(out personFullName);
+            isValidateName = ReadValidateText(out personFullName);
 
             Console.WriteLine($"Введите должность сотрудника.");
-            isValidatePosition = IsUserInputValidateText(out personPosition);
+            isValidatePosition = ReadValidateText(out personPosition);
 
             if (isValidatePosition && isValidateName)
             {
@@ -126,7 +126,7 @@ namespace Lesson_4._1_PersonalAccounting
             return bufferArray;
         }
 
-        static bool IsUserInputValidateText(out string textInput)
+        static bool ReadValidateText(out string textInput)
         {
             Console.Write(":");
             textInput = Console.ReadLine();
@@ -218,7 +218,7 @@ namespace Lesson_4._1_PersonalAccounting
             bool isValidateInputSearch;
             string searchString; // так сделать ??? string searchString = ValidateEnter();
             Console.WriteLine($"Введите символы, без учета регистра, для поиска в строке по фамилии (или \"{CancelEnterTextCommand}\" для выхода)");
-            isValidateInputSearch = IsUserInputValidateText(out searchString);
+            isValidateInputSearch = ReadValidateText(out searchString);
 
             if (!isValidateInputSearch)
             {
