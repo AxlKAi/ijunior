@@ -16,7 +16,12 @@ namespace Lesson_5._2_QueueInShop
 
             while (buyersReceipts.Count > 0)
             {
-                ServeСustomer(ref buyersReceipts, ref totalSum);
+                int receipt = buyersReceipts.Dequeue();
+
+                totalSum += receipt;
+                Console.WriteLine($"Покупатель приобрел товаров на сумму {receipt}, общий счет магазина:{totalSum}");
+                Console.WriteLine("Нажмите клавишу для обработки следующего покупателя.");
+                Console.ReadKey();
             }
 
             Console.ReadKey();
@@ -33,16 +38,6 @@ namespace Lesson_5._2_QueueInShop
             }
 
             return queue;
-        }
-
-        static void ServeСustomer(ref Queue<int> buyersReceipts, ref int totalSum)
-        {
-            int receipt = buyersReceipts.Dequeue();
-
-            totalSum += receipt;
-            Console.WriteLine($"Покупатель приобрел товаров на сумму {receipt}, общий счет магазина:{totalSum}");
-            Console.WriteLine("Нажмите клавишу для обработки следующего покупателя.");
-            Console.ReadKey();
         }
     }
 }
