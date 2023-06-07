@@ -12,14 +12,14 @@ namespace Lesson_5._5_UnityToOneCollection
             List<string> unityStrings = new List<string>();
 
             MergeElement(unityStrings, stringsOne);
-            MergeElement(unityStrings, stringsOne);
+            MergeElement(unityStrings, stringsTwo);
             ShowElements(unityStrings);
             Console.ReadKey();
         }
 
-        static void MergeElement(List<string> unityStrings, string[] strings)
+        static void MergeElement(List<string> unityStrings, string[] stringsArray)
         {
-            foreach (string element in strings)
+            foreach (string element in stringsArray)
             {
                 if (unityStrings.Contains(element) == false)
                 {
@@ -28,9 +28,9 @@ namespace Lesson_5._5_UnityToOneCollection
             }
         }
 
-        static void ShowElements(List<string> unityStrings)
+        static void ShowElements(List<string> strings)
         {
-            foreach(string element in unityStrings)
+            foreach(string element in strings)
             {
                 Console.Write(element + "  ");
             }
