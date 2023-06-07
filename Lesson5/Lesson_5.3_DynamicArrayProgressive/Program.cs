@@ -22,8 +22,14 @@ namespace Lesson_5._3_DynamicArray
 
             while (isMainLoopActive)
             {
+                int number = 0;
+                bool isNumber = false;
+
                 Console.Write(":");
                 userInput = Console.ReadLine();
+
+                if (Int32.TryParse(userInput, out number))
+                    isNumber = true;
 
                 if (userInput == ExitCommand)
                 {
@@ -34,18 +40,13 @@ namespace Lesson_5._3_DynamicArray
                 {
                     Console.WriteLine($"Сумма элементов массива = {NumbersSum(numbers)}");
                 }
-                else 
+                else if (isNumber)
                 {
-                    int number = 0;
-
-                    if (Int32.TryParse(userInput, out number))
-                    {
-                        AddNumber(numbers, number);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Ошибка ввода, не могу распознать команду или число.");
-                    }
+                    AddNumber(numbers, number);
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка ввода, не могу распознать команду или число.");
                 }
             }
         }
