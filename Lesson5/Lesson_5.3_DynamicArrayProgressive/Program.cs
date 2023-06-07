@@ -36,23 +36,23 @@ namespace Lesson_5._3_DynamicArray
                 }
                 else 
                 {
-                   
+                    int number = 0;
+
+                    if (Int32.TryParse(userInput, out number))
+                    {
+                        AddNumber(numbers, number);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ошибка ввода, не могу распознать команду или число.");
+                    }
                 }
             }
         }
 
         static void AddNumber(List<int> numbers, int addingNumber)
         {
-            int number = 0;
-
-            if (Int32.TryParse(userInput, out number))
-            {
-                numbers.Add(number);
-            }
-            else
-            {
-                Console.WriteLine("Ошибка ввода, не могу распознать команду или число.");
-            }
+            numbers.Add(addingNumber);
         }
 
         static int NumbersSum(List<int> numbers)
