@@ -32,27 +32,37 @@ namespace Lesson_5._3_DynamicArray
                 }
                 else if (userInput == SumCommand)
                 {
-                    int numbersSum = 0;
-
-                    foreach (int number in numbers)
-                        numbersSum += number;
-
-                    Console.WriteLine($"Сумма элементов массива = {numbersSum}");
+                    Console.WriteLine($"Сумма элементов массива = {NumbersSum(numbers)}");
                 }
                 else 
                 {
-                    int number = 0;
-
-                    if (Int32.TryParse(userInput,out number))
-                    {
-                        numbers.Add(number);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Ошибка ввода, не могу распознать команду или число.");
-                    }                    
+                   
                 }
             }
+        }
+
+        static void AddNumber(List<int> numbers, int addingNumber)
+        {
+            int number = 0;
+
+            if (Int32.TryParse(userInput, out number))
+            {
+                numbers.Add(number);
+            }
+            else
+            {
+                Console.WriteLine("Ошибка ввода, не могу распознать команду или число.");
+            }
+        }
+
+        static int NumbersSum(List<int> numbers)
+        {
+            int numbersSum = 0;
+
+            foreach (int number in numbers)
+                numbersSum += number;
+
+            return numbersSum;
         }
     }
 }
