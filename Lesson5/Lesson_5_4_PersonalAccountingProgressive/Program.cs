@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lesson_5_4_PersonalAccountingProgressive
 {
@@ -13,8 +10,6 @@ namespace Lesson_5_4_PersonalAccountingProgressive
         const string DeletePersonCommand = "3";
         const string ExitCommand = "4";
         const string CancelEnterTextCommand = "no";
-
-        const char WordsSeparator = ' ';
 
         static void Main(string[] args)
         {
@@ -95,14 +90,14 @@ namespace Lesson_5_4_PersonalAccountingProgressive
             Console.WriteLine($"Введите должность сотрудника.");
             isValidatePosition = TryReadText(out personPosition);
 
-            if (isValidatePosition && isValidateName)
+            if (isValidatePosition && isValidateName && personsPositions.ContainsKey(personFullName) == false)
             {
                 Console.WriteLine($"Добавляем в базу: {personFullName} на должности {personPosition}");
                 personsPositions.Add(personFullName, personPosition);
             }
             else
             {
-                Console.WriteLine("Ошибка ввода данных, поля не могут быть пустыми или содержать только пробелы.");
+                Console.WriteLine("Ошибка ввода данных, поля не могут быть пустыми или содержать только пробелы. ФИО не моежт дублироваться,.");
             }
         }
 
