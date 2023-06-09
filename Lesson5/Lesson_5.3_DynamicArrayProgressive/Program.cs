@@ -38,7 +38,7 @@ namespace Lesson_5._3_DynamicArray
                 }
                 else if (userInput == SumCommand)
                 {
-                    Console.WriteLine($"Сумма элементов массива = {NumbersSum(numbers)}");
+                    Console.WriteLine($"Сумма элементов массива = {GetNumber(numbers)}");
                 }
                 else if (isNumber)
                 {
@@ -51,12 +51,12 @@ namespace Lesson_5._3_DynamicArray
             }
         }
 
-        static void AddNumber(List<int> numbers, int addingNumber)
+        static void AddNumber(List<int> numbers, int number)
         {
-            numbers.Add(addingNumber);
+            numbers.Add(number);
         }
 
-        static int NumbersSum(List<int> numbers)
+        static int GetNumber(List<int> numbers)
         {
             int numbersSum = 0;
 
