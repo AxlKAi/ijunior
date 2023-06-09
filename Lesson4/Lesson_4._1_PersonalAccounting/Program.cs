@@ -4,15 +4,6 @@ namespace Lesson_4._1_PersonalAccounting
 {
     class Program
     {
-        /*         
-        Доработать. 
-        1) - Если возвращается одно значение, то нужно использовать return, а не ref или out. [исправил метод AddToArray]
-        2) - пустые строки исправил 
-        3) - bool isUserInputNumber , я с названием перемудрил, переименовал в isNumber 
-        4) - ?? if (index >= array.Length || index < 0) - логичнее эту проверку вынесите в метод - DeletePersonByIndex. 
-        5) - Если using не используется, то его следует удалить.
-        */
-
         const string AddCommand = "1";
         const string ShowCommand = "2";
         const string DeletePersonCommand = "3";
@@ -96,10 +87,10 @@ namespace Lesson_4._1_PersonalAccounting
             bool isValidatePosition;
 
             Console.WriteLine($"Введите Фамилию Имя и Отчество сотрудника.");
-            isValidateName = ReadValidateText(out personFullName);
+            isValidateName = TryReadText(out personFullName);
 
             Console.WriteLine($"Введите должность сотрудника.");
-            isValidatePosition = ReadValidateText(out personPosition);
+            isValidatePosition = TryReadText(out personPosition);
 
             if (isValidatePosition && isValidateName)
             {
@@ -126,7 +117,7 @@ namespace Lesson_4._1_PersonalAccounting
             return bufferArray;
         }
 
-        static bool ReadValidateText(out string textInput)
+        static bool TryReadText(out string textInput)
         {
             Console.Write(":");
             textInput = Console.ReadLine();
@@ -174,17 +165,20 @@ namespace Lesson_4._1_PersonalAccounting
             }
 
             int deleteId;
-            bool isNumber = Int32.TryParse(userInput, out deleteId);
 
-            if (isNumber && deleteId < personsFullName.Length)
+            if (Int32.TryParse(userInput, out deleteId))
             {
                 Console.WriteLine($"Удаляю элемент {deleteId} из базы...");
-                DeleteFromArrayByIndex(ref personsFullName, deleteId);
-                DeleteFromArrayByIndex(ref personsPosition, deleteId);
-            }
-            else if (isNumber && deleteId >= personsFullName.Length)
-            {
-                Console.WriteLine($"id = {deleteId} больше выходит за пределы массива. Введите число меньше.");
+
+                if (deleteId >= 0 || deleteId <= personsFullName.Length)
+                {
+                    personsFullName = DeleteFromArrayByIndex(personsFullName, deleteId);
+                    personsFullName = DeleteFromArrayByIndex(personsPosition, deleteId);
+                }
+                else
+                {
+                    Console.WriteLine($"id = {deleteId} выходит за пределы массива. Введите число меньше.");
+                }
             }
             else
             {
@@ -192,11 +186,8 @@ namespace Lesson_4._1_PersonalAccounting
             }
         }
 
-        static void DeleteFromArrayByIndex(ref string[] array, int index)
-        {
-            if (index >= array.Length || index < 0)
-                return;
-
+        static string[] DeleteFromArrayByIndex(string[] array, int index)
+        {           
             int bufferArraySize = array.Length - 1;
             string[] bufferArray = new string[bufferArraySize];
 
@@ -210,17 +201,15 @@ namespace Lesson_4._1_PersonalAccounting
                 bufferArray[i] = array[i + 1];
             }
 
-            array = bufferArray;
+            return bufferArray;
         }
 
         static void FindByFamily(string[] personsFullName)
         {
-            bool isValidateInputSearch;
-            string searchString; // так сделать ??? string searchString = ValidateEnter();
+            string searchString; 
             Console.WriteLine($"Введите символы, без учета регистра, для поиска в строке по фамилии (или \"{CancelEnterTextCommand}\" для выхода)");
-            isValidateInputSearch = ReadValidateText(out searchString);
 
-            if (!isValidateInputSearch)
+            if (TryReadText(out searchString) == false)
             {
                 Console.WriteLine("Строка для поиска не может быть пустой или содержать только пробелы.");
                 return;
@@ -233,14 +222,19 @@ namespace Lesson_4._1_PersonalAccounting
                 familyArray[i] = personsFullName[i].Split(WordsSeparator)[0];
             }
 
+            bool isContained = false;
+
             for (int i = 0; i < familyArray.Length; i++)
             {
                 int containedPosition = familyArray[i].IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
-                bool isContained = containedPosition >= 0;
+                isContained = containedPosition >= 0;
 
                 if (isContained)
-                    Console.WriteLine($"id =[{i}] Фамилия: {familyArray[i]} содержит подстроку начиная с символа {containedPosition}.");
+                    Console.WriteLine($"id =[{i}] Фамилия: {familyArray[i]} содержит подстроку начиная с символа {containedPosition}.");                    
             }
+
+            if(isContained == false)
+                Console.WriteLine($"Не удалось найти ничего похожего на {searchString}.");
         }
     }
 }
