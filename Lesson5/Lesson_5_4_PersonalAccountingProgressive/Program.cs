@@ -90,14 +90,21 @@ namespace Lesson_5_4_PersonalAccountingProgressive
             Console.WriteLine($"Введите должность сотрудника.");
             isValidatePosition = TryReadText(out personPosition);
 
-            if (isValidatePosition && isValidateName && personsPositions.ContainsKey(personFullName) == false)
+            if (isValidatePosition && isValidateName)
             {
-                Console.WriteLine($"Добавляем в базу: {personFullName} на должности {personPosition}");
-                personsPositions.Add(personFullName, personPosition);
+                if (personsPositions.ContainsKey(personFullName) == false)
+                {
+                    Console.WriteLine($"Добавляем в базу: {personFullName} на должности {personPosition}");
+                    personsPositions.Add(personFullName, personPosition);
+                }
+                else
+                {
+                    Console.WriteLine($"Элемент: {personFullName} уже существует на должности {personsPositions[personFullName]}");
+                }
             }
             else
             {
-                Console.WriteLine("Ошибка ввода данных, поля не могут быть пустыми или содержать только пробелы. ФИО не моежт дублироваться,.");
+                Console.WriteLine("Ошибка ввода данных, поля не могут быть пустыми или содержать только пробелы. ФИО не моежт дублироваться.");
             }
         }
 
