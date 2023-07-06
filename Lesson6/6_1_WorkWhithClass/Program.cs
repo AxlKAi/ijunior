@@ -1,20 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-
-/*
- *Создать класс игрока, с полями, содержащими информацию об игроке и методом, 
- *который выводит информацию на экран.
-
-В классе обязательно должен быть конструктор 
- * 
- * 
- * 
- */
 namespace _6_1_WorkWhithClass
 {
     class Program
