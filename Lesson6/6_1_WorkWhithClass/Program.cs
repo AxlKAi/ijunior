@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace _6_1_WorkWhithClass
 {
     class Program
@@ -13,22 +14,22 @@ namespace _6_1_WorkWhithClass
 
     class Player
     {
-        public string Name { get; private set; }
-        public int Health { get; private set; }
-        public int Armor { get; private set; }
+        private string _name;
+        private int _health;
+        private int _armor;
 
-        public Player(string name, int health, int armor=0)
+        public Player(string name, int health, int armor)
         {
-            Name = name;
-            Health = health;
-            Armor = armor;
+            _name = name;
+            _health = health;
+            _armor = armor;
         }
 
         public void ShowStatistics()
         {
-            Console.WriteLine($"Player name: {Name}");
-            Console.WriteLine($"Player heath: {Health}");
-            Console.WriteLine($"Player armor: {Armor}");
+            Console.WriteLine($"Player name: {_name}");
+            Console.WriteLine($"Player heath: {_health}");
+            Console.WriteLine($"Player armor: {_armor}");
         }
     }
 }
