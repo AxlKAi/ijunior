@@ -4,12 +4,12 @@ namespace Lesson_4._1_PersonalAccounting
 {
     class Program
     {
-        const string AddCommand = "1";
-        const string ShowCommand = "2";
+        const string AddPersonCommand = "1";
+        const string ShowAllPersonsCommand = "2";
         const string DeletePersonCommand = "3";
         const string FindByFamilyCommand = "4";
         const string ExitCommand = "5";
-        const string CancelEnterTextCommand = "no";
+        const string CancelTextCommand = "no";
 
         const char WordsSeparator = ' ';
 
@@ -28,34 +28,30 @@ namespace Lesson_4._1_PersonalAccounting
 
                 switch (userInput)
                 {
-                    case AddCommand:
+                    case AddPersonCommand:
                         AddToDossier(ref personsFullName, ref personsPosition);
-                        WaitToPressKey();
                         break;
 
-                    case ShowCommand:
+                    case ShowAllPersonsCommand:
                         ShowAllDosier(personsFullName, personsPosition);
-                        WaitToPressKey();
                         break;
 
                     case DeletePersonCommand:
                         DeletePersonByIndex(ref personsFullName, ref personsPosition);
-                        WaitToPressKey();
                         break;
 
                     case FindByFamilyCommand:
-                        FindByFamily(personsFullName);
-                        WaitToPressKey();
+                        ShowBySurname(personsFullName);                        
                         break;
 
                     case ExitCommand:
                         isMainLoopActive = false;
+                        Console.WriteLine("\nДосвиданья!");
                         break;
                 }
-            }
 
-            Console.WriteLine("\nДосвиданья!");
-            Console.ReadLine();
+                WaitToPressKey();
+            }
         }
 
         static void WaitToPressKey()
@@ -138,8 +134,8 @@ namespace Lesson_4._1_PersonalAccounting
             string exitMenuText = "Выход.";
 
             Console.Clear();
-            Console.WriteLine($"{AddCommand}. {addToDossierMenuText}");
-            Console.WriteLine($"{ShowCommand}. {showDossierMenuText}");
+            Console.WriteLine($"{AddPersonCommand}. {addToDossierMenuText}");
+            Console.WriteLine($"{ShowAllPersonsCommand}. {showDossierMenuText}");
             Console.WriteLine($"{DeletePersonCommand}. {deletePersonMenuText}");
             Console.WriteLine($"{FindByFamilyCommand}. {findByFamilyMenuText}");
             Console.WriteLine($"{ExitCommand}. {exitMenuText}");
@@ -156,10 +152,10 @@ namespace Lesson_4._1_PersonalAccounting
 
             ShowAllDosier(personsFullName, personsPosition);
 
-            Console.WriteLine($"Введите id сотрудника для удаления (или \"{CancelEnterTextCommand}\" для выхода)");
+            Console.WriteLine($"Введите id сотрудника для удаления (или \"{CancelTextCommand}\" для выхода)");
             string userInput = Console.ReadLine();
 
-            if (userInput == CancelEnterTextCommand)
+            if (userInput == CancelTextCommand)
             {
                 return;
             }
@@ -170,10 +166,10 @@ namespace Lesson_4._1_PersonalAccounting
             {
                 Console.WriteLine($"Удаляю элемент {deleteId} из базы...");
 
-                if (deleteId >= 0 || deleteId <= personsFullName.Length)
+                if (deleteId >= 0 && deleteId <= personsFullName.Length)
                 {
                     personsFullName = DeleteFromArrayByIndex(personsFullName, deleteId);
-                    personsFullName = DeleteFromArrayByIndex(personsPosition, deleteId);
+                    personsPosition = DeleteFromArrayByIndex(personsPosition, deleteId);
                 }
                 else
                 {
@@ -204,10 +200,10 @@ namespace Lesson_4._1_PersonalAccounting
             return bufferArray;
         }
 
-        static void FindByFamily(string[] personsFullName)
+        static void ShowBySurname(string[] personsFullName)
         {
             string searchString; 
-            Console.WriteLine($"Введите символы, без учета регистра, для поиска в строке по фамилии (или \"{CancelEnterTextCommand}\" для выхода)");
+            Console.WriteLine($"Введите символы, без учета регистра, для поиска в строке по фамилии (или \"{CancelTextCommand}\" для выхода)");
 
             if (TryReadText(out searchString) == false)
             {
@@ -215,25 +211,30 @@ namespace Lesson_4._1_PersonalAccounting
                 return;
             }
 
-            string[] familyArray = new string[personsFullName.Length];
+            string[] surnames = new string[personsFullName.Length];
 
             for (int i = 0; i < personsFullName.Length; i++)
             {
-                familyArray[i] = personsFullName[i].Split(WordsSeparator)[0];
+                surnames[i] = personsFullName[i].Split(WordsSeparator)[0];
             }
 
+            bool isAtLeastOneContain = false;
             bool isContained = false;
 
-            for (int i = 0; i < familyArray.Length; i++)
+            for (int i = 0; i < surnames.Length; i++)
             {
-                int containedPosition = familyArray[i].IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
+                int containedPosition = surnames[i].IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
                 isContained = containedPosition >= 0;
 
                 if (isContained)
-                    Console.WriteLine($"id =[{i}] Фамилия: {familyArray[i]} содержит подстроку начиная с символа {containedPosition}.");                    
+                {
+                    Console.WriteLine($"id =[{i}] Фамилия: {surnames[i]} " +
+                        $"содержит подстроку начиная с символа {containedPosition}.");
+                    isAtLeastOneContain = true;
+                }                    
             }
 
-            if(isContained == false)
+            if(isAtLeastOneContain == false)
                 Console.WriteLine($"Не удалось найти ничего похожего на {searchString}.");
         }
     }
