@@ -9,6 +9,8 @@ namespace _6_3_DataBase
         {
             DataBase dataBase = new DataBase();
             Player player1 = dataBase.GetPlayerById(7);
+            Player player4 = new Player("Player 4", 4);
+
             player1 = dataBase.GetPlayerById(1);
 
             dataBase.ShowAllWrites();
@@ -19,12 +21,10 @@ namespace _6_3_DataBase
             player1?.SetBan(true);
             player1?.ShowPlayerStats();
             dataBase.SavePlayer(player1);
-
             player1?.SetBan(false);
-            Console.WriteLine("Снимим бан с player1, но не будем записывать в базу." +
+            Console.WriteLine("Уберем бан с player1, но не будем записывать в базу." +
                 " Убедимся что объекты игрока и запись в базе не связана.");
-
-            Player player4 = new Player("Player 4", 4);
+            
             dataBase.SavePlayer(player4);
             dataBase.SetBanStateById(4, true);
             dataBase.SetBanStateById(4, false);
@@ -40,11 +40,6 @@ namespace _6_3_DataBase
 
     class Player
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public int Level { get; private set; }
-        public bool IsBanned { get; private set; } = false;
-
         public Player(string name, int level)
         {
             Name = name;
@@ -59,6 +54,11 @@ namespace _6_3_DataBase
             Id = player.Id;
             IsBanned = player.IsBanned;
         }
+
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public int Level { get; private set; }
+        public bool IsBanned { get; private set; } = false;
 
         public void ChangeId(int id)
         {
