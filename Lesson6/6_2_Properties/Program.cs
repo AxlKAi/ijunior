@@ -1,5 +1,15 @@
 ﻿using System;
 
+/**
+ * 
+1 - Свойства объявляются после конструктора класса. 
+2 - public int Armor - сейчас мы в любой точке программы может изменить значение, 
+    данные не защищены. Свойство должно быть с приватным сеттером. 
+3 - Вместо поля и свойства реализуйте одно автореализуемое свойство. 
+    public int Name{get; private set;} Запись станет лаконичнее. 
+ * 
+ */
+
 namespace _6_2_Properties
 {
     class Program
@@ -20,43 +30,18 @@ namespace _6_2_Properties
 
     class Player
     {
-        public int PositionX { get; private set; }
-        public int PositionY { get; private set; }
-
-        private int _armor = 0;
-        private int _maximumArmor = 100;
-
-        private string _name = "";
-
         public Player(string name, int health, int armor)
         {
-            _name = name;
+            Name = name;
             Health = health;
-            _armor = armor;
+            Armor = armor;
         }
 
+        public int PositionX { get; private set; }
+        public int PositionY { get; private set; }
         public int Health { get; private set; }
-
-        public int Armor
-        {
-            get { return _armor; }
-            set
-            {
-                if (value < 0)
-                    _armor = 0;
-                else if (value > _maximumArmor)
-                    _armor = _maximumArmor;
-                else
-                    _armor = value;
-            }
-        }
-
-        public string Name
-        {
-            get => _name;
-            private set => _name = value;
-        }
-
+        public int Armor { get; private set; }
+        public string Name { get; private set; }
         public int ManaAmmount { get; private set; }
 
         public void MoveTo(int positionX, int positionY)
