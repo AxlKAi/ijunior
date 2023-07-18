@@ -1,26 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-/*
-1 - public void ChangeId(int id) - [убрал возможность изменить Id из-вне]
 
-2 - SetBan/RemoveBan - лаконичнее будет Ban/Unban - [залаконичел :) ]. 
-
-3 - public void AddPlayer(Player player) - запрашивайте данные внутри метода. [сделал]
-
-4 - TryGetPlayerById - ищите сразу игрока, перебирая всех. 
-    Через foreach будет удобно и от лишнего метода FindIndexOfId [переписал]
-
-5 - static Database database; - зачем статика? [сдела класс application] 
-
-6 - const string ShowAllEntrysCommand = "1"; - и т.д. 
-    - поля должны описывать класс. [перенес] 
-
-7 - В class Program оставляйте одну функцию Main. [один метод, 2 строчки] 
-
-8 - Каждый case в switch должен содержать в себе только код в 1 строку [везде 1 строка]
-
-9 - MainLoop - методы должны именоваться с глагола [все начинаются с глагола]
-*/
 namespace _6_3_DataBase
 {
     class Program
