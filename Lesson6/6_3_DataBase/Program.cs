@@ -24,12 +24,9 @@ namespace _6_3_DataBase
         const string ShowPlayerCommand = "7";
         const string ExitCommand = "8";
 
-        Database database = new Database();
-
         public void Run()
         {
-            int id;
-            Player player;
+            Database database = new Database();
             bool isMainLoopActive = true;
 
             while (isMainLoopActive)
@@ -68,12 +65,13 @@ namespace _6_3_DataBase
                         break;
 
                     case ExitCommand:
-                        isMainLoopActive = !TryUserWantExit();                        
+                        if (TryUserWantExit())
+                            isMainLoopActive = false;
                         break;
                 }
 
                 WaitToPressKey();
-            }            
+            }
         }
 
         private void ShowMainMenu()
@@ -111,7 +109,7 @@ namespace _6_3_DataBase
             Console.Write("Вы хотите выйти? (n - нет, другой - да):");
             userInput = Console.ReadLine();
 
-            if(userInput == "n")
+            if (userInput == "n")
             {
                 return false;
             }
@@ -220,7 +218,7 @@ namespace _6_3_DataBase
         {
             Console.WriteLine("База данных:");
 
-            foreach(var player in _players)
+            foreach (var player in _players)
                 Console.WriteLine($"id={player.Id} | {player.Name} " +
                     $"| Level = {player.Level} | Ban = {player.IsBanned}");
 
@@ -246,7 +244,7 @@ namespace _6_3_DataBase
 
         public void BanById()
         {
-            Player player; 
+            Player player;
 
             if (TryGetPlayerByInput(out player, "Снять бан с игрока."))
             {
@@ -258,7 +256,7 @@ namespace _6_3_DataBase
 
         public void UnBanById()
         {
-            Player player; 
+            Player player;
 
             if (TryGetPlayerByInput(out player, "Установить БАН игрока."))
             {
