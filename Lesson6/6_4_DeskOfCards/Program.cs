@@ -17,6 +17,16 @@ namespace _6_4_DeskOfCards
     {
         static void Main(string[] args)
         {
+            Application application = new Application();
+
+            application.Run();
+        }
+    }
+
+    public class Application
+    {
+        public void Run()
+        {
             bool isMainLoopActive = true;
 
             CardDesc cardDesk = new CardDesc();
@@ -49,7 +59,7 @@ namespace _6_4_DeskOfCards
             Console.ReadKey();
         }
 
-        static void ShowMenu()
+        public void ShowMenu()
         {
             Console.Clear();
             Console.WriteLine("Стрелка ^ вверх -  взять карту из колоды;   Пробел - показать карты игрока;");
@@ -112,8 +122,8 @@ namespace _6_4_DeskOfCards
         public void AddCard(Card card)
         {
             _cards.Add(card);
-            Console.WriteLine($"У игрока {_cards.Count} карт");
-            Console.Write($"Он вытянул");
+            Console.WriteLine($"У игрока {_cards.Count} карт. ");
+            Console.Write($"Он вытянул ");
             card.ShowCard();
         }
 
