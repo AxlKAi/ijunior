@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace _6_4_DeskOfCards
+namespace _6_4_DeckOfCards
 {
     public enum СardSuit
     {
@@ -131,7 +131,7 @@ namespace _6_4_DeskOfCards
 
         public CardDeck()
         {
-            FillTheDesk();
+            FillTheDeck();
         }
 
         public bool TryTakeCard(out Card card)
@@ -155,10 +155,10 @@ namespace _6_4_DeskOfCards
         public void Renew()
         {
             _cards = new List<Card>();
-            FillTheDesk();
+            FillTheDeck();
         }
 
-        private void FillTheDesk()
+        private void FillTheDeck()
         {
             var suits = Enum.GetValues(typeof(СardSuit));
             var values = Enum.GetValues(typeof(CardValue));
@@ -224,8 +224,8 @@ namespace _6_4_DeskOfCards
 
         public Table()
         {
-            CardDeck cardDesk = new CardDeck();
-            _cardDeck = cardDesk;
+            CardDeck cardDeck = new CardDeck();
+            _cardDeck = cardDeck;
         }
 
         public void ConnectPlayer(Player player)
