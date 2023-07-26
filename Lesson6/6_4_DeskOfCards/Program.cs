@@ -25,12 +25,20 @@ namespace _6_4_DeskOfCards
 
     public class Application
     {
+        private Table table = new Table();
+        private List<Player> _players;
+
         public void Run()
         {
-            bool isMainLoopActive = true;
+            _players = new List<Player>()
+            {
+                new Player("Дима", table),
+                new Player("Костя", table),
+                new Player("Петр", table),
+                new Player("Ян", table)
+            };
 
-            CardDesc cardDesk = new CardDesc();
-            Player player = new Player();
+            bool isMainLoopActive = true;
 
             ShowMenu();
 
@@ -41,12 +49,27 @@ namespace _6_4_DeskOfCards
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        cardDesk.MoveRandomCardToPlayer(player);
+                        _players[0].TakeCard();
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        _players[1].TakeCard();
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+                        _players[2].TakeCard();
+                        break;
+
+                    case ConsoleKey.RightArrow:
+                        _players[3].TakeCard();
                         break;
 
                     case ConsoleKey.Spacebar:
-                        ShowMenu();
-                        player.ShowCards();
+                        ShowAllPlayerCards();
+                        break;
+
+                    case ConsoleKey.Backspace:
+                        NewGame();
                         break;
 
                     case ConsoleKey.Escape:
@@ -62,7 +85,25 @@ namespace _6_4_DeskOfCards
         public void ShowMenu()
         {
             Console.Clear();
-            Console.WriteLine("Стрелка ^ вверх -  взять карту из колоды;   Пробел - показать карты игрока;");
+            Console.WriteLine("Стрелка ^ < > вверх, вниз, лево, право -  взять карту из колоды соответствующему игроку.");
+            Console.WriteLine("Пробел - показать карты игроков;   Backspace - Начать игру заново;");
+        }
+
+        public void ShowAllPlayerCards()
+        {
+            ShowMenu();
+
+            foreach (Player player in _players)
+                player.ShowCards();
+        }
+
+        public void NewGame()
+        {
+            table.NewRound();
+            ShowMenu();
+
+            foreach (Player player in _players)
+                player.ShowCards();
         }
     }
 
@@ -84,11 +125,40 @@ namespace _6_4_DeskOfCards
         }
     }
 
-    public class CardDesc
+    public class CardDeck
     {
         private List<Card> _cards = new List<Card>();
 
-        public CardDesc()
+        public CardDeck()
+        {
+            FillTheDesk();
+        }
+
+        public bool TryTakeCard(out Card card)
+        {
+            if (_cards.Count <= 0)
+            {
+                Console.WriteLine("Не осталось карт в колоде.");
+                card = null;
+                return false;
+            }
+
+            Random random = new Random();
+            int cardNumber = random.Next(0, _cards.Count);
+            Card randomCard = _cards[cardNumber];
+
+            _cards.RemoveAt(cardNumber);
+            card = randomCard;
+            return true;
+        }
+
+        public void Renew()
+        {
+            _cards = new List<Card>();
+            FillTheDesk();
+        }
+
+        private void FillTheDesk()
         {
             var suits = Enum.GetValues(typeof(СardSuit));
             var values = Enum.GetValues(typeof(CardValue));
@@ -97,42 +167,97 @@ namespace _6_4_DeskOfCards
                 foreach (var value in values)
                     _cards.Add(new Card((СardSuit)suit, (CardValue)value));
         }
-
-        public void MoveRandomCardToPlayer(Player player)
-        {
-            if (_cards.Count <= 0)
-            {
-                Console.WriteLine("Не осталось карт в колоде.");
-                return;
-            }
-
-            Random random = new Random();
-            int cardNumber = random.Next(0, _cards.Count);
-            Card randomCard = _cards[cardNumber];
-
-            _cards.RemoveAt(cardNumber);
-            player.AddCard(randomCard);
-        }
     }
 
     public class Player
     {
         private List<Card> _cards = new List<Card>();
+        private Table _table;
+
+        public Player(string name, Table table)
+        {
+            Name = name;
+            SitDownAt(table);
+        }
+
+        public string Name {get; private set;}
+
+        public void TakeCard()
+        {
+            _table.GiveCard(this);
+        }
 
         public void AddCard(Card card)
         {
             _cards.Add(card);
-            Console.WriteLine($"У игрока {_cards.Count} карт. ");
+            Console.WriteLine($"У игрока {Name} {_cards.Count} карт. ");
             Console.Write($"Он вытянул ");
             card.ShowCard();
         }
 
         public void ShowCards()
         {
-            Console.WriteLine($"у игрока {_cards.Count} карт");
+            Console.WriteLine($"у игрока {Name} на руках {_cards.Count} карт.");
 
             foreach (var card in _cards)
                 card.ShowCard();
+
+            Console.WriteLine();
+        }
+
+        public void SitDownAt(Table table)
+        {
+            _table = table;
+            table.ConnectPlayer(this);
+        }
+
+        public void EmptyCards()
+        {
+            _cards = new List<Card>();
+        }
+    }
+
+    public class Table
+    {
+        private CardDeck _cardDeck;
+        private List<Player> _players = new List<Player>();
+
+        public Table()
+        {
+            CardDeck cardDesk = new CardDeck();
+            _cardDeck = cardDesk;
+        }
+
+        public void ConnectPlayer(Player player)
+        {
+            _players.Add(player);
+        }
+
+        public void GiveCard(Player player)
+        {
+            Card card;
+
+            if (_cardDeck.TryTakeCard(out card))
+            {
+                player.AddCard(card);
+            }
+            else
+            {
+                Console.WriteLine("В колоде кончились карты.");
+            }
+        }
+
+        public void NewRound()
+        {
+            Console.WriteLine("Новый раунд! Крупье забирает все карты у игроков.");
+
+            foreach (Player player in _players)
+                player.EmptyCards();
+
+            _cardDeck.Renew();
+
+            Console.WriteLine("Нажмите клавишу для продолжения ....");
+            Console.ReadKey();
         }
     }
 }
