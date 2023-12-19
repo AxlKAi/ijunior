@@ -19,7 +19,7 @@ namespace Variables
             int passportNumber;
             long bankAccountNumber;
             uint walletCount;
-            bool isDualCitizenship;
+            bool haveDualCitizenship;
             char male;
         }
     }
