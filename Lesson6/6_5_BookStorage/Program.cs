@@ -1,6 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-
+/*
+ * 1) Блоки if и else должны быть оформлены одинаково. 
+ * Если один из блоков заключен в фигурные скобки, 
+ * то и другой(другие, если у вас много else if)
+ * должен быть заключён в фигурные скобки. 
+ * 
+ * 2) if (!Book.ValidateName(title)) - лучше указывать явно == false. ! плохо читается, 
+ * из-за чего может быть пропущена/забыта, что приведёт к ошибке в дальнейшем. 
+ * 
+ * 3) Find - сделайте один switch с проверками. 
+ * Создайте 3 метода, где запрашиваете ввод и если нашлось 
+ * совпадение в соответствующем свойстве , то выводите книгу. 
+ * 
+ * 4) DeleteBooks - зачем нужен метод?
+ */
 namespace _6_5_BookStorage
 {
     class Program
@@ -143,7 +157,7 @@ namespace _6_5_BookStorage
 
     class BookStorage
     {
-        const int OlderstBookAgeYears = 800;
+        private const int OlderstBookAgeYears = 800;
 
         private List<Book> _books = new List<Book>();
 
@@ -231,12 +245,12 @@ namespace _6_5_BookStorage
             {
                 case FindBy.Autor:
                 case FindBy.Title:
-                    if (!Book.ValidateName(searchString))
+                    if (Book.ValidateName(searchString) == false)
                         return;
                     break;
 
                 case FindBy.Year:
-                    if (!Int32.TryParse(searchString, out searchYear))
+                    if (Int32.TryParse(searchString, out searchYear) == false)
                     {
                         Console.WriteLine("Не могу распознать число. Введите только цыфры.");
                         return;

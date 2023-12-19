@@ -10,7 +10,12 @@ namespace ConsoleOutput
     {
         static void Main(string[] args)
         {
+            Console.Write(5 + 5f + "helloy");
+            Console.WriteLine();
 
+            int x = 5, y = 2;
+
+            float res = x / y;
         }
     }
 }
