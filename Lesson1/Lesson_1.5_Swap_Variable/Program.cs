@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SwapVariable
 {
@@ -10,10 +6,6 @@ namespace SwapVariable
     {
         static void Main(string[] args)
         {
-            /*
-            Даны две переменные. Поменять местами значения двух переменных. 
-            Вывести на экран значения переменных до перестановки и после. 
-            */
             string name = "Пестропалов";
             string surname = "Эдуард";
             string cashe;
