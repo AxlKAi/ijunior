@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pictures
 {
@@ -13,10 +9,9 @@ namespace Pictures
             int picturesInRow = 3;
             int totalPictures = 52;
             int overMeasureRowPictures = totalPictures % picturesInRow;
-            int lineCounts = totalPictures / picturesInRow 
-                    + Convert.ToInt32(overMeasureRowPictures > 0);
+            int lineCounts = totalPictures / picturesInRow;                    
             
-            Console.WriteLine($"Всего рядов:{lineCounts}; " +
+            Console.WriteLine($"Полностью заполненных рядов:{lineCounts}; \n" +
                 $"Картинок в ряду сверх меры:{overMeasureRowPictures};"); 
         }
     }
