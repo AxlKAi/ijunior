@@ -9,7 +9,7 @@ namespace NumbersSum
             int randomMaxNumber;
             int taskMinimum = 1;
             int taskMaximum = 100;
-            int multipleNumber = 5;
+            int multipleNumber = 3;
             int multipleSum = 0;
             Random rand;
 
@@ -23,11 +23,11 @@ namespace NumbersSum
                 if (i % multipleNumber == 0)
                 {
                     multipleSum += i;
-                    Console.WriteLine($"+ {i}");
+                    Console.Write($"+{i} ");
                 }                    
             }
 
-            Console.WriteLine($" = {multipleSum}");
+            Console.WriteLine($"= {multipleSum}");
         }
     }
 }
