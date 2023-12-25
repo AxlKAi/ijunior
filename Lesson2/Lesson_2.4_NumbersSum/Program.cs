@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NumbersSum
 {
@@ -10,10 +6,10 @@ namespace NumbersSum
     {
         static void Main(string[] args)
         {            
-            int randomMaxNumber = 0;
+            int randomMaxNumber;
             int taskMinimum = 1;
             int taskMaximum = 100;
-            int multipleNumber = 3;
+            int multipleNumber = 5;
             int multipleSum = 0;
             Random rand;
 
@@ -25,10 +21,13 @@ namespace NumbersSum
             for (int i=taskMinimum; i<=randomMaxNumber; i++)
             {
                 if (i % multipleNumber == 0)
-                    multipleSum += i;                  
+                {
+                    multipleSum += i;
+                    Console.WriteLine($"+ {i}");
+                }                    
             }
 
-            Console.WriteLine($"Сумма = {multipleSum}");
+            Console.WriteLine($" = {multipleSum}");
         }
     }
 }
