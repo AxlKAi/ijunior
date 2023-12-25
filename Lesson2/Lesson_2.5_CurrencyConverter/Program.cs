@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CurrencyConverter
 {
@@ -26,9 +23,9 @@ namespace CurrencyConverter
             const string CommandExit = "exit";
             const string NumberCommandExit = "7";
 
-            float balanceRub = 0;
-            float balanceUsd = 0;
-            float balanceEur = 0;
+            float balanceRub;
+            float balanceUsd;
+            float balanceEur;
             float currencyForExchange;
             float coefficientRubToUsd = .012168f;
             float coefficientRubToEur = .011145f; 
