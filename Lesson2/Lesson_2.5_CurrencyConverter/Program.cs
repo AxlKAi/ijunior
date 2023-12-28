@@ -11,24 +11,24 @@ namespace CurrencyConverter
     {
         static void Main(string[] args)
         {
-            const string CommandRubToUsd = "RubToUsd";
-            const string NumberCommandRubToUsd = "1";
-            const string CommandRubToEur = "RubToEur";
-            const string NumberCommandRubToEur = "2";
-            const string CommandEurToUsd = "EurToUsd";
-            const string NumberCommandEurToUsd = "3";
-            const string CommandEurToRub = "EurToRub";
-            const string NumberCommandEurToRub = "4";
-            const string CommandUsdToRub = "UsdToRub";
-            const string NumberCommandUsdToRub = "5";
-            const string CommandUsdToEur = "UsdToEur";
-            const string NumberCommandUsdToEur = "6";
+            const string CommandRubToUsd = "rd";
+            const string MenuRubToUsd = "1";
+            const string CommandRubToEur = "re";
+            const string MenuRubToEur = "2";
+            const string CommandEurToUsd = "ed";
+            const string MenuEurToUsd = "3";
+            const string CommandEurToRub = "er";
+            const string MenuEurToRub = "4";
+            const string CommandUsdToRub = "dr";
+            const string MenuUsdToRub = "5";
+            const string CommandUsdToEur = "de";
+            const string MenuUsdToEur = "6";
             const string CommandExit = "exit";
-            const string NumberCommandExit = "7";
+            const string MenuExit = "7";
 
-            float balanceRub = 0;
-            float balanceUsd = 0;
-            float balanceEur = 0;
+            float balanceRub;
+            float balanceUsd;
+            float balanceEur;
             float currencyForExchange;
             float coefficientRubToUsd = .012168f;
             float coefficientRubToEur = .011145f; 
@@ -54,26 +54,31 @@ namespace CurrencyConverter
                 Console.Write("Рублей " + balanceRub.ToString("C", new CultureInfo("ru-RU"))+"  ");
                 Console.Write($"Долларов "+ balanceUsd.ToString("C", new CultureInfo("en-US")) + "  ");
                 Console.WriteLine($"Евро "+ balanceEur.ToString("C", new CultureInfo("de-DE")) + "  ");
-                Console.WriteLine($"{NumberCommandRubToUsd}.Поменять рубли на доллары (команда {CommandRubToUsd})");
-                Console.WriteLine($"{NumberCommandRubToEur}.Поменять рубли на евро (команда {CommandRubToEur})");
-                Console.WriteLine($"{NumberCommandEurToUsd}.Поменять евро на доллары (команда {CommandEurToUsd})");
-                Console.WriteLine($"{NumberCommandEurToRub}.Поменять евро на рубли (команда {CommandEurToRub})");
-                Console.WriteLine($"{NumberCommandUsdToRub}.Поменять доллары на рубли (команда {CommandUsdToRub})");
-                Console.WriteLine($"{NumberCommandUsdToEur}.Поменять доллары на евро (команда {CommandUsdToEur})");
-                Console.WriteLine($"{NumberCommandExit}.Выход из программы (команда {CommandExit})");
+                Console.WriteLine();
+                Console.WriteLine($"{MenuRubToUsd}.Поменять рубли на доллары (команда {CommandRubToUsd}) по курсу {coefficientRubToUsd}");
+                Console.WriteLine($"{MenuRubToEur}.Поменять рубли на евро (команда {CommandRubToEur}) по курсу {coefficientRubToEur}");
+                Console.WriteLine($"{MenuEurToUsd}.Поменять евро на доллары (команда {CommandEurToUsd}) курсу {coefficientEurToUsd}");
+                Console.WriteLine($"{MenuEurToRub}.Поменять евро на рубли (команда {CommandEurToRub}) по курсу {coefficientEurToRub}");
+                Console.WriteLine($"{MenuUsdToRub}.Поменять доллары на рубли (команда {CommandUsdToRub}) по курсу {coefficientUsdToRub}");
+                Console.WriteLine($"{MenuUsdToEur}.Поменять доллары на евро (команда {CommandUsdToEur}) по курсу {coefficientUsdToEur}");
+                Console.WriteLine($"{MenuExit}.Выход из программы (команда {CommandExit})");
                 userChoise = Console.ReadLine();
 
                 switch (userChoise)
                 {
                     case CommandRubToUsd:
-                    case NumberCommandRubToUsd:
+                    case MenuRubToUsd:
                         Console.Write("Сколько РУБЛЕЙ на USD хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
 
                         if (balanceRub >= currencyForExchange)
                         {
+                            float usdToBuy = currencyForExchange * coefficientRubToUsd;
                             balanceRub -= currencyForExchange;
-                            balanceUsd += currencyForExchange * coefficientRubToUsd;
+                            balanceUsd += usdToBuy;
+
+                            Console.WriteLine($"Вы обменяли {currencyForExchange} РУБЛЕЙ на {usdToBuy} ДОЛЛАРОВ.");
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -84,14 +89,18 @@ namespace CurrencyConverter
                         break;
 
                     case CommandRubToEur:
-                    case NumberCommandRubToEur:
+                    case MenuRubToEur:
                         Console.Write("Сколько РУБЛЕЙ на EURO хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
 
                         if (balanceRub >= currencyForExchange)
                         {
+                            float eurToBuy = currencyForExchange * coefficientRubToEur;
                             balanceRub -= currencyForExchange;
-                            balanceEur += currencyForExchange * coefficientRubToEur;
+                            balanceEur += eurToBuy;
+
+                            Console.WriteLine($"Вы обменяли {currencyForExchange} РУБЛЕЙ на {eurToBuy} ЕВРО.");
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -102,14 +111,18 @@ namespace CurrencyConverter
                         break;
 
                     case CommandEurToUsd:
-                    case NumberCommandEurToUsd:
+                    case MenuEurToUsd:
                         Console.Write("Сколько EURO на USD хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
 
                         if (balanceEur >= currencyForExchange)
                         {
+                            float usdToBuy = currencyForExchange * coefficientEurToUsd;
                             balanceEur -= currencyForExchange;
-                            balanceUsd += currencyForExchange * coefficientEurToUsd;
+                            balanceUsd += usdToBuy;
+
+                            Console.WriteLine($"Вы обменяли {currencyForExchange} ЕВРО на {usdToBuy} ДОЛЛАРОВ.");
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -120,14 +133,18 @@ namespace CurrencyConverter
                         break;
 
                     case CommandEurToRub:
-                    case NumberCommandEurToRub:
+                    case MenuEurToRub:
                         Console.Write("Сколько EURO на РУБЛИ хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
 
                         if (balanceEur >= currencyForExchange)
                         {
+                            float eurToBuy = currencyForExchange * coefficientEurToRub;
                             balanceEur -= currencyForExchange;
-                            balanceRub += currencyForExchange * coefficientEurToRub;
+                            balanceRub += eurToBuy;
+
+                            Console.WriteLine($"Вы обменяли {currencyForExchange} ЕВРО на {eurToBuy} РУБЛЕЙ.");
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -138,14 +155,18 @@ namespace CurrencyConverter
                         break;
 
                     case CommandUsdToRub:
-                    case NumberCommandUsdToRub:
+                    case MenuUsdToRub:
                         Console.Write("Сколько USD на РУБЛИ хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
 
                         if (balanceUsd >= currencyForExchange)
                         {
+                            float usdToBuy = currencyForExchange * coefficientUsdToRub;
                             balanceUsd -= currencyForExchange;
-                            balanceRub += currencyForExchange * coefficientUsdToRub;
+                            balanceRub += usdToBuy;
+
+                            Console.WriteLine($"Вы обменяли {currencyForExchange} ДОЛЛАРОВ на {usdToBuy} РУБЛЕЙ.");
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -156,14 +177,18 @@ namespace CurrencyConverter
                         break;
 
                     case CommandUsdToEur:
-                    case NumberCommandUsdToEur:
+                    case MenuUsdToEur:
                         Console.Write("Сколько USD на EUR хотите обменять ?: ");
                         currencyForExchange = Convert.ToSingle(Console.ReadLine());
 
                         if (balanceUsd >= currencyForExchange)
                         {
+                            float usdToBuy = currencyForExchange * coefficientUsdToEur;
                             balanceUsd -= currencyForExchange;
-                            balanceEur += currencyForExchange * coefficientUsdToEur;
+                            balanceEur += usdToBuy;
+
+                            Console.WriteLine($"Вы обменяли {currencyForExchange} ДОЛЛАРОВ на {usdToBuy} ЕВРО.");
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -174,7 +199,7 @@ namespace CurrencyConverter
                         break;
                         
                     case CommandExit:
-                    case NumberCommandExit:
+                    case MenuExit:
                         isMainLoopActive = false;
 
                         break;
