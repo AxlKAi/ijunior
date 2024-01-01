@@ -26,10 +26,10 @@ namespace ConsoleMenu
             bool isMainLoopActive = true;
             ConsoleColor heartColor = ConsoleColor.White;
             ConsoleColor elefantColor = ConsoleColor.White;
-            ConsoleColor AdultBackgroundColor = ConsoleColor.Black;
-            ConsoleColor DefaultBackgroundColor = ConsoleColor.Black;
-            ConsoleColor DefaultForegroundColor = ConsoleColor.White;
-            string userCommand = "";
+            ConsoleColor adultBackgroundColor = ConsoleColor.Black;
+            ConsoleColor defaultBackgroundColor = ConsoleColor.Black;
+            ConsoleColor defaultForegroundColor = ConsoleColor.White;
+            string userCommand;
 
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -60,12 +60,12 @@ namespace ConsoleMenu
                     Console.WriteLine("░▒░░▒░░░█▓▓▓█▓▓▓█▓▓▓▓█");
                     Console.WriteLine("░▒░░▒░░░█▓▓▓█░░░█▓▓▓█");
                     Console.WriteLine("░▒░░▒░░██▓██░░░██▓▓█");
-                    Console.ForegroundColor = DefaultForegroundColor;
+                    Console.ForegroundColor = defaultForegroundColor;
                     Console.WriteLine("Вы смотрите детский интерактивный ТВ канал.");
                 }
                 else
                 {
-                    Console.BackgroundColor = AdultBackgroundColor;
+                    Console.BackgroundColor = adultBackgroundColor;
                     Console.WriteLine("⠄⠄⣿⣿⣿⣿⠘⡿⢛⣿⣿⣿⣿⣿⣧⢻⣿⣿⠃⠸⣿⣿⣿⠄⠄⠄⠄⠄");
                     Console.WriteLine("⠄⠄⣿⣿⣿⣿⢀⠼⣛⣛⣭⢭⣟⣛⣛⣛⠿⠿⢆⡠⢿⣿⣿⠄⠄⠄⠄⠄");
                     Console.WriteLine("⠄⠄⠸⣿⣿⢣⢶⣟⣿⣖⣿⣷⣻⣮⡿⣽⣿⣻⣖⣶⣤⣭⡉⠄⠄⠄⠄⠄");
@@ -77,8 +77,8 @@ namespace ConsoleMenu
                     Console.WriteLine("⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠣⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄");
                     Console.WriteLine("⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄");
                     Console.WriteLine("⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄\n");
-                    Console.BackgroundColor = DefaultBackgroundColor;
-                    Console.WriteLine("Вы смотрите взрослый ТВ канал, уберите детей от экрана ! \n");                    
+                    Console.BackgroundColor = defaultBackgroundColor;
+                    Console.WriteLine("Вы смотрите взрослый ТВ канал, уберите детей от экрана! \n");                    
                 }
 
                 Console.WriteLine("Наберите команду");
@@ -127,15 +127,15 @@ namespace ConsoleMenu
                         break;
 
                     case CommandBackgroundBlue:
-                        AdultBackgroundColor = ConsoleColor.Blue;
+                        adultBackgroundColor = ConsoleColor.Blue;
                         break;
 
                     case CommandBackgroundRed:
-                        AdultBackgroundColor = ConsoleColor.Red;
+                        adultBackgroundColor = ConsoleColor.Red;
                         break;
 
                     case CommandBackgroundDark:
-                        AdultBackgroundColor = ConsoleColor.Black;
+                        adultBackgroundColor = ConsoleColor.Black;
                         break;                        
 
                     case CommandAdultChannel:
