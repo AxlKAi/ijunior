@@ -16,23 +16,24 @@ namespace NameOutput
 
             Console.Write("Введите имя : ");
             userName = Console.ReadLine();
-            Console.Write("Введите символ для создания рамки :");
+
+            Console.Write("Введите символ для создания рамки : ");
             borderSymbol = Convert.ToChar(Console.ReadLine());
 
             for(int i=0; i<userName.Length+borderPadding; i++)
             {
                 Console.Write(borderSymbol);
             }
-            Console.WriteLine();
 
+            Console.WriteLine();
             Console.WriteLine(borderSymbol+" "+userName+" "+borderSymbol);
 
             for (int i = 0; i < userName.Length + borderPadding; i++)
             {
                 Console.Write(borderSymbol);
             }
-            Console.WriteLine("\n");
 
+            Console.WriteLine("\n");
             Console.WriteLine("Нажмите ENTER для завершение программы.");
             Console.ReadLine();
         }
