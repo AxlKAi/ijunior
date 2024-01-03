@@ -12,6 +12,7 @@ namespace NameOutput
         {
             char borderSymbol;
             string userName;
+            string horizontalBorder = "";
             int borderPadding = 4;
 
             Console.Write("Введите имя : ");
@@ -20,18 +21,14 @@ namespace NameOutput
             Console.Write("Введите символ для создания рамки : ");
             borderSymbol = Convert.ToChar(Console.ReadLine());
 
-            for(int i=0; i<userName.Length+borderPadding; i++)
-            {
-                Console.Write(borderSymbol);
-            }
-
-            Console.WriteLine();
-            Console.WriteLine(borderSymbol+" "+userName+" "+borderSymbol);
-
             for (int i = 0; i < userName.Length + borderPadding; i++)
             {
-                Console.Write(borderSymbol);
+                horizontalBorder += borderSymbol;
             }
+
+            Console.WriteLine(horizontalBorder);
+            Console.WriteLine(borderSymbol + " " + userName + " " + borderSymbol);
+            Console.WriteLine(horizontalBorder);
 
             Console.WriteLine("\n");
             Console.WriteLine("Нажмите ENTER для завершение программы.");
