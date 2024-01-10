@@ -27,7 +27,7 @@ namespace ProgrammUnderPassword
 
             if (userGrantAccess)
             {
-                Console.WriteLine("Вы получили доступ в систему");
+                Console.WriteLine("Пин-код от моей карточки 2456, но это секрет.");
             }
             else
             {
