@@ -19,15 +19,17 @@ namespace ProgrammUnderPassword
             {
                 Console.WriteLine($"Введите пароль (осталось {tryCount} попыток) :");
                 userInput = Console.ReadLine();
-                if(userInput == password)
+
+                if (userInput == password)
                 {
                     userGrantAccess = true;
                     break;
                 }
+
                 tryCount--;
             }
 
-            if(userGrantAccess)
+            if (userGrantAccess)
             {
                 Console.WriteLine("Вы получили доступ в систему");
             }
@@ -35,8 +37,9 @@ namespace ProgrammUnderPassword
             {
                 Console.WriteLine("Вы не знаете пароль, доступ запрещен. ");
             }
-            Console.WriteLine("Нажмите ENTER для завершение программы.");
-            Console.ReadLine();
+
+            Console.WriteLine("Нажмите клавишу для завершение программы.");
+            Console.ReadKey();
         }
     }
 }
