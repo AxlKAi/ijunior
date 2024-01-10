@@ -11,7 +11,7 @@ namespace ProgrammUnderPassword
             bool userGrantAccess = false;
             int tryCount = 3;
 
-            while (tryCount > 0)
+            while (tryCount > 0 && userGrantAccess == false)
             {
                 Console.WriteLine($"Введите пароль (осталось {tryCount} попыток) :");
                 userInput = Console.ReadLine();
@@ -19,7 +19,6 @@ namespace ProgrammUnderPassword
                 if (userInput == password)
                 {
                     userGrantAccess = true;
-                    break;
                 }
 
                 tryCount--;
