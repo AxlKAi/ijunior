@@ -6,7 +6,7 @@ namespace Local_Maximum
     {
         static void Main(string[] args)
         {
-            int numbersArrayLength = 10;
+            int numbersArrayLength = 30;
             int[] numbers = new int[numbersArrayLength];
             int firstIndex = 0;
             int lastIndex = numbersArrayLength - 1;
