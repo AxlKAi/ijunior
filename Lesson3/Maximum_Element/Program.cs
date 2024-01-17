@@ -10,7 +10,7 @@ namespace Maximum_Element
             int numbersMatrixHeight = 10;
             int maximumRandomNumber = 9;
             int minimumRandomNumber = 0;
-            int zeroElement = 0;
+            int fillingElement = 0;
             int maximumNumber = int.MinValue;
 
             int[,] numbersMatrix = new int[numbersMatrixHeight, numbersMatrixLength];
@@ -50,7 +50,7 @@ namespace Maximum_Element
                 {
                     if (numbersMatrix[i, j] == maximumNumber)
                     {
-                        numbersMatrix[i, j] = zeroElement;
+                        numbersMatrix[i, j] = fillingElement;
                     }
 
                     Console.Write(numbersMatrix[i, j] + " ");
