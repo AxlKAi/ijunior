@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lesson_2._12_FightWhisBoss
 {
@@ -91,7 +87,7 @@ namespace Lesson_2._12_FightWhisBoss
             const string DamageToPlayerShieldMessage = "Урон щиту игрока:";
             const string DamageToPlayerHealthMessage = "Урон здоровью игрока:";
             const string EnemyCantCastRoundsMessage = "Не колдует:";
-            const string VasiliskDamgeMessage = ">- из них Василиск >-";
+            const string VasiliskDamgeMessage = " ^_^ из них Василиск ";
             const string PressKeyPrompt = "Нажмите любую кнопку для продолжения....";
 
             string[] intoText =
@@ -149,7 +145,6 @@ namespace Lesson_2._12_FightWhisBoss
                 "теперь течет в Ваших жилах! Физическое тело стало крепче,",
                 "и новые знания открылись Вам ..."
             };
-
 
             string[] bothDeadFinalText =
             {
@@ -273,7 +268,6 @@ namespace Lesson_2._12_FightWhisBoss
                 "противника.   Корпус  скелета  искрит,  аура  между  ним и алтерем",
                $"пропадает. Мертвяк не может колдовать {playerSpellKonfundusEffectTime} раунда.",
             };
-
             string[] playerSpellKonfundusWrongCast =
             {
                 "Лишь малая часть знаний  Античных дошла до  нашего  времени. Магия",
@@ -323,7 +317,6 @@ namespace Lesson_2._12_FightWhisBoss
                $"Скелет не сможет колдовать {playerSpellExpiliarmusEffectTime} ход " +
                $"и получает урон в {playerSpellExpiliarmusPower} единиц."
             };
-
             string[] playerSpellExpiliarmusWrongCast =
             {
                 "Юный  волшебник   произносит  сложное  заклинание  и  одновременно",
@@ -343,7 +336,6 @@ namespace Lesson_2._12_FightWhisBoss
             int enemySpellInflarmePower = 40;
             int enemySpellInflarmeRechargeTime = 3;
             int enemySpellInflarmeTimeToCanCast = 0;
-
             string[] enemySpellInflarmeText =
             {
                 "Из  темноты  колонного  зала  вылетает  несколько  крупных злобных",
@@ -351,7 +343,6 @@ namespace Lesson_2._12_FightWhisBoss
                 "Маг применяет контрудар, но все же несколько волн достигают цели.",
             };
 
-            // Enemy Spells 3 Авахто (лечение)
             int enemySpellAvahtoAmmount = 1;
             string enemySpellAvahtoTitle = $"Лечение.";
             string[] enemySpellAvahtoText =
@@ -366,8 +357,7 @@ namespace Lesson_2._12_FightWhisBoss
             int enemySpellSektrumSempraTimeToCanCast = 0; 
             int enemySpellSektrumSempraAdventChance = 60; 
             int enemySpellSektrumSempraCastReserv = 2;
-            int enemySpellSektrumSempraAmmount = 0;
-            
+            int enemySpellSektrumSempraAmmount = 0;            
             string[] enemySpellSektrumSempraText =
             {
                 "Скелет  щелкает  костяшками   пальцев,    раздается  мощный  рокот",
@@ -390,14 +380,12 @@ namespace Lesson_2._12_FightWhisBoss
                 "тварь, смесь змеи и дракона. Что если накастовать щит ?",
             };
 
-            // Enemy Spells 6 Авада-Кедавра
             int enemySpellAvadaKedavraPower = 75;
             int enemySpellAvadaKedavraRechargeTime = 5;
             int enemySpellAvadaKedavraTimeToCanCast = 0;
             int enemySpellAvadaKedavraAdventChance = 60; 
             int enemySpellAvadaKedavraCastReserv = 2;
             int enemySpellAvadaKedavraAmmount = 0;
-            //TODO написать
             string[] EnemySpellAvadaKedavraText =
             {
                 "Костяной воин бормочет странным  говором знакомые выражения...  По",
@@ -499,10 +487,6 @@ namespace Lesson_2._12_FightWhisBoss
                 "          ███████     "
             };
 
-
-
-
-
             int[][] enemyDieAnimationFrames = new int[4][];
             enemyDieAnimationFrames[0] = new int[] { 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14 };
             enemyDieAnimationFrames[1] = new int[] { 2, 3, 4, 5, 7, 9, 10, 11, 12, 13 };
@@ -515,7 +499,6 @@ namespace Lesson_2._12_FightWhisBoss
             enemyAttackAnimationFrames[2] = new int[] { 3, 3, 3, 3, 2, 2, 2 };
             string[] finalOutputImage;
             string[] finalOutputText;
-
 
             int enemyWindowCursorPositionY;
             int playerWindowCursorPositionY;
@@ -536,8 +519,6 @@ namespace Lesson_2._12_FightWhisBoss
             string enemyImageClearLine = "";
             string finalWindowClearLine = "";
 
-
-            //параметры Player
             int playerHealthMaximum = 175;
             int playerHealth = playerHealthMaximum;
             int playerCriricalHealth = playerHealthMaximum / 3;
@@ -552,7 +533,6 @@ namespace Lesson_2._12_FightWhisBoss
                 "ввергайте в шок его разум. Он искусственный.",
             };
 
-            //параметры Enemy
             int enemyHealthMaximum = 450;
             int enemyHealth = enemyHealthMaximum;
             int enemyCriticalHealth = 150;
@@ -578,12 +558,16 @@ namespace Lesson_2._12_FightWhisBoss
 
             for (int i = 0; i < LogWindowLength -LogWindowTextOffsetX - WindowBorderthick; i++)
                 logWindowClearLine += " ";
+
             for (int i = 0; i < (PlayerWindowLength - PlayerWindowTextOffsetX - WindowBorderthick * 2); i++)
                 playerWindowClearLine += " ";
+
             for (int i = 0; i < EnemyWindowLength - LogWindowTextOffsetX - WindowBorderthick * 2; i++)
                 enemyWindowClearLine += " ";
+
             for (int i = 0; i < enemyImageClearLineLength; i++)
                 enemyImageClearLine += " ";
+
             for (int i = 0; i < FinalWindowLength - WindowBorderthick * 2; i++)
                 finalWindowClearLine += " ";
 
@@ -591,8 +575,10 @@ namespace Lesson_2._12_FightWhisBoss
             {
                 if (playerSpellPatronusTimeToCanCast > 0)
                     playerSpellPatronusTimeToCanCast--;
+
                 if (playerSpellImperioTimeToCanCast > 0)
                     playerSpellImperioTimeToCanCast--;
+
                 if (playerSpellKonfundusCastReserv > 0)
                 {                    
                     int adventChance = random.Next(0, persentageCoefficient);
@@ -603,6 +589,7 @@ namespace Lesson_2._12_FightWhisBoss
                         playerSpellKonfundusCastReserv--;
                     }                        
                 }
+
                 if (playerSpellAvadaKedavraCastReserv > 0)
                 {
                     int adventChance = random.Next(0, persentageCoefficient);
@@ -613,10 +600,12 @@ namespace Lesson_2._12_FightWhisBoss
                         playerSpellAvadaKedavraCastReserv--;
                     }
                 }
+
                 if (playerSpellExpiliarmusCastReserv > 0)
                 {
                     int adventChance = random.Next(0, persentageCoefficient);
                     bool haveAdventSpell = (adventChance <= playerSpellExpiliarmusAdventChance);
+
                     if (haveAdventSpell)
                     {
                         playerSpellExpiliarmusAmmount++;
@@ -624,7 +613,6 @@ namespace Lesson_2._12_FightWhisBoss
                     }
                 }
 
-                // восстановление магий Enemy
                 if (enemySpellInflarmeTimeToCanCast > 0)
                     enemySpellInflarmeTimeToCanCast--;
                 
@@ -640,13 +628,13 @@ namespace Lesson_2._12_FightWhisBoss
                 if (enemySpellAvadaKedavraTimeToCanCast > 0)
                     enemySpellAvadaKedavraTimeToCanCast--;
 
-
                 if (canEnemyCastSpells)
                 {
                     if (enemySpellEngorgioCastReserv > 0 && enemySpellEngorgioTimeToCanCast <= 0)
                     {
                         int adventChance = random.Next(0, persentageCoefficient);
                         bool haveAdventSpell = (adventChance <= enemySpellEngorgioAdventChance);
+
                         if (haveAdventSpell)
                         {
                             enemySpellEngorgioAmmount++;
@@ -658,6 +646,7 @@ namespace Lesson_2._12_FightWhisBoss
                     {
                         int adventChance = random.Next(0, persentageCoefficient);
                         bool haveAdventSpell = (adventChance <= enemySpellSektrumSempraAdventChance);
+
                         if (haveAdventSpell)
                         {
                             enemySpellSektrumSempraAmmount++;
@@ -669,19 +658,19 @@ namespace Lesson_2._12_FightWhisBoss
                     {
                         int adventChance = random.Next(0, persentageCoefficient);
                         bool haveAdventSpell = (adventChance <= enemySpellAvadaKedavraAdventChance);
+
                         if (haveAdventSpell)
                         {
                             enemySpellAvadaKedavraAmmount++;
                             enemySpellAvadaKedavraCastReserv--;
                         }
                     }
-                } else
+                } 
+                else
                 {
                     canEnemyCastSpells = true;
                 }
 
-
-                // прокрутка логов Enemy
                 if (enemyWindowMessage2 != "")
                     enemyWindowMessage3 = enemyWindowMessage2;
                 else
@@ -699,10 +688,8 @@ namespace Lesson_2._12_FightWhisBoss
 
                 enemyWindowMessageCaсhe = "";
 
-
-
-                // draw enemy image
                 Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY);
+
                 if (enemyHealth <= enemyCriticalHealth)
                     currentEnemyImageColor = EnemyAlmostDieColor;
                 else if (enemyHealth <= enemyWeaknessHealth)
@@ -712,6 +699,7 @@ namespace Lesson_2._12_FightWhisBoss
 
                 Console.ForegroundColor = currentEnemyImageColor;
                 enemyImageCursorPositionY = 0;
+
                 foreach (string line in enemyBossImage)
                 {
                     Console.SetCursorPosition(EnemyImagePositionX, EnemyImagePositionY + enemyImageCursorPositionY);
@@ -719,7 +707,6 @@ namespace Lesson_2._12_FightWhisBoss
                     enemyImageCursorPositionY++;
                 }
 
-                // draw vasilisk
                 if (isVasiliskActive)
                 {
                     Console.ForegroundColor = EnemyVasiliskColor;
@@ -732,30 +719,17 @@ namespace Lesson_2._12_FightWhisBoss
                     }
                 }
 
-
-
-
                 Console.ForegroundColor = DefaultTextColor;
 
-
-
-
-
-
-                //TODO вынести прорисовку окон из цикла
-
-                
-                // Logs
-                // Log window 
                 Console.ForegroundColor = WindowBorderColor;
                 Console.SetCursorPosition(LogWindowX, LogWindowY);
-                // Log window title
-                // --------------------------------------------
+
                 Console.Write(WindowBorderSymbolHorizontal);
                 Console.Write(LogWindowName);
+
                 for (int i = 1; i < LogWindowLength - LogWindowName.Length; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
-                // |                                          |
+                                    
                 for (int i = 1; i < LogWindowHeight - LogWindowTitleOffsetY; i++)
                 {
                     Console.SetCursorPosition(LogWindowX, LogWindowY + i);
@@ -763,15 +737,15 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.SetCursorPosition(LogWindowX + LogWindowLength - WindowBorderthick, LogWindowY + i);
                     Console.Write(WindowBorderSymbolVertical);
                 }
+
                 Console.SetCursorPosition(LogWindowX, LogWindowY + LogWindowHeight - WindowBorderthick);
-                // --------------------------------------------
+
                 for (int i = 0; i < LogWindowLength; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
-
-                // Log text            
+          
                 logWindowCursorPositionY = LogWindowTitleOffsetY;
                 Console.ForegroundColor = DefaultTextColor;
-                //Clear Log Window
+
                 for(int i=0; i<LogWindowHeight-WindowBorderthick*2; i++)
                 {
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
@@ -783,9 +757,9 @@ namespace Lesson_2._12_FightWhisBoss
 
                 if (isIntro)
                 {
-                    //intro
                     isIntro = false;
                     logWindowCursorPositionY++;
+
                     foreach (string textLine in intoText)
                     {
                         Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
@@ -798,7 +772,7 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
                     Console.Write(LogPlayerMoveTitle);
                     logWindowCursorPositionY++;
-                    // Log player text
+
                     foreach (string textLine in playerLogsOutput)
                     {
                         Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
@@ -806,11 +780,8 @@ namespace Lesson_2._12_FightWhisBoss
                         logWindowCursorPositionY++;
                         System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
                     }
+
                     logWindowCursorPositionY++;
-
-
-
-                    // draw enemy attack animation
 
                     Console.ForegroundColor = currentEnemyImageColor;
                     foreach (int[] animationFrames in enemyAttackAnimationFrames)
@@ -830,8 +801,8 @@ namespace Lesson_2._12_FightWhisBoss
 
                     if (canShowEnemyCastAnimation) 
                     { 
-                        // enemy animation cast spell 
                         Console.ForegroundColor = EnemyImageCastSpellColor;
+
                         foreach (string[] armImageFrame in enemyArmAnimation)
                         {
                             for (int lineNumber=0; lineNumber < armImageFrame.Length; lineNumber++)
@@ -841,7 +812,7 @@ namespace Lesson_2._12_FightWhisBoss
                             }
                             System.Threading.Thread.Sleep(EnemyAnimationFramesDelay);
                         }
-                        // enemy reverse animation cast spell 
+
                         for (int frameNumber = enemyArmAnimation.Length - 1; frameNumber >= 0; frameNumber--)
                         {
                             for (int lineNumber = 0; lineNumber < enemyArmAnimation[frameNumber].Length; lineNumber++)
@@ -857,8 +828,6 @@ namespace Lesson_2._12_FightWhisBoss
                         canShowEnemyCastAnimation = true;
                     }
 
-
-                    // enemy reverse animation
                     Console.ForegroundColor = currentEnemyImageColor;
 
                     for(int frameNumber = enemyAttackAnimationFrames.Length - 1; frameNumber>=0; frameNumber--)  
@@ -876,13 +845,11 @@ namespace Lesson_2._12_FightWhisBoss
                         }
                     }
 
-
                     Console.ForegroundColor = DefaultTextColor;
-
-                    // Log enemy text
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
                     Console.Write(LogEnemyMoveTitle);
                     logWindowCursorPositionY++;
+
                     foreach (string textLine in enemyLogsOutput)
                     {
                         Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
@@ -890,24 +857,18 @@ namespace Lesson_2._12_FightWhisBoss
                         logWindowCursorPositionY++;
                         System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
                     }
+
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
                     Console.ForegroundColor = LogWindowEnemyFooterColor;
                     Console.Write(enemyLogWindowFooterText);                    
                 }
 
-                
-
-
-
-
-
-
-                // Draw Enemi window
-                // Enemy window
                 Console.ForegroundColor = WindowBorderColor;
                 Console.SetCursorPosition(EnemyWindowX, EnemyWindowY);
+
                 for (int i = 0; i < EnemyWindowLength; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
+
                 for (int i = 1; i < EnemyWindowHeight - EnemyWindowTitleOffsetY; i++)
                 {
                     Console.SetCursorPosition(EnemyWindowX, EnemyWindowY + i);
@@ -915,32 +876,33 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.SetCursorPosition(EnemyWindowX + EnemyWindowLength - WindowBorderthick, EnemyWindowY + i);
                     Console.Write(WindowBorderSymbolVertical);
                 }
+
                 Console.SetCursorPosition(EnemyWindowX, EnemyWindowY + EnemyWindowHeight - WindowBorderthick);
+                
                 for (int i = 0; i < EnemyWindowLength; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
 
-                //Clear Enemy Window
                 enemyWindowCursorPositionY = EnemyWindowTitleOffsetY;
+
                 for (int i = 0; i < EnemyWindowHeight - WindowBorderthick * 2; i++)
                 {
                     Console.SetCursorPosition(EnemyWindowX + LogWindowTextOffsetX, EnemyWindowY + enemyWindowCursorPositionY);
                     Console.Write(enemyWindowClearLine);
                     enemyWindowCursorPositionY++;
                 }
-                //Enemy window write title
+
                 Console.ForegroundColor = WindowTitleColor;
                 enemyWindowCursorPositionY = EnemyWindowTitleOffsetY;
                 Console.SetCursorPosition(EnemyWindowX + EnemyWindowTitleOffsetX, EnemyWindowY + enemyWindowCursorPositionY);
                 Console.Write($" {EnemyBossName} | Здоровье: {enemyHealth}");
                 enemyWindowCursorPositionY++;
                 Console.SetCursorPosition(EnemyWindowX + EnemyWindowTitleOffsetX, EnemyWindowY + enemyWindowCursorPositionY);
+                
                 for (int i = WindowBorderthick; i < EnemyWindowLength - WindowBorderthick; i++)
                     Console.Write(WindowHeaderLine);
 
-
-
-                //enemy windows Текущий ход
                 Console.ForegroundColor = DefaultTextColor;
+
                 if (enemyWindowMessage1 != "")
                 {
                     enemyWindowCursorPositionY++;
@@ -951,6 +913,7 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.Write(enemyWindowMessage1);
                     enemyWindowCursorPositionY++;
                 }
+
                 if (enemyWindowMessage2 != "")
                 {
                     enemyWindowCursorPositionY++;
@@ -961,6 +924,7 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.Write(enemyWindowMessage2); 
                     enemyWindowCursorPositionY++;
                 }
+
                 if (enemyWindowMessage3 != "")
                 {
                     enemyWindowCursorPositionY++;
@@ -971,18 +935,12 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.Write(enemyWindowMessage3);
                 }
 
-
-
-
-                // Player window draw
-
                 Console.ForegroundColor = WindowBorderColor;
                 Console.SetCursorPosition(PlayerWindowX, PlayerWindowY);
-                // Player window title
-                // --------------------------------------------
+
                 for (int i = 0; i < PlayerWindowLength; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
-                // |                                          |
+
                 for (int i = 1; i < PlayerWindowHeight - PlayerWindowTitleOffsetY; i++)
                 {
                     Console.SetCursorPosition(PlayerWindowX, PlayerWindowY + i);
@@ -990,14 +948,14 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.SetCursorPosition(PlayerWindowX + PlayerWindowLength - WindowBorderthick, PlayerWindowY + i);
                     Console.Write(WindowBorderSymbolVertical);
                 }
+
                 Console.SetCursorPosition(PlayerWindowX, PlayerWindowY + PlayerWindowHeight - WindowBorderthick);
-                // --------------------------------------------
+
                 for (int i = 0; i < PlayerWindowLength; i++)
                     Console.Write(WindowBorderSymbolHorizontal);
 
-
-                //Clear Player Window Text
                 playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
+
                 for (int i = 0; i < PlayerWindowHeight - WindowBorderthick * 2; i++)
                 {
                     Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
@@ -1005,51 +963,54 @@ namespace Lesson_2._12_FightWhisBoss
                     playerWindowCursorPositionY++;
                 }
 
-                // Player text
                 Console.ForegroundColor = WindowTitleColor;
                 playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($" {PlayerName} | ");
+
                 if (playerHealth < playerCriricalHealth)
                     Console.ForegroundColor = PlayerCriricalHealthColor; 
                 else
                     Console.ForegroundColor = PlayerHealthColor;
+
                 Console.Write($"Здоровье: {playerHealth}");
                 Console.ForegroundColor = WindowTitleColor;
                 Console.Write($" | ");
+
                 if(playerShield > 0)
                     Console.ForegroundColor = ShieldTextColor;
+
                 Console.Write($"Щит: {playerShield}");
                 Console.ForegroundColor = WindowTitleColor;
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
+                
                 for (int i = WindowBorderthick; i < PlayerWindowLength - WindowBorderthick; i++)
                     Console.Write(WindowHeaderLine);
 
                 Console.ForegroundColor = DefaultTextColor;
-                // Player menu text 
-                // Write Spell 1 menu
+
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($"{PlayerSpellPatronusCommand}. {playerSpellPatronusName} - {playerSpellPatronusLog} " +
                              $"Перезарядка {playerSpellPatronusTimeToCanCast}.");
-                // Write Spell 2 menu
+
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($"{PlayerSpellImperioCommand}. {playerSpellImperioName} - {playerSpellImperioLog} " +
                               $"Перезарядка {playerSpellImperioTimeToCanCast}.");
-                // Write Spell 3 menu Авахто (лечение)
+
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($"{PlayerSpellAvahtoCommand}. {playerSpellAvahtoName} - {playerSpellAvahtoLog} " +
                               $"Кол-во {playerSpellAvahtoAmmount}.");
-                // Write Spell 4 menu Иммобилус
+
                 playerWindowCursorPositionY++;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($"{PlayerSpellImmobilusCommand}. {playerSpellImmobilusName} - {playerSpellImmobilusTitle} " +
                               $"Кол-во {playerSpellImmobilusAmmount}.");
-                // Write Spell 5 menu Конфундус
                 Console.ForegroundColor = HigthLihtSpellTextColor;
+
                 if (playerSpellKonfundusAmmount > 0)
                 {
 
@@ -1058,7 +1019,7 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.Write($"{PlayerSpellKonfundusCommand}. {playerSpellKonfundusName} - {playerSpellKonfundusTitle} " +
                                   $"Кол-во {playerSpellKonfundusAmmount}.");
                 }
-                // Write Spell 6 menu Авада-Кедавра
+
                 if (playerSpellAvadaKedavraAmmount > 0)
                 {
                     playerWindowCursorPositionY++;
@@ -1066,7 +1027,7 @@ namespace Lesson_2._12_FightWhisBoss
                     Console.Write($"{PlayerSpellAvadaKedavraCommand}. {playerSpellAvadaKedavraName} - {playerSpellAvadaKedavraTitle} " +
                                   $"Кол-во {playerSpellAvadaKedavraAmmount}.");
                 }
-                // Write Spell 7 menu Экспилиармус
+
                 if (playerSpellExpiliarmusAmmount > 0)
                 {
                     playerWindowCursorPositionY++;
@@ -1083,11 +1044,6 @@ namespace Lesson_2._12_FightWhisBoss
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + PlayerWindowHeight - WindowBorderthick*2);
                 Console.Write(PlayerInputCommandPrompt);
                 inputCommand = Console.ReadLine();
-
-
-
-
-
 
                 switch (inputCommand)
                 {
@@ -1227,27 +1183,25 @@ namespace Lesson_2._12_FightWhisBoss
                         break;
                 }
 
-                // Player window text output second time
                 playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($" {PlayerName} | ");
+
                 if (playerHealth < playerCriricalHealth)
                     Console.ForegroundColor = PlayerCriricalHealthColor;
                 else
                     Console.ForegroundColor = PlayerHealthColor;
+
                 Console.Write($"Здоровье: {playerHealth}");
                 Console.ForegroundColor = DefaultTextColor;
                 Console.Write($" | ");
+
                 if (playerShield > 0)
                     Console.ForegroundColor = ShieldTextColor;
+
                 Console.Write($"Щит: {playerShield}     ");
                 Console.ForegroundColor = DefaultTextColor;
 
-
-
-                // ENEMY MOOVE
-                // ENEMY MOOVE
-                // ENEMY MOOVE
                 if (wasLastEnemvySpellAvahto)
                     wasLastEnemvySpellAvahto = false;
 
@@ -1293,21 +1247,17 @@ namespace Lesson_2._12_FightWhisBoss
                 }
                 else if (enemySpellInflarmeTimeToCanCast <= 0)
                 {
-                    // enemy spell 2 
                     enemyDealDamageToPlayer = enemySpellInflarmePower;
                     enemyLogsOutput = enemySpellInflarmeText;
                     enemySpellInflarmeTimeToCanCast = enemySpellInflarmeRechargeTime;
                 }
                 else
-                {
-                    // enemy spell 1                
+                {               
                     enemyDealDamageToPlayer = enemyPunchPower;
                     enemyLogsOutput = enemyPunchText;
                     canShowEnemyCastAnimation = false;
                 }
 
-                //enemy apply damage to player
-                //enemy log boss status line (health, mov, etc)
                 enemyLogWindowFooterText = "";
 
                 if (isVasiliskActive && enemyVasilisklAliveRounds==0)
@@ -1353,22 +1303,24 @@ namespace Lesson_2._12_FightWhisBoss
                     }
                 }
 
-                // Player window text output third time
                 playerWindowCursorPositionY = PlayerWindowTitleOffsetY;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTitleOffsetX, PlayerWindowY + playerWindowCursorPositionY);
                 Console.Write($" {PlayerName} | ");
+
                 if (playerHealth < playerCriricalHealth)
                     Console.ForegroundColor = PlayerCriricalHealthColor;
                 else
                     Console.ForegroundColor = PlayerHealthColor;
+
                 Console.Write($"Здоровье: {playerHealth}");
                 Console.ForegroundColor = DefaultTextColor;
                 Console.Write($" | ");
+
                 if (playerShield > 0)
                     Console.ForegroundColor = ShieldTextColor;
+
                 Console.Write($"Щит: {playerShield}     ");
                 Console.ForegroundColor = DefaultTextColor;
-
 
                 if (playerHealth <= 0)
                 {
@@ -1381,13 +1333,12 @@ namespace Lesson_2._12_FightWhisBoss
                     isBattleActive = false;
                     isEnemyDie = true;
                 }
-
             }
 
             if (isEnemyDie)
             {
-                // draw enemy animation dead
                 Console.ForegroundColor = currentEnemyImageColor;
+
                 foreach (int[] animationFrames in enemyDieAnimationFrames)
                 {
                     System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
@@ -1424,15 +1375,11 @@ namespace Lesson_2._12_FightWhisBoss
                 finalOutputImage = playerWinImage;
             }
 
-
-
             if(isPlayerDead || isEnemyDie)
             {
-
-                // Output player move last time
                 logWindowCursorPositionY = LogWindowTitleOffsetY;
                 Console.ForegroundColor = DefaultTextColor;
-                //Clear Log Window
+
                 for (int i = 0; i < LogWindowHeight - WindowBorderthick * 2; i++)
                 {
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
@@ -1444,7 +1391,7 @@ namespace Lesson_2._12_FightWhisBoss
                 Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
                 Console.Write(LogPlayerMoveTitle);
                 logWindowCursorPositionY++;
-                // Log player text
+
                 foreach (string textLine in playerLogsOutput)
                 {
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
@@ -1454,13 +1401,12 @@ namespace Lesson_2._12_FightWhisBoss
                 }
                 logWindowCursorPositionY++;
 
-                // Output last enemy move....
                 Console.ForegroundColor = DefaultTextColor;
 
-                // Log enemy text
                 Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
                 Console.Write(LogEnemyMoveTitle);
                 logWindowCursorPositionY++;
+
                 foreach (string textLine in enemyLogsOutput)
                 {
                     Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
@@ -1468,12 +1414,11 @@ namespace Lesson_2._12_FightWhisBoss
                     logWindowCursorPositionY++;
                     System.Threading.Thread.Sleep(LogsLineAppearenseDelay);
                 }
+
                 Console.SetCursorPosition(LogWindowX + LogWindowTextOffsetX, LogWindowY + logWindowCursorPositionY);
                 Console.ForegroundColor = LogWindowEnemyFooterColor;
                 Console.Write(enemyLogWindowFooterText);
 
-
-                // Press any key to continue....
                 Console.ForegroundColor = HigthLihtSpellTextColor;
                 Console.SetCursorPosition(PlayerWindowX + PlayerWindowTextOffsetX, PlayerWindowY + PlayerWindowHeight - WindowBorderthick * 2);
                 Console.Write(PressKeyPrompt);
@@ -1519,7 +1464,6 @@ namespace Lesson_2._12_FightWhisBoss
                 finalWindowCursorPositionY = FinalWindowTextOffsetY;
                 Console.ForegroundColor = DefaultTextColor;
 
-                // Final text
                 finalWindowCursorPositionY = FinalWindowTextOffsetY;
                 Console.ForegroundColor = DefaultTextColor;
 
@@ -1531,9 +1475,7 @@ namespace Lesson_2._12_FightWhisBoss
                 }
 
                 Console.ReadKey();
-            }
-
-            
+            }            
         }
     }
 }
