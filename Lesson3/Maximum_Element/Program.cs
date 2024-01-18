@@ -12,10 +12,10 @@ namespace Maximum_Element
             int minimumRandomNumber = 0;
             int zeroElement = 0;
             int maximumNumber = int.MinValue;
-
             int[,] numbersMatrix = new int[numbersMatrixHeight, numbersMatrixLength];
 
             Random random = new Random();
+
             Console.WriteLine("Начальная матрица:");
 
             for (int i=0; i < numbersMatrix.GetLength(0); i++)
