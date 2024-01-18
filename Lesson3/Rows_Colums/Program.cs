@@ -19,7 +19,7 @@ namespace Rows_Colums
             int rowSum = 0;
             int rowForSumCalculation = 2;
 
-            int columnMultiplication = 1;
+            int multiplicationResult = 1;
             int columnForMultiplication = 1;
 
             for (int i=0; i<numbers.GetLength(0); i++)
@@ -41,10 +41,10 @@ namespace Rows_Colums
 
             for (int i = 0; i < numbers.GetLength(0); i++)
             {
-                columnMultiplication *= numbers[i, columnForMultiplication-1];
+                multiplicationResult *= numbers[i, columnForMultiplication-1];
             }
 
-            Console.WriteLine($"Произведение {columnForMultiplication} столбца {columnMultiplication}");
+            Console.WriteLine($"Произведение {columnForMultiplication} столбца {multiplicationResult}");
         }
     }
 }
