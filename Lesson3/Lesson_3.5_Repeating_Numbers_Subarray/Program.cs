@@ -9,6 +9,7 @@ namespace Lesson_3._5_Repeating_Numbers_Subarray
             int[] numbers = { 2, 2, 2, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 2, 2, 2, 1 };
 
             int repeatTimes = 1;
+            int checkingNumber = numbers[0];
             int maximumRepeatTimes = 0;
             int maximumRepeatNumber = 0;
 
@@ -21,13 +22,13 @@ namespace Lesson_3._5_Repeating_Numbers_Subarray
 
             for (int i = 1; i < numbers.Length; i++)
             {
-                if (numbers[i-1] == numbers[i])
+                if (checkingNumber == numbers[i])
                 {
                     repeatTimes++;
                 }
                 else
                 {
-                    numbers[i-1] = numbers[i];
+                    checkingNumber = numbers[i];
                     repeatTimes = 1;
                 }
                 
