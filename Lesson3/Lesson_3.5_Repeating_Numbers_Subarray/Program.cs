@@ -11,7 +11,7 @@ namespace Lesson_3._5_Repeating_Numbers_Subarray
             int repeatTimes = 1;
             int checkingNumber = numbers[0];
             int maximumRepeatTimes = 0;
-            int maximumRepeatNumber = 0;
+            int maximumRepeatNumber = 1;
 
             Console.WriteLine("Массив чисел:");
 
