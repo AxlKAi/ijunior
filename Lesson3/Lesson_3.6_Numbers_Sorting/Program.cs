@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lesson_3._6_Numbers_Sorting
 {
@@ -16,8 +12,8 @@ namespace Lesson_3._6_Numbers_Sorting
             int maximumRandomNumber = 100;
 
             Random random;
-            random = new Random();
 
+            random = new Random();
             Console.WriteLine("Генерируем массив:");
 
             for (int i = 0; i < numbersArrayLength; i++)
