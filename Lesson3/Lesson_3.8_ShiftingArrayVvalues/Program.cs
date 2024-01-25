@@ -30,6 +30,12 @@ namespace Lesson_3._8_ShiftingArrayVvalues
             Console.WriteLine("\nВведите количество сдвигов массива:");
             shiftTimes = Convert.ToInt32(Console.ReadLine());
 
+            if (shiftTimes >= numbers.Length)
+            {
+                shiftTimes = shiftTimes % numbers.Length;
+                Console.WriteLine($"\nКоличество сдвигов больше чем длинна массива, сокращаем до:{shiftTimes}");
+            }
+
             for(int j=0; j<shiftTimes; j++)
             {
                 int firstNumber = numbers[0];
