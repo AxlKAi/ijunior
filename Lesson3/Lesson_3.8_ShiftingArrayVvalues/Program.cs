@@ -40,13 +40,12 @@ namespace Lesson_3._8_ShiftingArrayVvalues
                 }
 
                 numbers[numbers.Length - 1] = firstNumber;
+            }
 
-                for (int i = 0; i < numbersArrayLength; i++)
-                {
-                    Console.Write(numbers[i] + "  ");
-                }
-
-                Console.WriteLine();
+            Console.WriteLine("\nМассив после сдвига:");
+            for (int i = 0; i < numbersArrayLength; i++)
+            {
+                Console.Write(numbers[i] + "  ");
             }
 
             Console.ReadLine();
