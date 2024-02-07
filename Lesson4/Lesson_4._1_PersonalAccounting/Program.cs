@@ -66,7 +66,7 @@ namespace Lesson_4._1_PersonalAccounting
             {
                 for (int i = 0; i < personsFullName.Length; i++)
                 {
-                    Console.WriteLine($" [{i}] {personsFullName[i]} --> {personsPosition[i]}");
+                    Console.WriteLine($" [{i}] {personsFullName[i]} - {personsPosition[i]}");
                 }
             }
             else
