@@ -228,6 +228,7 @@ namespace Lesson_4._1_PersonalAccounting
 
                 if (isContained)
                 {
+                    containedPosition++;
                     Console.WriteLine($"id =[{i}] Фамилия: {surnames[i]} " +
                         $"содержит подстроку начиная с символа {containedPosition}.");
                     isAtLeastOneContain = true;
