@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lesson_4._2_HealthBar
 {
@@ -21,7 +17,7 @@ namespace Lesson_4._2_HealthBar
             char leftBorder = '[';
             char rightBorder = ']';
             char emptySymbol = '_';
-            float healthBarLength = 10;
+            float healthBarLength = 30;
             float normalizedСoefficient = 1;
             float filledToEmptyFrontier = 0f;
             float persentageStep = normalizedСoefficient / healthBarLength;
