@@ -1,10 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lesson_4._4_BraveNewWorld
 {
@@ -19,6 +15,9 @@ namespace Lesson_4._4_BraveNewWorld
 
         const int BottomMenuX = 3;
         const int BottomMenuY = 25;
+        const int PlayerLogMenuX = 3;
+        const int PlayerLogMenuY = 24;
+        const int PlayerStep = 1;
 
         const string PlayerCollideTreasureMessage = "Вы нашли сокровище!                 ";
         const string PlayerCollideThornMessage = "Вы наступлили на колючку.              ";
@@ -27,14 +26,8 @@ namespace Lesson_4._4_BraveNewWorld
         static string BottomMenuText = $"Нажмите: 1-установить сокровище ({Treasure})  2-установить колючку ({Thorn})  " +
                                        $"3-установить вишенку ({Cherry}) 4-Стену ({Wall})  5-Выход";
 
-        const int PlayerLogMenuX = 3;
-        const int PlayerLogMenuY = 24;
         static string PlayerLogPrefix = "Игрок:";
-
-        const int playerStep = 1;
-
         static char[,] map;
-
         static int playerX;
         static int playerY;
 
@@ -55,19 +48,19 @@ namespace Lesson_4._4_BraveNewWorld
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        MovePlayer(0,-playerStep);
+                        MovePlayer(0, -PlayerStep);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        MovePlayer(0, playerStep);
+                        MovePlayer(0, PlayerStep);
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        MovePlayer(-playerStep, 0);
+                        MovePlayer(-PlayerStep, 0);
                         break;
 
                     case ConsoleKey.RightArrow:
-                        MovePlayer(playerStep, 0);
+                        MovePlayer(PlayerStep, 0);
                         break;
 
                     case ConsoleKey.D1:
@@ -96,11 +89,11 @@ namespace Lesson_4._4_BraveNewWorld
         static char[,] ReadMap(string mapName)
         {
             string[] mapFile = File.ReadAllLines($"map/{mapName}.txt");
-            char[,] map = new char[mapFile.Length,mapFile[0].Length];
+            char[,] map = new char[mapFile.Length, mapFile[0].Length];
 
-            for(int i=0; i<mapFile.Length; i++)
+            for (int i = 0; i < mapFile.Length; i++)
             {
-                for(int j=0; j< mapFile[0].Length; j++)
+                for (int j = 0; j < mapFile[0].Length; j++)
                 {
                     map[i, j] = mapFile[i][j];
                 }
@@ -148,12 +141,12 @@ namespace Lesson_4._4_BraveNewWorld
         static void HidePlayer()
         {
             Console.SetCursorPosition(playerX, playerY);
-            Console.Write(map[playerY,playerX]);
+            Console.Write(map[playerY, playerX]);
         }
 
         static void MovePlayer(int dx, int dy)
         {
-            if(map[playerY+dy,playerX+dx] != Wall)
+            if (map[playerY + dy, playerX + dx] != Wall)
             {
                 HidePlayer();
                 playerX += dx;
