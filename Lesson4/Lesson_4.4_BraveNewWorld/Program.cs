@@ -13,17 +13,17 @@ namespace Lesson_4._4_BraveNewWorld
         const char Thorn = '^';
         const char Cherry = '%';
 
+        enum Direction { Up, Down, Left, Right }
+
         static void Main(string[] args)
         {
             char[,] map;
 
             int playerPositionX = 0;
             int playerPositionY = 0;
-            int PlayerStep = 1;
-            bool isPlaying = true;
 
-            string bottomMenuText = $"Нажмите: 1-установить сокровище ({Treasure})  2-установить колючку ({Thorn})  " +
-                           $"3-установить вишенку ({Cherry}) 4-Стену ({Wall})  5-Выход";
+            bool isPlaying = true;
+            bool isDrawMode = true;
 
             Console.CursorVisible = false;
 
@@ -32,7 +32,7 @@ namespace Lesson_4._4_BraveNewWorld
             SetPlayerStartPosition(map, ref playerPositionX, ref playerPositionY);
             DrawPlayer(playerPositionX, playerPositionY);
 
-            ShowMenu(bottomMenuText);
+            ShowMenu(isDrawMode);
 
             while (isPlaying)
             {
@@ -41,27 +41,29 @@ namespace Lesson_4._4_BraveNewWorld
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        MovePlayer(0, -PlayerStep, ref playerPositionX, ref playerPositionY, map);
+                        MovePlayer(Direction.Up, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        MovePlayer(0, PlayerStep, ref playerPositionX, ref playerPositionY, map);
+                        MovePlayer(Direction.Down, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        MovePlayer(-PlayerStep, 0, ref playerPositionX, ref playerPositionY, map);
+                        MovePlayer(Direction.Left, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
                     case ConsoleKey.RightArrow:
-                        MovePlayer(PlayerStep, 0, ref playerPositionX, ref playerPositionY, map);
+                        MovePlayer(Direction.Right, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
                     case ConsoleKey.D1:
-                        PlaceItem(playerPositionX, playerPositionY, map, Treasure);
+                        if (isDrawMode)
+                            PlaceItem(playerPositionX, playerPositionY, map, Treasure);
                         break;
 
                     case ConsoleKey.D2:
-                        PlaceItem(playerPositionX, playerPositionY, map, Thorn);
+                        if (isDrawMode)
+                            PlaceItem(playerPositionX, playerPositionY, map, Thorn);
                         break;
 
                     case ConsoleKey.D3:
@@ -69,11 +71,17 @@ namespace Lesson_4._4_BraveNewWorld
                         break;
 
                     case ConsoleKey.D4:
-                        PlaceItem(playerPositionX, playerPositionY, map, Wall);
+                        if (isDrawMode)
+                            PlaceItem(playerPositionX, playerPositionY, map, Wall);
                         break;
 
                     case ConsoleKey.D5:
                         isPlaying = false;
+                        break;
+
+                    case ConsoleKey.D6:
+                        isDrawMode = false;
+                        ShowMenu(isDrawMode);
                         break;
                 }
             }
@@ -137,22 +145,92 @@ namespace Lesson_4._4_BraveNewWorld
             Console.Write(map[playerPositionY, playerPositionX]);
         }
 
-        static void MovePlayer(int deltaX, int deltaY, ref int playerPositionX, ref int playerPositionY, char[,] map)
+        static void MovePlayer(Direction direction, ref int playerPositionX, ref int playerPositionY, char[,] map, bool isDrawMode)
         {
-            if (map[playerPositionY + deltaY, playerPositionX + deltaX] != Wall)
+            int minPositionX = 0;
+            int minPositionY = 0;
+            int maxPositionX = map.GetLength(1) - 1;
+            int maxPositionY = map.GetLength(0) - 1;
+
+            int deltaX, deltaY;
+
+            GetMovementDirection(direction, out deltaX, out deltaY);
+
+            if (isDrawMode || map[playerPositionY + deltaY, playerPositionX + deltaX] != Wall)
             {
                 HidePlayer(playerPositionX, playerPositionY, map);
                 playerPositionX += deltaX;
                 playerPositionY += deltaY;
+
+                if (playerPositionX < minPositionX)
+                    playerPositionX = minPositionX;
+
+                if (playerPositionX > maxPositionX)
+                    playerPositionX = maxPositionX;
+
+                if (playerPositionY < minPositionY)
+                    playerPositionY = minPositionY;
+
+                if (playerPositionY > maxPositionY)
+                    playerPositionY = maxPositionY;
+
                 DrawPlayer(playerPositionX, playerPositionY);
-                CollidePlayer(playerPositionX, playerPositionY, map);
+
+                if (isDrawMode == false)
+                    CollidePlayer(playerPositionX, playerPositionY, map);
             }
         }
 
-        static void ShowMenu(string bottomMenuText)
+        static void GetMovementDirection(Direction direction, out int deltaX, out int deltaY)
         {
-            int bottomMenuX = 3;
-            int bottomMenuY = 25;
+            int PlayerStep = 1;
+
+            deltaX = 0;
+            deltaY = 0;
+
+            switch (direction)
+            {
+                case Direction.Up:
+                    deltaY = -PlayerStep;
+                    break;
+
+                case Direction.Down:
+                    deltaY = PlayerStep;
+                    break;
+
+                case Direction.Left:
+                    deltaX = -PlayerStep;
+                    break;
+
+                case Direction.Right:
+                    deltaX = PlayerStep;
+                    break;
+            }
+        }
+
+        static void ShowMenu(bool isDrawMode)
+        {
+            int bottomMenuX = 0;
+            int bottomMenuY = 20;
+
+            string bottomMenuText;
+
+            if (isDrawMode)
+                bottomMenuText = $"Вы в режиме редактирования карты. \n " +
+                    $"1-установить сокровище ({Treasure}) \n" +
+                    $"2-установить колючку ({Thorn})       \n" +
+                    $"3-установить вишенку ({Cherry})      \n" +
+                    $"4-установить Стену ({Wall})          \n" +
+                    $"5-Выход                              \n" +
+                    $"6-Начать игру.                  ";
+            else
+                bottomMenuText = $"Вы в режиме игры.                   \n " +
+                    "                                     \n" +
+                    $"Кушайте вишню ({Cherry}),           \n" +
+                    $"собирайте сокровища ({Treasure}).   \n" +
+                    $"избегайте колючек ({Thorn}),         \n" +
+                    $"                                    \n" +
+                    $"5-Выход                              ";
 
             Console.SetCursorPosition(bottomMenuX, bottomMenuY);
             Console.Write(bottomMenuText);
