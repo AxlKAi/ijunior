@@ -17,10 +17,21 @@ namespace Lesson_4._4_BraveNewWorld
 
         static void Main(string[] args)
         {
+            const ConsoleKey UpKey = ConsoleKey.UpArrow;
+            const ConsoleKey DownKey = ConsoleKey.DownArrow;
+            const ConsoleKey LeftKey = ConsoleKey.LeftArrow;
+            const ConsoleKey RightKey = ConsoleKey.RightArrow;
+            const ConsoleKey PlaceTreasureKey = ConsoleKey.D1;
+            const ConsoleKey PlaceThornKey = ConsoleKey.D2;
+            const ConsoleKey PlaceCherryKey = ConsoleKey.D3;
+            const ConsoleKey PlaceWallKey = ConsoleKey.D4;
+            const ConsoleKey ExitKey = ConsoleKey.D5;
+            const ConsoleKey DrawModeKey = ConsoleKey.D6;
+
             char[,] map;
 
-            int playerPositionX = 0;
-            int playerPositionY = 0;
+            int playerPositionX;
+            int playerPositionY;
 
             bool isPlaying = true;
             bool isDrawMode = true;
@@ -29,7 +40,7 @@ namespace Lesson_4._4_BraveNewWorld
 
             map = ReadMap("map");
             DrawMap(map);
-            SetPlayerStartPosition(map, ref playerPositionX, ref playerPositionY);
+            SetPlayerStartPosition(map, out playerPositionX, out playerPositionY);
             DrawPlayer(playerPositionX, playerPositionY);
 
             ShowMenu(isDrawMode);
@@ -40,46 +51,46 @@ namespace Lesson_4._4_BraveNewWorld
 
                 switch (key.Key)
                 {
-                    case ConsoleKey.UpArrow:
+                    case UpKey:
                         MovePlayer(Direction.Up, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
-                    case ConsoleKey.DownArrow:
+                    case DownKey:
                         MovePlayer(Direction.Down, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
-                    case ConsoleKey.LeftArrow:
+                    case LeftKey:
                         MovePlayer(Direction.Left, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
-                    case ConsoleKey.RightArrow:
+                    case RightKey:
                         MovePlayer(Direction.Right, ref playerPositionX, ref playerPositionY, map, isDrawMode);
                         break;
 
-                    case ConsoleKey.D1:
+                    case PlaceTreasureKey:
                         if (isDrawMode)
                             PlaceItem(playerPositionX, playerPositionY, map, Treasure);
                         break;
 
-                    case ConsoleKey.D2:
+                    case PlaceThornKey:
                         if (isDrawMode)
                             PlaceItem(playerPositionX, playerPositionY, map, Thorn);
                         break;
 
-                    case ConsoleKey.D3:
+                    case PlaceCherryKey:
                         PlaceItem(playerPositionX, playerPositionY, map, Cherry);
                         break;
 
-                    case ConsoleKey.D4:
+                    case PlaceWallKey:
                         if (isDrawMode)
                             PlaceItem(playerPositionX, playerPositionY, map, Wall);
                         break;
 
-                    case ConsoleKey.D5:
+                    case ExitKey:
                         isPlaying = false;
                         break;
 
-                    case ConsoleKey.D6:
+                    case DrawModeKey:
                         isDrawMode = false;
                         ShowMenu(isDrawMode);
                         break;
@@ -116,8 +127,11 @@ namespace Lesson_4._4_BraveNewWorld
             }
         }
 
-        static void SetPlayerStartPosition(char[,] map, ref int playerPositionX, ref int playerPositionY)
+        static void SetPlayerStartPosition(char[,] map, out int playerPositionX, out int playerPositionY)
         {
+            playerPositionX = 0;
+            playerPositionY = 0;
+
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
@@ -183,7 +197,7 @@ namespace Lesson_4._4_BraveNewWorld
 
         static void GetMovementDirection(Direction direction, out int deltaX, out int deltaY)
         {
-            int PlayerStep = 1;
+            int playerStep = 1;
 
             deltaX = 0;
             deltaY = 0;
@@ -191,19 +205,19 @@ namespace Lesson_4._4_BraveNewWorld
             switch (direction)
             {
                 case Direction.Up:
-                    deltaY = -PlayerStep;
+                    deltaY = -playerStep;
                     break;
 
                 case Direction.Down:
-                    deltaY = PlayerStep;
+                    deltaY = playerStep;
                     break;
 
                 case Direction.Left:
-                    deltaX = -PlayerStep;
+                    deltaX = -playerStep;
                     break;
 
                 case Direction.Right:
-                    deltaX = PlayerStep;
+                    deltaX = playerStep;
                     break;
             }
         }
@@ -211,12 +225,12 @@ namespace Lesson_4._4_BraveNewWorld
         static void ShowMenu(bool isDrawMode)
         {
             int bottomMenuX = 0;
-            int bottomMenuY = 20;
+            int bottomMenuY = 22;
 
             string bottomMenuText;
 
             if (isDrawMode)
-                bottomMenuText = $"Вы в режиме редактирования карты. \n " +
+                bottomMenuText = $"Вы в режиме редактирования карты. \n" +
                     $"1-установить сокровище ({Treasure}) \n" +
                     $"2-установить колючку ({Thorn})       \n" +
                     $"3-установить вишенку ({Cherry})      \n" +
@@ -270,8 +284,8 @@ namespace Lesson_4._4_BraveNewWorld
 
         static void ShowPlayerLog(string message)
         {
-            int playerLogMenuX = 3;
-            int playerLogMenuY = 24;
+            int playerLogMenuX = 0;
+            int playerLogMenuY = 23;
 
             string playerLogPrefix = "Игрок:";
 
