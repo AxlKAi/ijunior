@@ -40,7 +40,7 @@ namespace Lesson_4._4_BraveNewWorld
 
             map = ReadMap("map");
             DrawMap(map);
-            SetPlayerStartPosition(map, out playerPositionX, out playerPositionY);
+            InitializePlayerStartPosition(map, out playerPositionX, out playerPositionY);
             DrawPlayer(playerPositionX, playerPositionY);
 
             ShowMenu(isDrawMode);
@@ -127,7 +127,7 @@ namespace Lesson_4._4_BraveNewWorld
             }
         }
 
-        static void SetPlayerStartPosition(char[,] map, out int playerPositionX, out int playerPositionY)
+        static void InitializePlayerStartPosition(char[,] map, out int playerPositionX, out int playerPositionY)
         {
             playerPositionX = 0;
             playerPositionY = 0;
@@ -197,29 +197,20 @@ namespace Lesson_4._4_BraveNewWorld
 
         static void GetMovementDirection(Direction direction, out int deltaX, out int deltaY)
         {
-            int playerStep = 1;
-
             deltaX = 0;
             deltaY = 0;
+ 
+            if(direction == Direction.Up)
+                deltaY = -1;
 
-            switch (direction)
-            {
-                case Direction.Up:
-                    deltaY = -playerStep;
-                    break;
+            if (direction == Direction.Down)
+                deltaY = 1;
 
-                case Direction.Down:
-                    deltaY = playerStep;
-                    break;
+            if (direction == Direction.Left)
+                deltaX = -1;
 
-                case Direction.Left:
-                    deltaX = -playerStep;
-                    break;
-
-                case Direction.Right:
-                    deltaX = playerStep;
-                    break;
-            }
+            if (direction == Direction.Right)
+                deltaX = 1;
         }
 
         static void ShowMenu(bool isDrawMode)
