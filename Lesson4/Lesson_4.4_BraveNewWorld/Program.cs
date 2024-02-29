@@ -13,8 +13,6 @@ namespace Lesson_4._4_BraveNewWorld
         const char Thorn = '^';
         const char Cherry = '%';
 
-        enum Direction { Up, Down, Left, Right }
-
         static void Main(string[] args)
         {
             const ConsoleKey UpKey = ConsoleKey.UpArrow;
@@ -32,6 +30,8 @@ namespace Lesson_4._4_BraveNewWorld
 
             int playerPositionX;
             int playerPositionY;
+            int deltaX = 0;
+            int deltaY = 0;
 
             bool isPlaying = true;
             bool isDrawMode = true;
@@ -52,38 +52,38 @@ namespace Lesson_4._4_BraveNewWorld
                 switch (key.Key)
                 {
                     case UpKey:
-                        MovePlayer(Direction.Up, ref playerPositionX, ref playerPositionY, map, isDrawMode);
+                        deltaY = -1;
                         break;
 
                     case DownKey:
-                        MovePlayer(Direction.Down, ref playerPositionX, ref playerPositionY, map, isDrawMode);
+                        deltaY = 1;
                         break;
 
                     case LeftKey:
-                        MovePlayer(Direction.Left, ref playerPositionX, ref playerPositionY, map, isDrawMode);
+                        deltaX = -1;
                         break;
 
                     case RightKey:
-                        MovePlayer(Direction.Right, ref playerPositionX, ref playerPositionY, map, isDrawMode);
+                        deltaX = 1;
                         break;
 
                     case PlaceTreasureKey:
                         if (isDrawMode)
-                            PlaceItem(playerPositionX, playerPositionY, map, Treasure);
+                            PutItem(playerPositionX, playerPositionY, map, Treasure);
                         break;
 
                     case PlaceThornKey:
                         if (isDrawMode)
-                            PlaceItem(playerPositionX, playerPositionY, map, Thorn);
+                            PutItem(playerPositionX, playerPositionY, map, Thorn);
                         break;
 
                     case PlaceCherryKey:
-                        PlaceItem(playerPositionX, playerPositionY, map, Cherry);
+                        PutItem(playerPositionX, playerPositionY, map, Cherry);
                         break;
 
                     case PlaceWallKey:
                         if (isDrawMode)
-                            PlaceItem(playerPositionX, playerPositionY, map, Wall);
+                            PutItem(playerPositionX, playerPositionY, map, Wall);
                         break;
 
                     case ExitKey:
@@ -94,6 +94,13 @@ namespace Lesson_4._4_BraveNewWorld
                         isDrawMode = false;
                         ShowMenu(isDrawMode);
                         break;
+                }
+
+                if (deltaX != 0 || deltaY != 0)
+                {
+                    MovePlayer(ref playerPositionX, ref playerPositionY, deltaX, deltaY, map, isDrawMode);
+                    deltaX = 0;
+                    deltaY = 0;
                 }
             }
         }
@@ -159,34 +166,24 @@ namespace Lesson_4._4_BraveNewWorld
             Console.Write(map[playerPositionY, playerPositionX]);
         }
 
-        static void MovePlayer(Direction direction, ref int playerPositionX, ref int playerPositionY, char[,] map, bool isDrawMode)
+        static void MovePlayer(ref int playerPositionX, ref int playerPositionY, int offsetX, int offsetY, char[,] map, bool isDrawMode)
         {
             int minPositionX = 0;
             int minPositionY = 0;
             int maxPositionX = map.GetLength(1) - 1;
             int maxPositionY = map.GetLength(0) - 1;
 
-            int deltaX, deltaY;
-
-            GetMovementDirection(direction, out deltaX, out deltaY);
-
-            if (isDrawMode || map[playerPositionY + deltaY, playerPositionX + deltaX] != Wall)
+            if (isDrawMode || map[playerPositionY + offsetY, playerPositionX + offsetX] != Wall)
             {
                 HidePlayer(playerPositionX, playerPositionY, map);
-                playerPositionX += deltaX;
-                playerPositionY += deltaY;
+                playerPositionX += offsetX;
+                playerPositionY += offsetY;
 
-                if (playerPositionX < minPositionX)
+                if (playerPositionX < minPositionX || playerPositionX > maxPositionX)
                     playerPositionX = minPositionX;
 
-                if (playerPositionX > maxPositionX)
-                    playerPositionX = maxPositionX;
-
-                if (playerPositionY < minPositionY)
+                if (playerPositionY < minPositionY || playerPositionY > maxPositionY)
                     playerPositionY = minPositionY;
-
-                if (playerPositionY > maxPositionY)
-                    playerPositionY = maxPositionY;
 
                 DrawPlayer(playerPositionX, playerPositionY);
 
@@ -195,26 +192,15 @@ namespace Lesson_4._4_BraveNewWorld
             }
         }
 
-        static void GetMovementDirection(Direction direction, out int deltaX, out int deltaY)
-        {
-            deltaX = 0;
-            deltaY = 0;
- 
-            if(direction == Direction.Up)
-                deltaY = -1;
-
-            if (direction == Direction.Down)
-                deltaY = 1;
-
-            if (direction == Direction.Left)
-                deltaX = -1;
-
-            if (direction == Direction.Right)
-                deltaX = 1;
-        }
-
         static void ShowMenu(bool isDrawMode)
         {
+            string HotkeyIconPlaceTreashure = "1";
+            string HotkeyIconPlaceThorn = "2";
+            string HotkeyIconPlaceCherry = "3";
+            string HotkeyIconPlaceWall = "4";
+            string HotkeyIconExit = "5";
+            string HotkeyIconStartGame = "6";
+
             int bottomMenuX = 0;
             int bottomMenuY = 22;
 
@@ -222,12 +208,12 @@ namespace Lesson_4._4_BraveNewWorld
 
             if (isDrawMode)
                 bottomMenuText = $"Вы в режиме редактирования карты. \n" +
-                    $"1-установить сокровище ({Treasure}) \n" +
-                    $"2-установить колючку ({Thorn})       \n" +
-                    $"3-установить вишенку ({Cherry})      \n" +
-                    $"4-установить Стену ({Wall})          \n" +
-                    $"5-Выход                              \n" +
-                    $"6-Начать игру.                  ";
+                    $"{HotkeyIconPlaceTreashure}-установить сокровище ({Treasure}) \n" +
+                    $"{HotkeyIconPlaceThorn}-установить колючку ({Thorn})       \n" +
+                    $"{HotkeyIconPlaceCherry}-установить вишенку ({Cherry})      \n" +
+                    $"{HotkeyIconPlaceWall}-установить Стену ({Wall})          \n" +
+                    $"{HotkeyIconExit}-Выход                              \n" +
+                    $"{HotkeyIconStartGame}-Начать игру.                  ";
             else
                 bottomMenuText = $"Вы в режиме игры.                   \n " +
                     "                                     \n" +
@@ -235,13 +221,13 @@ namespace Lesson_4._4_BraveNewWorld
                     $"собирайте сокровища ({Treasure}).   \n" +
                     $"избегайте колючек ({Thorn}),         \n" +
                     $"                                    \n" +
-                    $"5-Выход                              ";
+                    $"{HotkeyIconExit}-Выход                              ";
 
             Console.SetCursorPosition(bottomMenuX, bottomMenuY);
             Console.Write(bottomMenuText);
         }
 
-        static void PlaceItem(int playerPositionX, int playerPositionY, char[,] map, char item)
+        static void PutItem(int playerPositionX, int playerPositionY, char[,] map, char item)
         {
             map[playerPositionY, playerPositionX] = item;
             Console.SetCursorPosition(playerPositionX, playerPositionY);
