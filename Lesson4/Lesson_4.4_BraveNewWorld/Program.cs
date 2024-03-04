@@ -13,25 +13,32 @@ namespace Lesson_4._4_BraveNewWorld
         const char Thorn = '^';
         const char Cherry = '%';
 
+        enum Direction 
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
+
         static void Main(string[] args)
         {
             const ConsoleKey UpKey = ConsoleKey.UpArrow;
             const ConsoleKey DownKey = ConsoleKey.DownArrow;
             const ConsoleKey LeftKey = ConsoleKey.LeftArrow;
             const ConsoleKey RightKey = ConsoleKey.RightArrow;
-            const ConsoleKey PlaceTreasureKey = ConsoleKey.D1;
-            const ConsoleKey PlaceThornKey = ConsoleKey.D2;
-            const ConsoleKey PlaceCherryKey = ConsoleKey.D3;
-            const ConsoleKey PlaceWallKey = ConsoleKey.D4;
-            const ConsoleKey ExitKey = ConsoleKey.D5;
+            const ConsoleKey PutTreasureKey = ConsoleKey.D1;
+            const ConsoleKey PutThornKey = ConsoleKey.D2;
+            const ConsoleKey PutCherryKey = ConsoleKey.D3;
+            const ConsoleKey PutWallKey = ConsoleKey.D4;
+            const ConsoleKey ExitKey = ConsoleKey.D0;
             const ConsoleKey DrawModeKey = ConsoleKey.D6;
 
             char[,] map;
 
             int playerPositionX;
             int playerPositionY;
-            int deltaX = 0;
-            int deltaY = 0;
+            int[] directionVector = { 0, 0};
 
             bool isPlaying = true;
             bool isDrawMode = true;
@@ -43,7 +50,8 @@ namespace Lesson_4._4_BraveNewWorld
             InitializePlayerStartPosition(map, out playerPositionX, out playerPositionY);
             DrawPlayer(playerPositionX, playerPositionY);
 
-            ShowMenu(isDrawMode);
+            ShowMenu(isDrawMode, (char)PutTreasureKey, (char)PutThornKey, 
+                (char)PutCherryKey, (char)PutWallKey, (char)ExitKey, (char)DrawModeKey);
 
             while (isPlaying)
             {
@@ -52,36 +60,36 @@ namespace Lesson_4._4_BraveNewWorld
                 switch (key.Key)
                 {
                     case UpKey:
-                        deltaY = -1;
+                        directionVector = GetDirection(Direction.Up);
                         break;
 
                     case DownKey:
-                        deltaY = 1;
+                        directionVector = GetDirection(Direction.Down);
                         break;
 
                     case LeftKey:
-                        deltaX = -1;
+                        directionVector = GetDirection(Direction.Left);
                         break;
 
                     case RightKey:
-                        deltaX = 1;
+                        directionVector = GetDirection(Direction.Right);
                         break;
 
-                    case PlaceTreasureKey:
+                    case PutTreasureKey:
                         if (isDrawMode)
                             PutItem(playerPositionX, playerPositionY, map, Treasure);
                         break;
 
-                    case PlaceThornKey:
+                    case PutThornKey:
                         if (isDrawMode)
                             PutItem(playerPositionX, playerPositionY, map, Thorn);
                         break;
 
-                    case PlaceCherryKey:
+                    case PutCherryKey:
                         PutItem(playerPositionX, playerPositionY, map, Cherry);
                         break;
 
-                    case PlaceWallKey:
+                    case PutWallKey:
                         if (isDrawMode)
                             PutItem(playerPositionX, playerPositionY, map, Wall);
                         break;
@@ -92,15 +100,16 @@ namespace Lesson_4._4_BraveNewWorld
 
                     case DrawModeKey:
                         isDrawMode = false;
-                        ShowMenu(isDrawMode);
+                        ShowMenu(isDrawMode, (char)PutTreasureKey, (char)PutThornKey,
+                                    (char)PutCherryKey, (char)PutWallKey, (char)ExitKey, (char)DrawModeKey);
                         break;
                 }
 
-                if (deltaX != 0 || deltaY != 0)
+                if (directionVector[0] != 0 || directionVector[1] != 0)
                 {
-                    MovePlayer(ref playerPositionX, ref playerPositionY, deltaX, deltaY, map, isDrawMode);
-                    deltaX = 0;
-                    deltaY = 0;
+                    MovePlayer(ref playerPositionX, ref playerPositionY, directionVector[0], directionVector[1], map, isDrawMode);
+                    directionVector[0] = 0;
+                    directionVector[1] = 0;
                 }
             }
         }
@@ -192,28 +201,21 @@ namespace Lesson_4._4_BraveNewWorld
             }
         }
 
-        static void ShowMenu(bool isDrawMode)
+        static void ShowMenu(bool isDrawMode, char putTreashureSymbol, char putThornSymbol, char putCherrySymbol,
+                                char putWallSymbol, char exitSymbol, char startGameSymbol)
         {
-            string HotkeyIconPlaceTreashure = "1";
-            string HotkeyIconPlaceThorn = "2";
-            string HotkeyIconPlaceCherry = "3";
-            string HotkeyIconPlaceWall = "4";
-            string HotkeyIconExit = "5";
-            string HotkeyIconStartGame = "6";
-
             int bottomMenuX = 0;
             int bottomMenuY = 22;
-
             string bottomMenuText;
 
             if (isDrawMode)
                 bottomMenuText = $"Вы в режиме редактирования карты. \n" +
-                    $"{HotkeyIconPlaceTreashure}-установить сокровище ({Treasure}) \n" +
-                    $"{HotkeyIconPlaceThorn}-установить колючку ({Thorn})       \n" +
-                    $"{HotkeyIconPlaceCherry}-установить вишенку ({Cherry})      \n" +
-                    $"{HotkeyIconPlaceWall}-установить Стену ({Wall})          \n" +
-                    $"{HotkeyIconExit}-Выход                              \n" +
-                    $"{HotkeyIconStartGame}-Начать игру.                  ";
+                    $"{putTreashureSymbol}-установить сокровище ({Treasure}) \n" +
+                    $"{putThornSymbol}-установить колючку ({Thorn})       \n" +
+                    $"{putCherrySymbol}-установить вишенку ({Cherry})      \n" +
+                    $"{putWallSymbol}-установить Стену ({Wall})          \n" +
+                    $"{exitSymbol}-Выход                              \n" +
+                    $"{startGameSymbol}-Начать игру.                  ";
             else
                 bottomMenuText = $"Вы в режиме игры.                   \n " +
                     "                                     \n" +
@@ -221,7 +223,7 @@ namespace Lesson_4._4_BraveNewWorld
                     $"собирайте сокровища ({Treasure}).   \n" +
                     $"избегайте колючек ({Thorn}),         \n" +
                     $"                                    \n" +
-                    $"{HotkeyIconExit}-Выход                              ";
+                    $"{exitSymbol}-Выход                              ";
 
             Console.SetCursorPosition(bottomMenuX, bottomMenuY);
             Console.Write(bottomMenuText);
@@ -268,6 +270,22 @@ namespace Lesson_4._4_BraveNewWorld
 
             Console.SetCursorPosition(playerLogMenuX, playerLogMenuY);
             Console.Write($"{playerLogPrefix} {message}");
+        }
+
+        static int[] GetDirection(Direction direction)
+        {
+            int[] directionVector = { 0, 0 };
+
+            if (direction == Direction.Up)
+                directionVector[1] = -1;
+            else if (direction == Direction.Down)
+                directionVector[1] = 1;
+            else if (direction == Direction.Left)
+                directionVector[0] = -1;
+            else if (direction == Direction.Right)
+                directionVector[0] = 1;
+
+            return directionVector;
         }
     }
 }
