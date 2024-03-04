@@ -50,7 +50,7 @@ namespace Lesson_4._4_BraveNewWorld
             InitializePlayerStartPosition(map, out playerPositionX, out playerPositionY);
             DrawPlayer(playerPositionX, playerPositionY);
 
-            ShowMenu(isDrawMode, (char)PutTreasureKey, (char)PutThornKey, 
+            ShowDrawModeMenu(isDrawMode, (char)PutTreasureKey, (char)PutThornKey, 
                 (char)PutCherryKey, (char)PutWallKey, (char)ExitKey, (char)DrawModeKey);
 
             while (isPlaying)
@@ -100,8 +100,7 @@ namespace Lesson_4._4_BraveNewWorld
 
                     case DrawModeKey:
                         isDrawMode = false;
-                        ShowMenu(isDrawMode, (char)PutTreasureKey, (char)PutThornKey,
-                                    (char)PutCherryKey, (char)PutWallKey, (char)ExitKey, (char)DrawModeKey);
+                        ShowGameMenu((char)ExitKey);
                         break;
                 }
 
@@ -201,29 +200,19 @@ namespace Lesson_4._4_BraveNewWorld
             }
         }
 
-        static void ShowMenu(bool isDrawMode, char putTreashureSymbol, char putThornSymbol, char putCherrySymbol,
+        static void ShowDrawModeMenu(bool isDrawMode, char putTreashureSymbol, char putThornSymbol, char putCherrySymbol,
                                 char putWallSymbol, char exitSymbol, char startGameSymbol)
         {
             int bottomMenuX = 0;
             int bottomMenuY = 22;
-            string bottomMenuText;
-
-            if (isDrawMode)
-                bottomMenuText = $"Вы в режиме редактирования карты. \n" +
-                    $"{putTreashureSymbol}-установить сокровище ({Treasure}) \n" +
-                    $"{putThornSymbol}-установить колючку ({Thorn})       \n" +
-                    $"{putCherrySymbol}-установить вишенку ({Cherry})      \n" +
-                    $"{putWallSymbol}-установить Стену ({Wall})          \n" +
-                    $"{exitSymbol}-Выход                              \n" +
-                    $"{startGameSymbol}-Начать игру.                  ";
-            else
-                bottomMenuText = $"Вы в режиме игры.                   \n " +
-                    "                                     \n" +
-                    $"Кушайте вишню ({Cherry}),           \n" +
-                    $"собирайте сокровища ({Treasure}).   \n" +
-                    $"избегайте колючек ({Thorn}),         \n" +
-                    $"                                    \n" +
-                    $"{exitSymbol}-Выход                              ";
+            string bottomMenuText = 
+                $"Вы в режиме редактирования карты. \n" +
+                $"{putTreashureSymbol}-установить сокровище ({Treasure}) \n" +
+                $"{putThornSymbol}-установить колючку ({Thorn})       \n" +
+                $"{putCherrySymbol}-установить вишенку ({Cherry})      \n" +
+                $"{putWallSymbol}-установить Стену ({Wall})          \n" +
+                $"{exitSymbol}-Выход                              \n" +
+                $"{startGameSymbol}-Начать игру.                  ";
 
             Console.SetCursorPosition(bottomMenuX, bottomMenuY);
             Console.Write(bottomMenuText);
@@ -286,6 +275,23 @@ namespace Lesson_4._4_BraveNewWorld
                 directionVector[0] = 1;
 
             return directionVector;
+        }
+
+        static void ShowGameMenu(char exitSymbol)
+        {
+            int bottomMenuX = 0;
+            int bottomMenuY = 22;
+            string bottomMenuText =
+                $"Вы в режиме игры.                    \n " +
+                $"                                     \n" +
+                $"Кушайте вишню ({Cherry}),            \n" +
+                $"собирайте сокровища ({Treasure}) .   \n" +
+                $"избегайте колючек ({Thorn}),         \n" +
+                $"                                     \n" +
+                $"{exitSymbol}-Выход                              ";
+
+            Console.SetCursorPosition(bottomMenuX, bottomMenuY);
+            Console.Write(bottomMenuText);
         }
     }
 }
