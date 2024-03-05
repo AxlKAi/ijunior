@@ -19,11 +19,16 @@ namespace Lesson_5._2_QueueInShop
                 int receipt = buyersReceipts.Dequeue();
 
                 totalSum += receipt;
+
+                Console.Clear();
                 Console.WriteLine($"Покупатель приобрел товаров на сумму {receipt}, общий счет магазина:{totalSum}");
                 Console.WriteLine("Нажмите клавишу для обработки следующего покупателя.");
                 Console.ReadKey();
             }
 
+            Console.Clear();
+            Console.WriteLine($"Очередь пуста, все клиенты обслужаны. Общий счет магазина {totalSum} рублей.");
+            Console.WriteLine("Нажмите кнопку для завершения программы.");
             Console.ReadKey();
         }
 
