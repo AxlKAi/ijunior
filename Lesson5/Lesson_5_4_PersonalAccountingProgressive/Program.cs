@@ -5,14 +5,14 @@ namespace Lesson_5_4_PersonalAccountingProgressive
 {
     class Program
     {
-        const string AddCommand = "1";
-        const string ShowCommand = "2";
-        const string DeletePersonCommand = "3";
-        const string ExitCommand = "4";
-        const string CancelEnterTextCommand = "no";
 
         static void Main(string[] args)
         {
+            const string AddCommand = "1";
+            const string ShowCommand = "2";
+            const string DeletePersonCommand = "3";
+            const string ExitCommand = "4";
+
             Dictionary<string, string> personsPositions= new Dictionary<string, string>()
             {
                 ["Петров Петр Петрович"] = "Дилехтор",
@@ -54,6 +54,21 @@ namespace Lesson_5_4_PersonalAccountingProgressive
 
             Console.WriteLine("\nДосвиданья!");
             Console.ReadLine();
+
+            void ShowMainMenu()
+            {
+                string addToDossierMenuText = "Добавить в досье.";
+                string showDossierMenuText = "Показать все досье.";
+                string deletePersonMenuText = "Удалить запись из досье.";
+                string exitMenuText = "Выход.";
+
+                Console.Clear();
+                Console.WriteLine($"{AddCommand}. {addToDossierMenuText}");
+                Console.WriteLine($"{ShowCommand}. {showDossierMenuText}");
+                Console.WriteLine($"{DeletePersonCommand}. {deletePersonMenuText}");
+                Console.WriteLine($"{ExitCommand}. {exitMenuText}");
+                Console.WriteLine();
+            }
         }
 
         static void WaitToPressKey()
@@ -120,23 +135,10 @@ namespace Lesson_5_4_PersonalAccountingProgressive
                 return true;
         }
 
-        static void ShowMainMenu()
-        {
-            string addToDossierMenuText = "Добавить в досье.";
-            string showDossierMenuText = "Показать все досье.";
-            string deletePersonMenuText = "Удалить запись из досье.";
-            string exitMenuText = "Выход.";
-
-            Console.Clear();
-            Console.WriteLine($"{AddCommand}. {addToDossierMenuText}");
-            Console.WriteLine($"{ShowCommand}. {showDossierMenuText}");
-            Console.WriteLine($"{DeletePersonCommand}. {deletePersonMenuText}");
-            Console.WriteLine($"{ExitCommand}. {exitMenuText}");
-            Console.WriteLine();
-        }
-
         static void DeletePersonByFullName(Dictionary<string,string> personsPositions)
         {
+            const string CancelEnterTextCommand = "no";
+
             if (personsPositions.Count == 0)
             {
                 Console.WriteLine("Досье пусто...");
