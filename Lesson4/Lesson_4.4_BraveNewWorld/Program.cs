@@ -13,33 +13,45 @@ namespace Lesson_4._4_BraveNewWorld
         const char Thorn = '^';
         const char Cherry = '%';
 
-        const int BottomMenuX = 3;
-        const int BottomMenuY = 25;
-        const int PlayerLogMenuX = 3;
-        const int PlayerLogMenuY = 24;
-        const int PlayerStep = 1;
-
-        const string PlayerCollideTreasureMessage = "Вы нашли сокровище!                 ";
-        const string PlayerCollideThornMessage = "Вы наступлили на колючку.              ";
-        const string PlayerCollideCherryMessage = "Вы скушали вишенку!                  ";
-
-        static string BottomMenuText = $"Нажмите: 1-установить сокровище ({Treasure})  2-установить колючку ({Thorn})  " +
-                                       $"3-установить вишенку ({Cherry}) 4-Стену ({Wall})  5-Выход";
-
-        static string PlayerLogPrefix = "Игрок:";
-        static char[,] map;
-        static int playerX;
-        static int playerY;
+        enum Direction 
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
 
         static void Main(string[] args)
         {
-            map = ReadMap("map");
+            const ConsoleKey UpKey = ConsoleKey.UpArrow;
+            const ConsoleKey DownKey = ConsoleKey.DownArrow;
+            const ConsoleKey LeftKey = ConsoleKey.LeftArrow;
+            const ConsoleKey RightKey = ConsoleKey.RightArrow;
+            const ConsoleKey PutTreasureKey = ConsoleKey.D1;
+            const ConsoleKey PutThornKey = ConsoleKey.D2;
+            const ConsoleKey PutCherryKey = ConsoleKey.D3;
+            const ConsoleKey PutWallKey = ConsoleKey.D4;
+            const ConsoleKey ExitKey = ConsoleKey.D0;
+            const ConsoleKey DrawModeKey = ConsoleKey.D6;
+
+            char[,] map;
+
+            int playerPositionX;
+            int playerPositionY;
+            int[] directionVector = { 0, 0};
+
             bool isPlaying = true;
+            bool isDrawMode = true;
+
             Console.CursorVisible = false;
 
-            DrawMap();
-            SetPlayerStartPosition();
-            ShowMenu();
+            map = ReadMap("map");
+            DrawMap(map);
+            InitializePlayerStartPosition(map, out playerPositionX, out playerPositionY);
+            DrawPlayer(playerPositionX, playerPositionY);
+
+            ShowDrawModeMenu(isDrawMode, (char)PutTreasureKey, (char)PutThornKey, 
+                (char)PutCherryKey, (char)PutWallKey, (char)ExitKey, (char)DrawModeKey);
 
             while (isPlaying)
             {
@@ -47,41 +59,56 @@ namespace Lesson_4._4_BraveNewWorld
 
                 switch (key.Key)
                 {
-                    case ConsoleKey.UpArrow:
-                        MovePlayer(0, -PlayerStep);
+                    case UpKey:
+                        directionVector = GetDirection(Direction.Up);
                         break;
 
-                    case ConsoleKey.DownArrow:
-                        MovePlayer(0, PlayerStep);
+                    case DownKey:
+                        directionVector = GetDirection(Direction.Down);
                         break;
 
-                    case ConsoleKey.LeftArrow:
-                        MovePlayer(-PlayerStep, 0);
+                    case LeftKey:
+                        directionVector = GetDirection(Direction.Left);
                         break;
 
-                    case ConsoleKey.RightArrow:
-                        MovePlayer(PlayerStep, 0);
+                    case RightKey:
+                        directionVector = GetDirection(Direction.Right);
                         break;
 
-                    case ConsoleKey.D1:
-                        PlaceItem(Treasure);
+                    case PutTreasureKey:
+                        if (isDrawMode)
+                            PutItem(playerPositionX, playerPositionY, map, Treasure);
                         break;
 
-                    case ConsoleKey.D2:
-                        PlaceItem(Thorn);
+                    case PutThornKey:
+                        if (isDrawMode)
+                            PutItem(playerPositionX, playerPositionY, map, Thorn);
                         break;
 
-                    case ConsoleKey.D3:
-                        PlaceItem(Cherry);
+                    case PutCherryKey:
+                        PutItem(playerPositionX, playerPositionY, map, Cherry);
                         break;
 
-                    case ConsoleKey.D4:
-                        PlaceItem(Wall);
+                    case PutWallKey:
+                        if (isDrawMode)
+                            PutItem(playerPositionX, playerPositionY, map, Wall);
                         break;
 
-                    case ConsoleKey.D5:
+                    case ExitKey:
                         isPlaying = false;
                         break;
+
+                    case DrawModeKey:
+                        isDrawMode = false;
+                        ShowGameMenu((char)ExitKey);
+                        break;
+                }
+
+                if (directionVector[0] != 0 || directionVector[1] != 0)
+                {
+                    MovePlayer(ref playerPositionX, ref playerPositionY, directionVector[0], directionVector[1], map, isDrawMode);
+                    directionVector[0] = 0;
+                    directionVector[1] = 0;
                 }
             }
         }
@@ -102,7 +129,7 @@ namespace Lesson_4._4_BraveNewWorld
             return map;
         }
 
-        static void DrawMap()
+        static void DrawMap(char[,] map)
         {
             for (int i = 0; i < map.GetLength(0); i++)
             {
@@ -115,85 +142,156 @@ namespace Lesson_4._4_BraveNewWorld
             }
         }
 
-        static void SetPlayerStartPosition()
+        static void InitializePlayerStartPosition(char[,] map, out int playerPositionX, out int playerPositionY)
         {
+            playerPositionX = 0;
+            playerPositionY = 0;
+
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
                     if (map[i, j] == Empty)
                     {
-                        playerX = j;
-                        playerY = i;
-                        DrawPlayer();
+                        playerPositionX = j;
+                        playerPositionY = i;
+
                         return;
                     }
                 }
             }
         }
 
-        static void DrawPlayer()
+        static void DrawPlayer(int playerPositionX, int playerPositionY)
         {
-            Console.SetCursorPosition(playerX, playerY);
+            Console.SetCursorPosition(playerPositionX, playerPositionY);
             Console.Write(Player);
         }
 
-        static void HidePlayer()
+        static void HidePlayer(int playerPositionX, int playerPositionY, char[,] map)
         {
-            Console.SetCursorPosition(playerX, playerY);
-            Console.Write(map[playerY, playerX]);
+            Console.SetCursorPosition(playerPositionX, playerPositionY);
+            Console.Write(map[playerPositionY, playerPositionX]);
         }
 
-        static void MovePlayer(int dx, int dy)
+        static void MovePlayer(ref int playerPositionX, ref int playerPositionY, int offsetX, int offsetY, char[,] map, bool isDrawMode)
         {
-            if (map[playerY + dy, playerX + dx] != Wall)
+            int minPositionX = 0;
+            int minPositionY = 0;
+            int maxPositionX = map.GetLength(1) - 1;
+            int maxPositionY = map.GetLength(0) - 1;
+
+            if (isDrawMode || map[playerPositionY + offsetY, playerPositionX + offsetX] != Wall)
             {
-                HidePlayer();
-                playerX += dx;
-                playerY += dy;
-                DrawPlayer();
-                CollidePlayer();
+                HidePlayer(playerPositionX, playerPositionY, map);
+                playerPositionX += offsetX;
+                playerPositionY += offsetY;
+
+                if (playerPositionX < minPositionX || playerPositionX > maxPositionX)
+                    playerPositionX = minPositionX;
+
+                if (playerPositionY < minPositionY || playerPositionY > maxPositionY)
+                    playerPositionY = minPositionY;
+
+                DrawPlayer(playerPositionX, playerPositionY);
+
+                if (isDrawMode == false)
+                    CollidePlayer(playerPositionX, playerPositionY, map);
             }
         }
 
-        static void ShowMenu()
+        static void ShowDrawModeMenu(bool isDrawMode, char putTreashureSymbol, char putThornSymbol, char putCherrySymbol,
+                                char putWallSymbol, char exitSymbol, char startGameSymbol)
         {
-            Console.SetCursorPosition(BottomMenuX, BottomMenuY);
-            Console.Write(BottomMenuText);
+            int bottomMenuX = 0;
+            int bottomMenuY = 22;
+            string bottomMenuText = 
+                $"Вы в режиме редактирования карты. \n" +
+                $"{putTreashureSymbol}-установить сокровище ({Treasure}) \n" +
+                $"{putThornSymbol}-установить колючку ({Thorn})       \n" +
+                $"{putCherrySymbol}-установить вишенку ({Cherry})      \n" +
+                $"{putWallSymbol}-установить Стену ({Wall})          \n" +
+                $"{exitSymbol}-Выход                              \n" +
+                $"{startGameSymbol}-Начать игру.                  ";
+
+            Console.SetCursorPosition(bottomMenuX, bottomMenuY);
+            Console.Write(bottomMenuText);
         }
 
-        static void PlaceItem(char item)
+        static void PutItem(int playerPositionX, int playerPositionY, char[,] map, char item)
         {
-            map[playerY, playerX] = item;
-            Console.SetCursorPosition(playerX, playerY);
+            map[playerPositionY, playerPositionX] = item;
+            Console.SetCursorPosition(playerPositionX, playerPositionY);
             Console.Write(item);
         }
 
-        static void CollidePlayer()
+        static void CollidePlayer(int playerPositionX, int playerPositionY, char[,] map)
         {
-            switch (map[playerY, playerX])
+            string playerCollideTreasureMessage = "Вы нашли сокровище!                 ";
+            string playerCollideThornMessage = "Вы наступлили на колючку.              ";
+            string playerCollideCherryMessage = "Вы скушали вишенку!                  ";
+
+            switch (map[playerPositionY, playerPositionX])
             {
                 case Treasure:
-                    ShowPlayerLog(PlayerCollideTreasureMessage);
-                    map[playerY, playerX] = Empty;
+                    ShowPlayerLog(playerCollideTreasureMessage);
+                    map[playerPositionY, playerPositionX] = Empty;
                     break;
 
                 case Cherry:
-                    ShowPlayerLog(PlayerCollideCherryMessage);
-                    map[playerY, playerX] = Empty;
+                    ShowPlayerLog(playerCollideCherryMessage);
+                    map[playerPositionY, playerPositionX] = Empty;
                     break;
 
                 case Thorn:
-                    ShowPlayerLog(PlayerCollideThornMessage);
-                    map[playerY, playerX] = Empty;
+                    ShowPlayerLog(playerCollideThornMessage);
+                    map[playerPositionY, playerPositionX] = Empty;
                     break;
             }
         }
 
         static void ShowPlayerLog(string message)
         {
-            Console.SetCursorPosition(PlayerLogMenuX, PlayerLogMenuY);
-            Console.Write($"{PlayerLogPrefix} {message}");
+            int playerLogMenuX = 0;
+            int playerLogMenuY = 23;
+
+            string playerLogPrefix = "Игрок:";
+
+            Console.SetCursorPosition(playerLogMenuX, playerLogMenuY);
+            Console.Write($"{playerLogPrefix} {message}");
+        }
+
+        static int[] GetDirection(Direction direction)
+        {
+            int[] directionVector = { 0, 0 };
+
+            if (direction == Direction.Up)
+                directionVector[1] = -1;
+            else if (direction == Direction.Down)
+                directionVector[1] = 1;
+            else if (direction == Direction.Left)
+                directionVector[0] = -1;
+            else if (direction == Direction.Right)
+                directionVector[0] = 1;
+
+            return directionVector;
+        }
+
+        static void ShowGameMenu(char exitSymbol)
+        {
+            int bottomMenuX = 0;
+            int bottomMenuY = 22;
+            string bottomMenuText =
+                $"Вы в режиме игры.                    \n " +
+                $"                                     \n" +
+                $"Кушайте вишню ({Cherry}),            \n" +
+                $"собирайте сокровища ({Treasure}) .   \n" +
+                $"избегайте колючек ({Thorn}),         \n" +
+                $"                                     \n" +
+                $"{exitSymbol}-Выход                              ";
+
+            Console.SetCursorPosition(bottomMenuX, bottomMenuY);
+            Console.Write(bottomMenuText);
         }
     }
 }
