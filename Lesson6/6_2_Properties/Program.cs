@@ -6,13 +6,14 @@ namespace _6_2_Properties
     {
         static void Main(string[] args)
         {
-            Player player = new Player("AxlUndeadMan", 99, 55);
-            Renderer renderer = new Renderer(10, 10);
+            Player player = new Player("AxlUndeadMan", '*', 99, 55);
+            Renderer renderer = new Renderer();
 
             player.IncreaseMana(77);
             player.MoveTo(5, 5);
 
             renderer.ShowPlayer(player);
+            renderer.ShowPlayerInfo(player,5,15);
 
             Console.ReadKey();
         }
@@ -20,13 +21,15 @@ namespace _6_2_Properties
 
     class Player
     {
-        public Player(string name, int health, int armor)
+        public Player(string name, char skin, int health, int armor)
         {
             Name = name;
             Health = health;
             Armor = armor;
+            Skin = skin;
         }
 
+        public char Skin { get; private set; }
         public int PositionX { get; private set; }
         public int PositionY { get; private set; }
         public int Health { get; private set; }
@@ -49,38 +52,33 @@ namespace _6_2_Properties
 
     class Renderer
     {
-        private int _windowTopX = 0;
-        private int _windowTopY = 0;
-
-        public Renderer(int windowTopLeftX, int windowTopLeftY)
-        {
-            _windowTopX = windowTopLeftX;
-            _windowTopY = windowTopLeftY;
-        }
-
         public void ShowPlayer(Player player)
         {
-            int line = 0;
-            int positionX = player.PositionX;
-            int positionY = player.PositionY;
+            Console.SetCursorPosition(player.PositionX, player.PositionY);
+            Console.Write(player.Skin);
+        }
 
-            Console.SetCursorPosition(_windowTopX, _windowTopY);
+        public void ShowPlayerInfo(Player player, int windowTopX, int windowTopY)
+        {
+            int line = 0;
+
+            Console.SetCursorPosition(windowTopX, windowTopY);
             Console.Write($"Игрок {player.Name}");
 
             line++;
-            Console.SetCursorPosition(_windowTopX, _windowTopY + line);
-            Console.Write($"Координаты X={positionX} Y={positionY}");
+            Console.SetCursorPosition(windowTopX, windowTopY + line);
+            Console.Write($"Координаты X={player.PositionX} Y={player.PositionY}");
 
             line++;
-            Console.SetCursorPosition(_windowTopX, _windowTopY + line);
+            Console.SetCursorPosition(windowTopX, windowTopY + line);
             Console.Write($"Защита игрока {player.Armor}");
 
             line++;
-            Console.SetCursorPosition(_windowTopX, _windowTopY + line);
+            Console.SetCursorPosition(windowTopX, windowTopY + line);
             Console.Write($"Здоровье игрока {player.Health}");
 
             line++;
-            Console.SetCursorPosition(_windowTopX, _windowTopY + line);
+            Console.SetCursorPosition(windowTopX, windowTopY + line);
             Console.Write($"Мана игрока {player.ManaAmmount}");
         }
     }
