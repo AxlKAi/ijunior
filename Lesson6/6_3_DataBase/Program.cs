@@ -23,6 +23,7 @@ namespace _6_3_DataBase
         const string IncreasePlayerLevelCommand = "6";
         const string ShowPlayerCommand = "7";
         const string ExitCommand = "8";
+        const string CancelExitKey = "n";
 
         public void Run()
         {
@@ -53,7 +54,7 @@ namespace _6_3_DataBase
                         break;
 
                     case RemoveBanPlayerCommand:
-                        database.UnBanById();
+                        database.UnbanById();
                         break;
 
                     case IncreasePlayerLevelCommand:
@@ -76,24 +77,15 @@ namespace _6_3_DataBase
 
         private void ShowMainMenu()
         {
-            string showAllEntrys = "Показать всю базу.";
-            string createPlayer = "Создать игрока.";
-            string deletePlayer = "Удалить игрока.";
-            string setBanPlayer = "Дать бан игроку.";
-            string removeBanPlayer = "Снять бан у игрока.";
-            string increasePlayerLevel = "Увеличить уровень игрока.";
-            string showPlayer = "Показать статистику игрока.";
-            string exitMenuText = "Выход.";
-
             Console.Clear();
-            Console.WriteLine($"{ShowAllEntrysCommand}. {showAllEntrys}");
-            Console.WriteLine($"{CreatePlayerCommand}. {createPlayer}");
-            Console.WriteLine($"{DeletePlayerCommand}. {deletePlayer}");
-            Console.WriteLine($"{SetBanPlayerCommand}. {setBanPlayer}");
-            Console.WriteLine($"{RemoveBanPlayerCommand}. {removeBanPlayer}");
-            Console.WriteLine($"{IncreasePlayerLevelCommand}. {increasePlayerLevel}");
-            Console.WriteLine($"{ShowPlayerCommand}. {showPlayer}");
-            Console.WriteLine($"{ExitCommand}. {exitMenuText}");
+            Console.WriteLine($"{ShowAllEntrysCommand}. Показать всю базу.");
+            Console.WriteLine($"{CreatePlayerCommand}. Создать игрока.");
+            Console.WriteLine($"{DeletePlayerCommand}. Удалить игрока.");
+            Console.WriteLine($"{SetBanPlayerCommand}. Дать бан игроку.");
+            Console.WriteLine($"{RemoveBanPlayerCommand}. Снять бан у игрока.");
+            Console.WriteLine($"{IncreasePlayerLevelCommand}. Увеличить уровень игрока.");
+            Console.WriteLine($"{ShowPlayerCommand}. Показать статистику игрока.");
+            Console.WriteLine($"{ExitCommand}. Выход.");
             Console.WriteLine();
         }
 
@@ -106,10 +98,10 @@ namespace _6_3_DataBase
         private bool TryUserWantExit()
         {
             string userInput;
-            Console.Write("Вы хотите выйти? (n - нет, другой - да):");
+            Console.Write($"Вы хотите выйти? ({CancelExitKey} - нет, другой - да):");
             userInput = Console.ReadLine();
 
-            if (userInput == "n")
+            if (userInput == CancelExitKey)
             {
                 return false;
             }
@@ -136,19 +128,6 @@ namespace _6_3_DataBase
         public string Name { get; private set; }
         public int Level { get; private set; }
         public bool IsBanned { get; private set; } = false;
-
-        public static bool CheckNameIsCorrect(string name)
-        {
-            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ");
-
-            if (name == "" || name == " ")
-            {
-                Console.WriteLine("Введено не корректное имя игрока.");
-                return false;
-            }
-            else
-                return true;
-        }
 
         public void IncreaseLevel()
         {
@@ -185,9 +164,27 @@ namespace _6_3_DataBase
             IsBanned = true;
         }
 
-        public void UnBan()
+        public void Unban()
         {
             IsBanned = false;
+        }
+    }
+
+    class PlayerUtils
+    {
+        public static bool IsNameCorrect(string name)
+        {
+            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ");
+
+            if (name == "" || name == " ")
+            {
+                Console.WriteLine("Введено не корректное имя игрока.");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 
@@ -208,7 +205,7 @@ namespace _6_3_DataBase
             Console.WriteLine("Введите имя:");
             string name = Console.ReadLine();
 
-            if (Player.CheckNameIsCorrect(name))
+            if (PlayerUtils.IsNameCorrect(name))
             {
                 CreatePlayerEntry(name, 1);
             }
@@ -225,28 +222,11 @@ namespace _6_3_DataBase
             Console.WriteLine();
         }
 
-        public bool TryGetPlayerById(out Player player, int id)
-        {
-            player = null;
-
-            foreach (var element in _players)
-            {
-                if (element.Id == id)
-                {
-                    player = element;
-                    return true;
-                }
-            }
-
-            Console.WriteLine($"Не могу удалить игрока с id = {id}");
-            return false;
-        }
-
         public void BanById()
         {
             Player player;
 
-            if (TryGetPlayerByInput(out player, "Снять бан с игрока."))
+            if (TryGetPlayerByInput(out player, "Установить бан для игрока."))
             {
                 player.Ban();
                 Console.WriteLine($"Игрок {player.Name} " +
@@ -254,13 +234,13 @@ namespace _6_3_DataBase
             }
         }
 
-        public void UnBanById()
+        public void UnbanById()
         {
             Player player;
 
             if (TryGetPlayerByInput(out player, "Установить БАН игрока."))
             {
-                player.UnBan();
+                player.Unban();
                 Console.WriteLine($"Игрок {player.Name} " +
                     $"с id= {player.Id}, блокировки (бан) нет.");
             }
@@ -300,6 +280,23 @@ namespace _6_3_DataBase
             {
                 player.ShowStats();
             }
+        }
+
+        private bool TryGetPlayerById(out Player player, int id)
+        {
+            player = null;
+
+            foreach (var element in _players)
+            {
+                if (element.Id == id)
+                {
+                    player = element;
+                    return true;
+                }
+            }
+
+            Console.WriteLine($"Не могу удалить игрока с id = {id}");
+            return false;
         }
 
         private void CreatePlayerEntry(string name, int level)
