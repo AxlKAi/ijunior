@@ -50,11 +50,11 @@ namespace _6_3_DataBase
                         break;
 
                     case SetBanPlayerCommand:
-                        database.BanById();
+                        database.SetBanById(true);
                         break;
 
                     case RemoveBanPlayerCommand:
-                        database.UnbanById();
+                        database.SetBanById(false);
                         break;
 
                     case IncreasePlayerLevelCommand:
@@ -194,20 +194,31 @@ namespace _6_3_DataBase
 
         public Database()
         {
-            CreatePlayerEntry("Player1", 1);
-            CreatePlayerEntry("Player2", 2);
-            CreatePlayerEntry("Player3", 3);
+            AddPlayer("Player1", 1);
+            AddPlayer("Player2", 2);
+            AddPlayer("Player3", 3);
         }
 
-        public void AddPlayer()
+        public void AddPlayer(string name = "", int level = 1)
         {
             Console.WriteLine("Добавление нового игрока.");
             Console.WriteLine("Введите имя:");
-            string name = Console.ReadLine();
+
+            if (name == "")
+                name = Console.ReadLine();
 
             if (PlayerUtils.IsNameCorrect(name))
             {
-                CreatePlayerEntry(name, 1);
+                Player player = new Player(name, level);
+
+                _players.Add(player);
+                Console.WriteLine($"Добавлена новая запись в базу, " +
+                        $"id={player.Id}, имя игрока={player.Name}");
+            }
+            else
+            {
+                Console.WriteLine($"Указанно не корректное имя игрока = {name}");
+                Console.WriteLine("Запись в базу данных не сделана.");
             }
         }
 
@@ -222,27 +233,19 @@ namespace _6_3_DataBase
             Console.WriteLine();
         }
 
-        public void BanById()
+        public void SetBanById(bool isBan)
         {
             Player player;
 
-            if (TryGetPlayerByInput(out player, "Установить бан для игрока."))
+            if (TryGetPlayerByInput(out player, $"Установить бан={isBan} для игрока."))
             {
-                player.Ban();
-                Console.WriteLine($"Игрок {player.Name} " +
-                    $"с id= {player.Id} Установлен бан!");
-            }
-        }
+                if (isBan == true)
+                    player.Ban();
+                else
+                    player.Unban();
 
-        public void UnbanById()
-        {
-            Player player;
-
-            if (TryGetPlayerByInput(out player, "Установить БАН игрока."))
-            {
-                player.Unban();
                 Console.WriteLine($"Игрок {player.Name} " +
-                    $"с id= {player.Id}, блокировки (бан) нет.");
+                    $"с id= {player.Id} состояние ban = {player.IsBanned}");
             }
         }
 
@@ -282,32 +285,6 @@ namespace _6_3_DataBase
             }
         }
 
-        private bool TryGetPlayerById(out Player player, int id)
-        {
-            player = null;
-
-            foreach (var element in _players)
-            {
-                if (element.Id == id)
-                {
-                    player = element;
-                    return true;
-                }
-            }
-
-            Console.WriteLine($"Не могу удалить игрока с id = {id}");
-            return false;
-        }
-
-        private void CreatePlayerEntry(string name, int level)
-        {
-            Player player = new Player(name, 1);
-
-            _players.Add(player);
-            Console.WriteLine($"Добавлена новая запись в базу, " +
-                    $"id={player.Id}, имя игрока={player.Name}");
-        }
-
         private bool TryGetPlayerByInput(out Player player, string inputPrompt)
         {
             player = null;
@@ -326,10 +303,16 @@ namespace _6_3_DataBase
 
             if (int.TryParse(Console.ReadLine(), out id))
             {
-                if (TryGetPlayerById(out player, id))
+                foreach (var element in _players)
                 {
-                    return true;
+                    if (element.Id == id)
+                    {
+                        player = element;
+                        return true;
+                    }
                 }
+
+                Console.WriteLine($"Не могу найти игрока с id = {id}");
             }
             else
             {
