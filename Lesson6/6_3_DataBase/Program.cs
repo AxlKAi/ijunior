@@ -170,7 +170,7 @@ namespace _6_3_DataBase
         }
     }
 
-    class PlayerUtils
+    class PlayerUtility
     {
         public static bool IsNameCorrect(string name)
         {
@@ -207,7 +207,7 @@ namespace _6_3_DataBase
             if (name == "")
                 name = Console.ReadLine();
 
-            if (PlayerUtils.IsNameCorrect(name))
+            if (PlayerUtility.IsNameCorrect(name))
             {
                 Player player = new Player(name, level);
 
