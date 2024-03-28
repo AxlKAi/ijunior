@@ -5,12 +5,26 @@ namespace _6_4_DeckOfCards
 {
     public enum СardSuit
     {
-        Hearts, Spades, Diamonds, Clubs
+        Hearts, 
+        Spades, 
+        Diamonds, 
+        Clubs
     }
 
     public enum CardValue
     {
-        Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace
+        Two, 
+        Three, 
+        Four, Five, 
+        Six, 
+        Seven, 
+        Eight, 
+        Nine, 
+        Ten, 
+        Jack, 
+        Queen, 
+        King, 
+        Ace
     }
 
     class Program
@@ -25,7 +39,7 @@ namespace _6_4_DeckOfCards
 
     public class Application
     {
-        private Table table = new Table();
+        private Table _table = new Table();
 
         public void Run()
         {
@@ -40,19 +54,19 @@ namespace _6_4_DeckOfCards
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        table.GiveCardToPlayer(1);
+                        _table.GiveCardToPlayer(1);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        table.GiveCardToPlayer(2);
+                        _table.GiveCardToPlayer(2);
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        table.GiveCardToPlayer(3);
+                        _table.GiveCardToPlayer(3);
                         break;
 
                     case ConsoleKey.RightArrow:
-                        table.GiveCardToPlayer(4);
+                        _table.GiveCardToPlayer(4);
                         break;
 
                     case ConsoleKey.Spacebar:
@@ -73,22 +87,22 @@ namespace _6_4_DeckOfCards
             Console.ReadKey();
         }
 
-        public void ShowMenu()
+        private void ShowMenu()
         {
             Console.Clear();
             Console.WriteLine("Стрелка ^ < > вверх, вниз, лево, право -  взять карту из колоды соответствующему игроку.");
             Console.WriteLine("Пробел - показать карты игроков;   Backspace - Начать игру заново; Esc - выход из программы.");
         }
 
-        public void ShowAllPlayerCards()
+        private void ShowAllPlayerCards()
         {
             ShowMenu();
-            table.ShowAllPlayersCards();
+            _table.ShowAllPlayersCards();
         }
 
-        public void NewGame()
+        private void NewGame()
         {
-            table.NewRound();
+            _table.NewRound();
             ShowMenu();
         }
     }
@@ -105,7 +119,7 @@ namespace _6_4_DeckOfCards
 
         public СardSuit Suit { get; private set; }
 
-        public void ShowCard()
+        public void Show()
         {
             Console.WriteLine($"card: {Suit} {Value}");
         }
@@ -117,10 +131,10 @@ namespace _6_4_DeckOfCards
 
         public CardDeck()
         {
-            FillTheDeck();
+            Fill();
         }
 
-        public bool TryTakeCard(out Card card)
+        public bool TryGiveCard(out Card card)
         {
             if (_cards.Count <= 0)
             {
@@ -129,22 +143,19 @@ namespace _6_4_DeckOfCards
                 return false;
             }
 
-            Random random = new Random();
-            int cardNumber = random.Next(0, _cards.Count);
-            Card randomCard = _cards[cardNumber];
+            card = _cards[0];
+            _cards.RemoveAt(0);
 
-            _cards.RemoveAt(cardNumber);
-            card = randomCard;
             return true;
         }
 
         public void Renew()
         {
             _cards = new List<Card>();
-            FillTheDeck();
+            Fill();
         }
 
-        private void FillTheDeck()
+        private void Fill()
         {
             var suits = Enum.GetValues(typeof(СardSuit));
             var values = Enum.GetValues(typeof(CardValue));
@@ -152,6 +163,21 @@ namespace _6_4_DeckOfCards
             foreach (var suit in suits)
                 foreach (var value in values)
                     _cards.Add(new Card((СardSuit)suit, (CardValue)value));
+
+            Shuffle();
+        }
+
+        private void Shuffle()
+        {
+            Random random = new Random();
+
+            for (int i = _cards.Count - 1; i >= 1; i--)
+            {
+                int randomIndex = random.Next(i + 1);
+                var tempCard = _cards[randomIndex];
+                _cards[randomIndex] = _cards[i];
+                _cards[i] = tempCard;
+            }
         }
     }
 
@@ -172,7 +198,7 @@ namespace _6_4_DeckOfCards
             _cards.Add(card);
             Console.WriteLine($"У игрока {Name} {_cards.Count} карт. ");
             Console.Write($"Он вытянул ");
-            card.ShowCard();
+            card.Show();
         }
 
         public void ShowCards()
@@ -180,7 +206,7 @@ namespace _6_4_DeckOfCards
             Console.WriteLine($"у игрока {Name} на руках {_cards.Count} карт.");
 
             foreach (var card in _cards)
-                card.ShowCard();
+                card.Show();
 
             Console.WriteLine();
         }
@@ -216,7 +242,7 @@ namespace _6_4_DeckOfCards
             {
                 Card card;
 
-                if (_cardDeck.TryTakeCard(out card))
+                if (_cardDeck.TryGiveCard(out card))
                 {
                     _players[playerNumber-1].AddCard(card);
                 }
