@@ -74,7 +74,7 @@ namespace _6_4_DeckOfCards
                         break;
 
                     case ConsoleKey.Backspace:
-                        NewGame();
+                        StartNewGame();
                         break;
 
                     case ConsoleKey.Escape:
@@ -100,9 +100,9 @@ namespace _6_4_DeckOfCards
             _table.ShowAllPlayersCards();
         }
 
-        private void NewGame()
+        private void StartNewGame()
         {
-            _table.NewRound();
+            _table.StartNewRound();
             ShowMenu();
         }
     }
@@ -253,7 +253,7 @@ namespace _6_4_DeckOfCards
             }
         }
 
-        public void NewRound()
+        public void StartNewRound()
         {
             Console.WriteLine("Новый раунд! Крупье забирает все карты у игроков.");
 
