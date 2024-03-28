@@ -26,18 +26,9 @@ namespace _6_4_DeckOfCards
     public class Application
     {
         private Table table = new Table();
-        private List<Player> _players;
 
         public void Run()
         {
-            _players = new List<Player>()
-            {
-                new Player("Дима", table),
-                new Player("Костя", table),
-                new Player("Петр", table),
-                new Player("Ян", table)
-            };
-
             bool isMainLoopActive = true;
 
             ShowMenu();
@@ -49,19 +40,19 @@ namespace _6_4_DeckOfCards
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        _players[0].TakeCard();
+                        table.GiveCardToPlayer(1);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        _players[1].TakeCard();
+                        table.GiveCardToPlayer(2);
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        _players[2].TakeCard();
+                        table.GiveCardToPlayer(3);
                         break;
 
                     case ConsoleKey.RightArrow:
-                        _players[3].TakeCard();
+                        table.GiveCardToPlayer(4);
                         break;
 
                     case ConsoleKey.Spacebar:
@@ -86,24 +77,19 @@ namespace _6_4_DeckOfCards
         {
             Console.Clear();
             Console.WriteLine("Стрелка ^ < > вверх, вниз, лево, право -  взять карту из колоды соответствующему игроку.");
-            Console.WriteLine("Пробел - показать карты игроков;   Backspace - Начать игру заново;");
+            Console.WriteLine("Пробел - показать карты игроков;   Backspace - Начать игру заново; Esc - выход из программы.");
         }
 
         public void ShowAllPlayerCards()
         {
             ShowMenu();
-
-            foreach (Player player in _players)
-                player.ShowCards();
+            table.ShowAllPlayersCards();
         }
 
         public void NewGame()
         {
             table.NewRound();
             ShowMenu();
-
-            foreach (Player player in _players)
-                player.ShowCards();
         }
     }
 
@@ -172,20 +158,14 @@ namespace _6_4_DeckOfCards
     public class Player
     {
         private List<Card> _cards = new List<Card>();
-        private Table _table;
 
-        public Player(string name, Table table)
+        public Player(string name)
         {
             Name = name;
-            SitDownAt(table);
         }
 
         public string Name {get; private set;}
 
-        public void TakeCard()
-        {
-            _table.GiveCard(this);
-        }
 
         public void AddCard(Card card)
         {
@@ -205,12 +185,6 @@ namespace _6_4_DeckOfCards
             Console.WriteLine();
         }
 
-        public void SitDownAt(Table table)
-        {
-            _table = table;
-            table.ConnectPlayer(this);
-        }
-
         public void EmptyCards()
         {
             _cards = new List<Card>();
@@ -220,30 +194,36 @@ namespace _6_4_DeckOfCards
     public class Table
     {
         private CardDeck _cardDeck;
-        private List<Player> _players = new List<Player>();
+        private List<Player> _players;
 
         public Table()
         {
             CardDeck cardDeck = new CardDeck();
             _cardDeck = cardDeck;
+
+            _players = new List<Player>() 
+            {
+                new Player("Дима"),
+                new Player("Костя"),
+                new Player("Петр"),
+                new Player("Ян") 
+            };
         }
 
-        public void ConnectPlayer(Player player)
+        public void GiveCardToPlayer(int playerNumber)
         {
-            _players.Add(player);
-        }
-
-        public void GiveCard(Player player)
-        {
-            Card card;
-
-            if (_cardDeck.TryTakeCard(out card))
+            if (playerNumber <= _players.Count)
             {
-                player.AddCard(card);
-            }
-            else
-            {
-                Console.WriteLine("В колоде кончились карты.");
+                Card card;
+
+                if (_cardDeck.TryTakeCard(out card))
+                {
+                    _players[playerNumber-1].AddCard(card);
+                }
+                else
+                {
+                    Console.WriteLine("В колоде кончились карты.");
+                }
             }
         }
 
@@ -258,6 +238,12 @@ namespace _6_4_DeckOfCards
 
             Console.WriteLine("Нажмите клавишу для продолжения ....");
             Console.ReadKey();
+        }
+
+        public void ShowAllPlayersCards()
+        {
+            foreach (var player in _players)
+                player.ShowCards();
         }
     }
 }
