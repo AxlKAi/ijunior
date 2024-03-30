@@ -211,7 +211,7 @@ namespace _6_4_DeckOfCards
             Console.WriteLine();
         }
 
-        public void EmptyCards()
+        public void RemoveCards()
         {
             _cards = new List<Card>();
         }
@@ -258,7 +258,7 @@ namespace _6_4_DeckOfCards
             Console.WriteLine("Новый раунд! Крупье забирает все карты у игроков.");
 
             foreach (Player player in _players)
-                player.EmptyCards();
+                player.RemoveCards();
 
             _cardDeck.Renew();
 
