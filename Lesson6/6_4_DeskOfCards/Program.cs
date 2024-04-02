@@ -39,22 +39,20 @@ namespace _6_4_DeckOfCards
 
     public class Application
     {
-        const ConsoleKey ShowAllPlayersCardKey = ConsoleKey.Spacebar;
-        const ConsoleKey NewGameKey = ConsoleKey.Backspace;
-        const ConsoleKey QuitKey = ConsoleKey.Escape;
+        private const ConsoleKey ShowAllPlayersCardKey = ConsoleKey.Spacebar;
+        private const ConsoleKey NewGameKey = ConsoleKey.Backspace;
+        private const ConsoleKey QuitKey = ConsoleKey.Escape;
 
-        const ConsoleKey PlayerOneKey = ConsoleKey.UpArrow;
-        const ConsoleKey PlayerTwoKey = ConsoleKey.DownArrow;
-        const ConsoleKey PlayerThreeKey = ConsoleKey.LeftArrow;
-        const ConsoleKey PlayerFourKey = ConsoleKey.RightArrow;
+        private const ConsoleKey PlayerTwoKey = ConsoleKey.DownArrow;
+        private const ConsoleKey PlayerThreeKey = ConsoleKey.LeftArrow;
+        private const ConsoleKey PlayerOneKey = ConsoleKey.UpArrow;
+        private const ConsoleKey PlayerFourKey = ConsoleKey.RightArrow;
 
         private Table _table = new Table();
 
         public void Run()
         {
             bool isMainLoopActive = true;
-
-            var player1 = ConsoleKey.UpArrow;
 
             _table.AddPlayer("Дима", PlayerOneKey);
             _table.AddPlayer("Костя", PlayerTwoKey);
@@ -129,11 +127,11 @@ namespace _6_4_DeckOfCards
         }
     }
 
-    public class CardDeck
+    public class CardsDeck
     {
         private List<Card> _cards = new List<Card>();
 
-        public CardDeck()
+        public CardsDeck()
         {
             Fill();
             Shuffle();
@@ -177,7 +175,7 @@ namespace _6_4_DeckOfCards
 
             for (int i = _cards.Count - 1; i >= 1; i--)
             {
-                int randomIndex = random.Next(i + 1);
+                int randomIndex = random.Next(_cards.Count);
                 var tempCard = _cards[randomIndex];
                 _cards[randomIndex] = _cards[i];
                 _cards[i] = tempCard;
@@ -222,12 +220,12 @@ namespace _6_4_DeckOfCards
 
     public class Table
     {
-        private CardDeck _cardDeck;        
+        private CardsDeck _cardDeck;        
         private Dictionary<ConsoleKey, Player> _players = new Dictionary<ConsoleKey, Player>();
 
         public Table()
         {
-            CardDeck cardDeck = new CardDeck();
+            CardsDeck cardDeck = new CardsDeck();
             _cardDeck = cardDeck;
         }
 
