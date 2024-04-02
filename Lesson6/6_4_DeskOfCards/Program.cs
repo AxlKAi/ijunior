@@ -39,11 +39,27 @@ namespace _6_4_DeckOfCards
 
     public class Application
     {
+        const ConsoleKey ShowAllPlayersCardKey = ConsoleKey.Spacebar;
+        const ConsoleKey NewGameKey = ConsoleKey.Backspace;
+        const ConsoleKey QuitKey = ConsoleKey.Escape;
+
+        const ConsoleKey PlayerOneKey = ConsoleKey.UpArrow;
+        const ConsoleKey PlayerTwoKey = ConsoleKey.DownArrow;
+        const ConsoleKey PlayerThreeKey = ConsoleKey.LeftArrow;
+        const ConsoleKey PlayerFourKey = ConsoleKey.RightArrow;
+
         private Table _table = new Table();
 
         public void Run()
         {
             bool isMainLoopActive = true;
+
+            var player1 = ConsoleKey.UpArrow;
+
+            _table.AddPlayer("Дима", PlayerOneKey);
+            _table.AddPlayer("Костя", PlayerTwoKey);
+            _table.AddPlayer("Рита", PlayerThreeKey);
+            _table.AddPlayer("Вася", PlayerFourKey);
 
             ShowMenu();
 
@@ -53,32 +69,20 @@ namespace _6_4_DeckOfCards
 
                 switch (key.Key)
                 {
-                    case ConsoleKey.UpArrow:
-                        _table.GiveCardToPlayer(1);
-                        break;
-
-                    case ConsoleKey.DownArrow:
-                        _table.GiveCardToPlayer(2);
-                        break;
-
-                    case ConsoleKey.LeftArrow:
-                        _table.GiveCardToPlayer(3);
-                        break;
-
-                    case ConsoleKey.RightArrow:
-                        _table.GiveCardToPlayer(4);
-                        break;
-
-                    case ConsoleKey.Spacebar:
+                    case ShowAllPlayersCardKey:
                         ShowAllPlayerCards();
                         break;
 
-                    case ConsoleKey.Backspace:
+                    case NewGameKey:
                         StartNewGame();
                         break;
 
-                    case ConsoleKey.Escape:
+                    case QuitKey:
                         isMainLoopActive = false;
+                        break;
+
+                    default:
+                        _table.PlayerKeyEvent(key.Key);
                         break;
                 }
             }
@@ -132,6 +136,7 @@ namespace _6_4_DeckOfCards
         public CardDeck()
         {
             Fill();
+            Shuffle();
         }
 
         public bool TryGiveCard(out Card card)
@@ -153,6 +158,7 @@ namespace _6_4_DeckOfCards
         {
             _cards = new List<Card>();
             Fill();
+            Shuffle();
         }
 
         private void Fill()
@@ -163,8 +169,6 @@ namespace _6_4_DeckOfCards
             foreach (var suit in suits)
                 foreach (var value in values)
                     _cards.Add(new Card((СardSuit)suit, (CardValue)value));
-
-            Shuffle();
         }
 
         private void Shuffle()
@@ -192,7 +196,6 @@ namespace _6_4_DeckOfCards
 
         public string Name {get; private set;}
 
-
         public void AddCard(Card card)
         {
             _cards.Add(card);
@@ -211,7 +214,7 @@ namespace _6_4_DeckOfCards
             Console.WriteLine();
         }
 
-        public void RemoveCards()
+        public void ClearCards()
         {
             _cards = new List<Card>();
         }
@@ -219,32 +222,30 @@ namespace _6_4_DeckOfCards
 
     public class Table
     {
-        private CardDeck _cardDeck;
-        private List<Player> _players;
+        private CardDeck _cardDeck;        
+        private Dictionary<ConsoleKey, Player> _players = new Dictionary<ConsoleKey, Player>();
 
         public Table()
         {
             CardDeck cardDeck = new CardDeck();
             _cardDeck = cardDeck;
-
-            _players = new List<Player>() 
-            {
-                new Player("Дима"),
-                new Player("Костя"),
-                new Player("Петр"),
-                new Player("Ян") 
-            };
         }
 
-        public void GiveCardToPlayer(int playerNumber)
+        public void AddPlayer(string name, ConsoleKey playerKey)
         {
-            if (playerNumber <= _players.Count)
-            {
-                Card card;
+            _players.Add(playerKey, new Player(name));
+        }
 
+        public void PlayerKeyEvent(ConsoleKey pressedKey)
+        {
+            Player player;
+            Card card;
+
+            if (_players.TryGetValue(pressedKey, out player))
+            {
                 if (_cardDeck.TryGiveCard(out card))
                 {
-                    _players[playerNumber-1].AddCard(card);
+                    player.AddCard(card);
                 }
                 else
                 {
@@ -257,8 +258,8 @@ namespace _6_4_DeckOfCards
         {
             Console.WriteLine("Новый раунд! Крупье забирает все карты у игроков.");
 
-            foreach (Player player in _players)
-                player.RemoveCards();
+            foreach (KeyValuePair<ConsoleKey, Player> player in _players)
+                player.Value.ClearCards();
 
             _cardDeck.Renew();
 
@@ -268,8 +269,8 @@ namespace _6_4_DeckOfCards
 
         public void ShowAllPlayersCards()
         {
-            foreach (var player in _players)
-                player.ShowCards();
+            foreach (KeyValuePair<ConsoleKey, Player> player in _players)
+                player.Value.ShowCards();
         }
     }
 }
