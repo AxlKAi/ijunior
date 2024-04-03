@@ -1,20 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-/*
- * 1) Блоки if и else должны быть оформлены одинаково. 
- * Если один из блоков заключен в фигурные скобки, 
- * то и другой(другие, если у вас много else if)
- * должен быть заключён в фигурные скобки. 
- * 
- * 2) if (!Book.ValidateName(title)) - лучше указывать явно == false. ! плохо читается, 
- * из-за чего может быть пропущена/забыта, что приведёт к ошибке в дальнейшем. 
- * 
- * 3) Find - сделайте один switch с проверками. 
- * Создайте 3 метода, где запрашиваете ввод и если нашлось 
- * совпадение в соответствующем свойстве , то выводите книгу. 
- * 
- * 4) DeleteBooks - зачем нужен метод?
- */
+
 namespace _6_5_BookStorage
 {
     class Program
@@ -29,13 +15,13 @@ namespace _6_5_BookStorage
 
     class Application
     {
-        const string ShowAllEntrysCommand = "1";
-        const string AddBookCommand = "2";
-        const string DeleteBookCommand = "3";
-        const string SearchByAutorCommand = "4";
-        const string SearchByTitleCommand = "5";
-        const string SearchByYearCommand = "6";
-        const string ExitCommand = "7";
+        private const string ShowAllEntrysCommand = "1";
+        private const string AddBookCommand = "2";
+        private const string DeleteBookCommand = "3";
+        private const string SearchByAutorCommand = "4";
+        private const string SearchByTitleCommand = "5";
+        private const string SearchByYearCommand = "6";
+        private const string ExitCommand = "7";
 
         public void Run()
         {
@@ -157,7 +143,7 @@ namespace _6_5_BookStorage
 
     class BookStorage
     {
-        private const int OlderstBookAgeYears = 800;
+        private const int OlderstBookYear = 868;
 
         private List<Book> _books = new List<Book>();
 
@@ -205,13 +191,13 @@ namespace _6_5_BookStorage
 
             if (Int32.TryParse(Console.ReadLine(), out year))
             {
-                if (year <= DateTime.Now.Year && year >= DateTime.Now.Year - OlderstBookAgeYears)
+                if (year <= DateTime.Now.Year && year >= OlderstBookYear)
                 {
                     CreateBookEntry(title, autor, year);
                 }
                 else
                 {
-                    Console.WriteLine($"Введенный год не попадает в последние {OlderstBookAgeYears} лет.");
+                    Console.WriteLine($"Введенный год не попадает в период с {OlderstBookYear} года до текущей даты.");
                 }
             }
             else
@@ -235,27 +221,23 @@ namespace _6_5_BookStorage
         public void Find(FindBy findBy)
         {
             string searchString;
-            int searchYear = 0;
-            List<Book> findBooks = new List<Book>(); 
+            int searchYear;
+            List<Book> findBooks = new List<Book>();
 
             Console.WriteLine("Введите строку для поиска.");
             searchString = Console.ReadLine();
 
-            switch (findBy)
+            if ((findBy == FindBy.Autor || findBy == FindBy.Title) && Book.ValidateName(searchString) == false)
             {
-                case FindBy.Autor:
-                case FindBy.Title:
-                    if (Book.ValidateName(searchString) == false)
-                        return;
-                    break;
-
-                case FindBy.Year:
-                    if (Int32.TryParse(searchString, out searchYear) == false)
-                    {
-                        Console.WriteLine("Не могу распознать число. Введите только цыфры.");
-                        return;
-                    }                        
-                    break;
+                return;
+            }
+            else if (findBy == FindBy.Year)
+            {
+                if (Int32.TryParse(searchString, out searchYear) == false)
+                {
+                    Console.WriteLine("Не могу распарсить число. Вводите только цифры.");
+                    return;
+                }                  
             }
 
             bool isContained = false;
@@ -288,11 +270,11 @@ namespace _6_5_BookStorage
                     containedPosition++;
                     Console.WriteLine($"id =[{i}] Книга: {_books[i].Title} " +
                         $"Автор: {_books[i].Autor} Год: {_books[i].Year}" +
-                        $" содержит подстроку начиная с символа {containedPosition}.");  
+                        $" содержит подстроку начиная с символа {containedPosition}.");
                 }
             }
 
-            if (findBooks.Count > 0 )
+            if (findBooks.Count > 0)
             {
                 string userInput;
                 Console.Write("Вы хотите удалить все найденные книги? (y - да, другой - нет):");
