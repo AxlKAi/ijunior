@@ -22,6 +22,7 @@ namespace _6_5_BookStorage
         private const string SearchByTitleCommand = "5";
         private const string SearchByYearCommand = "6";
         private const string ExitCommand = "7";
+        private const string NegotiveAnswer = "n";
 
         public void Run()
         {
@@ -48,15 +49,16 @@ namespace _6_5_BookStorage
                         break;
 
                     case SearchByAutorCommand:
-                        bookStorage.Find(BookStorage.FindBy.Autor);
+
+                        bookStorage.Find(bookStorage.SearchAutorPattern); 
                         break;
 
                     case SearchByTitleCommand:
-                        bookStorage.Find(BookStorage.FindBy.Title);
+                        bookStorage.Find(bookStorage.SearchTitlePattern);
                         break;
 
                     case SearchByYearCommand:
-                        bookStorage.Find(BookStorage.FindBy.Year);
+                        bookStorage.Find(bookStorage.SearchYearPattern);
                         break;
 
                     case ExitCommand:
@@ -92,10 +94,11 @@ namespace _6_5_BookStorage
         private bool TryUserWantExit()
         {
             string userInput;
+
             Console.Write("Вы хотите выйти? (n - нет, другой - да):");
             userInput = Console.ReadLine();
 
-            if (userInput == "n")
+            if (userInput == NegotiveAnswer)
             {
                 return false;
             }
@@ -137,13 +140,16 @@ namespace _6_5_BookStorage
                 return false;
             }
             else
+            {
                 return true;
+            }                
         }
     }
 
     class BookStorage
     {
         private const int OlderstBookYear = 868;
+        private const string PositiveAnswer = "y";
 
         private List<Book> _books = new List<Book>();
 
@@ -160,7 +166,7 @@ namespace _6_5_BookStorage
             CreateBookEntry("Возвращение короля", "Толкин Джон Рональд Руэл", 1954);
         }
 
-        public enum FindBy { Autor, Title, Year }
+        public delegate int? StringSearchPattern(int listIndex, string searchableLetters);
 
         public void AddBook()
         {
@@ -172,7 +178,7 @@ namespace _6_5_BookStorage
             Console.Write("Введите название:");
             title = Console.ReadLine();
 
-            if (!Book.ValidateName(title))
+            if (Book.ValidateName(title) == false)
             {
                 Console.WriteLine("Название книги введено не правильно.");
                 return;
@@ -218,48 +224,49 @@ namespace _6_5_BookStorage
             Console.WriteLine();
         }
 
-        public void Find(FindBy findBy)
+        public int? SearchAutorPattern(int index, string searchText) => _books[index].Autor.IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
+
+        public int? SearchTitlePattern(int index, string searchText) => _books[index].Title.IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
+
+        public int? SearchYearPattern(int index, string searchText)
+        {
+            int searchYear;
+
+            if (Int32.TryParse(searchText, out searchYear) == false)
+            {
+                Console.WriteLine("Не могу распарсить число. Вводите только цифры.");
+                return null;
+            }
+            else
+            {
+                return _books[index].Year.ToString().IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
+            }            
+        }
+
+        public void Find(StringSearchPattern searchPattern)
         {
             string searchString;
-            int searchYear;
             List<Book> findBooks = new List<Book>();
 
             Console.WriteLine("Введите строку для поиска.");
             searchString = Console.ReadLine();
 
-            if ((findBy == FindBy.Autor || findBy == FindBy.Title) && Book.ValidateName(searchString) == false)
+            if (Book.ValidateName(searchString) == false)
             {
+                Console.WriteLine("Не корректная строка для поиска.");
                 return;
-            }
-            else if (findBy == FindBy.Year)
-            {
-                if (Int32.TryParse(searchString, out searchYear) == false)
-                {
-                    Console.WriteLine("Не могу распарсить число. Вводите только цифры.");
-                    return;
-                }                  
             }
 
             bool isContained = false;
 
             for (int i = 0; i < _books.Count; i++)
             {
-                int containedPosition = -1;
+                int? containedPosition = -1;
 
-                switch (findBy)
-                {
-                    case FindBy.Autor:
-                        containedPosition = _books[i].Autor.IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
-                        break;
+                containedPosition = searchPattern(i, searchString);
 
-                    case FindBy.Title:
-                        containedPosition = _books[i].Title.IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
-                        break;
-
-                    case FindBy.Year:
-                        containedPosition = _books[i].Year.ToString().IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
-                        break;
-                }
+                if (containedPosition == null)
+                    break;
 
                 isContained = containedPosition >= 0;
 
@@ -276,14 +283,7 @@ namespace _6_5_BookStorage
 
             if (findBooks.Count > 0)
             {
-                string userInput;
-                Console.Write("Вы хотите удалить все найденные книги? (y - да, другой - нет):");
-                userInput = Console.ReadLine();
-
-                if (userInput == "y")
-                {
-                    DeleteBooks(findBooks);
-                }
+                AskDeleteBooks(findBooks);
             }
             else
             {
@@ -316,12 +316,20 @@ namespace _6_5_BookStorage
             }
         }
 
-        private void DeleteBooks(List<Book> books)
+        private void AskDeleteBooks(List<Book> books)
         {
-            foreach (Book book in books)
+            string userInput;
+
+            Console.Write("Вы хотите удалить все найденные книги? (y - да, другой - нет):");
+            userInput = Console.ReadLine();
+
+            if (userInput == PositiveAnswer)
             {
-                Console.WriteLine($"Удаляю книгу {book.Title}");
-                _books.Remove(book);
+                foreach (Book book in books)
+                {
+                    Console.WriteLine($"Удаляю книгу {book.Title}");
+                    _books.Remove(book);
+                }
             }
         }
 
