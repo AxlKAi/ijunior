@@ -187,7 +187,7 @@ namespace _6_5_BookStorage
             Console.Write("Введите автора:");
             autor = Console.ReadLine();
 
-            if (!Book.ValidateName(autor))
+            if (Book.ValidateName(autor) == false)
             {
                 Console.WriteLine("Имя автора книги введено не правильно.");
                 return;
