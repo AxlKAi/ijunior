@@ -27,9 +27,9 @@ namespace _6_5_BookStorage
         public void Run()
         {
             BookStorage bookStorage = new BookStorage();
-            bool isMainLoopActive = true;
+            bool isExit = false;
 
-            while (isMainLoopActive)
+            while (isExit == false)
             {
                 ShowMainMenu();
                 string userInput = Console.ReadLine();
@@ -49,8 +49,7 @@ namespace _6_5_BookStorage
                         break;
 
                     case SearchByAutorCommand:
-
-                        bookStorage.Find(bookStorage.SearchAutorPattern); 
+                        bookStorage.Find(bookStorage.SearchAutorPattern);
                         break;
 
                     case SearchByTitleCommand:
@@ -62,7 +61,7 @@ namespace _6_5_BookStorage
                         break;
 
                     case ExitCommand:
-                        isMainLoopActive = !TryUserWantExit();
+                        isExit = TryExit();
                         break;
                 }
 
@@ -72,26 +71,26 @@ namespace _6_5_BookStorage
 
         private void ShowMainMenu()
         {
-            string showAllEntrys = "Показать всю базу.";
-            string createBook = "Добавить книгу в базу.";
-            string deleteBook = "Удалить книгу.";
-            string searchByAutor = "Найти по автору.";
-            string searchByTitle = "Найти по названию.";
-            string searchByYear = "Найти по году.";
-            string exitMenuText = "Выход.";
+            string showAllEntrysMessage = "Показать всю базу.";
+            string createBookMessage = "Добавить книгу в базу.";
+            string deleteBookMessage = "Удалить книгу.";
+            string searchByAutorMessage = "Найти по автору.";
+            string searchByTitleMessage = "Найти по названию.";
+            string searchByYearMessage = "Найти по году.";
+            string exitMenuTextMessage = "Выход.";
 
             Console.Clear();
-            Console.WriteLine($"{ShowAllEntrysCommand}. {showAllEntrys}");
-            Console.WriteLine($"{AddBookCommand}. {createBook}");
-            Console.WriteLine($"{DeleteBookCommand}. {deleteBook}");
-            Console.WriteLine($"{SearchByAutorCommand}. {searchByAutor}");
-            Console.WriteLine($"{SearchByTitleCommand}. {searchByTitle}");
-            Console.WriteLine($"{SearchByYearCommand}. {searchByYear}");
-            Console.WriteLine($"{ExitCommand}. {exitMenuText}");
+            Console.WriteLine($"{ShowAllEntrysCommand}. {showAllEntrysMessage}");
+            Console.WriteLine($"{AddBookCommand}. {createBookMessage}");
+            Console.WriteLine($"{DeleteBookCommand}. {deleteBookMessage}");
+            Console.WriteLine($"{SearchByAutorCommand}. {searchByAutorMessage}");
+            Console.WriteLine($"{SearchByTitleCommand}. {searchByTitleMessage}");
+            Console.WriteLine($"{SearchByYearCommand}. {searchByYearMessage}");
+            Console.WriteLine($"{ExitCommand}. {exitMenuTextMessage}");
             Console.WriteLine();
         }
 
-        private bool TryUserWantExit()
+        private bool TryExit()
         {
             string userInput;
 
@@ -142,7 +141,7 @@ namespace _6_5_BookStorage
             else
             {
                 return true;
-            }                
+            }
         }
     }
 
@@ -155,15 +154,7 @@ namespace _6_5_BookStorage
 
         public BookStorage()
         {
-            CreateBookEntry("Война и мир", "Лев Толстой", 1865);
-            CreateBookEntry("В чём моя вера?", "Лев Толстой", 1884);
-            CreateBookEntry("Исповедь", "Лев Толстой", 1884);
-            CreateBookEntry("Идиот", "Достоевский", 1867);
-            CreateBookEntry("Бесы", "Достоевский", 1871);
-            CreateBookEntry("Братья Карамазовы", "Достоевский", 1879);
-            CreateBookEntry("Братство Кольца", "Толкин Джон Рональд Руэл", 1954);
-            CreateBookEntry("Две крепости", "Толкин Джон Рональд Руэл", 1954);
-            CreateBookEntry("Возвращение короля", "Толкин Джон Рональд Руэл", 1954);
+            Fill();
         }
 
         public delegate int? StringSearchPattern(int listIndex, string searchableLetters);
@@ -178,7 +169,7 @@ namespace _6_5_BookStorage
             Console.Write("Введите название:");
             title = Console.ReadLine();
 
-            if (Book.IsValidName(title) == false)
+            if (Book.IsValidName(title) == false) // TODO  вынести в ощий метод с autor
             {
                 Console.WriteLine("Название книги введено не правильно.");
                 return;
@@ -195,20 +186,15 @@ namespace _6_5_BookStorage
 
             Console.Write("Введите год издания:");
 
-            if (Int32.TryParse(Console.ReadLine(), out year))
+            year = ReadInt(Console.ReadLine(), "Не могу распарсить цифры.");
+
+            if (year <= DateTime.Now.Year && year >= OlderstBookYear)
             {
-                if (year <= DateTime.Now.Year && year >= OlderstBookYear)
-                {
-                    CreateBookEntry(title, autor, year);
-                }
-                else
-                {
-                    Console.WriteLine($"Введенный год не попадает в период с {OlderstBookYear} года до текущей даты.");
-                }
+                CreateBookEntry(title, autor, year);
             }
             else
             {
-                Console.WriteLine("Вводите только цифры, не могу распознать ввод.");
+                Console.WriteLine($"Введенный год не попадает в период с {OlderstBookYear} года до текущей даты.");
                 return;
             }
         }
@@ -224,23 +210,24 @@ namespace _6_5_BookStorage
             Console.WriteLine();
         }
 
-        public int? SearchAutorPattern(int index, string searchText) => _books[index].Autor.IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
+        public int? SearchAutorPattern(int index, string searchText) =>
+            _books[index].Autor.IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
 
-        public int? SearchTitlePattern(int index, string searchText) => _books[index].Title.IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
+        public int? SearchTitlePattern(int index, string searchText) =>
+            _books[index].Title.IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
 
         public int? SearchYearPattern(int index, string searchText)
         {
-            int searchYear;
+            int searchYear = ReadInt(searchText, "Не могу распарсить число. Вводите только цифры.");
 
-            if (Int32.TryParse(searchText, out searchYear) == false)
+            if (searchYear >= 0)
             {
-                Console.WriteLine("Не могу распарсить число. Вводите только цифры.");
-                return null;
+                return _books[index].Year.ToString().IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
             }
             else
             {
-                return _books[index].Year.ToString().IndexOf(searchText, StringComparison.OrdinalIgnoreCase);
-            }            
+                return null;
+            }
         }
 
         public void Find(StringSearchPattern searchPattern)
@@ -295,8 +282,9 @@ namespace _6_5_BookStorage
         {
             ShowAllEntires();
 
-            int index;
             Console.WriteLine("Удаление книги. Введите индекс. ");
+
+            int index = ReadInt();
 
             if (Int32.TryParse(Console.ReadLine(), out index))
             {
@@ -312,8 +300,21 @@ namespace _6_5_BookStorage
             }
             else
             {
-                Console.WriteLine("Не могу распознать число, вводите только цифры.");
+                Console.WriteLine();
             }
+        }
+
+        private void Fill()
+        {
+            CreateBookEntry("Война и мир", "Лев Толстой", 1865);
+            CreateBookEntry("В чём моя вера?", "Лев Толстой", 1884);
+            CreateBookEntry("Исповедь", "Лев Толстой", 1884);
+            CreateBookEntry("Идиот", "Достоевский", 1867);
+            CreateBookEntry("Бесы", "Достоевский", 1871);
+            CreateBookEntry("Братья Карамазовы", "Достоевский", 1879);
+            CreateBookEntry("Братство Кольца", "Толкин Джон Рональд Руэл", 1954);
+            CreateBookEntry("Две крепости", "Толкин Джон Рональд Руэл", 1954);
+            CreateBookEntry("Возвращение короля", "Толкин Джон Рональд Руэл", 1954);
         }
 
         private void AskDeleteBooks(List<Book> books)
@@ -338,6 +339,22 @@ namespace _6_5_BookStorage
             Book book = new Book(title, autor, year);
             _books.Add(book);
             Console.WriteLine($"В хранилище добавлен шедевр \"{title}\" созданный \"{autor}\" в {year} году.");
+        }
+
+        private int ReadInt(string text)
+        {
+            string errorMessage = "Не могу распознать число, вводите только цифры.";
+            int number;
+
+            if (Int32.TryParse(text, out number))
+            {
+                return number;
+            }
+            else
+            {
+                Console.WriteLine(errorMessage);
+                return -1;
+            }
         }
     }
 }
