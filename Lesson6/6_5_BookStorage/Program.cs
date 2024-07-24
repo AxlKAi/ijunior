@@ -127,22 +127,6 @@ namespace _6_5_BookStorage
         public string Autor { get; private set; }
         public string Title { get; private set; }
         public int Year { get; private set; }
-
-        public static bool IsValidName(string name)
-        {
-            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ");
-
-            if (name == "" || name == " ")
-            {
-                Console.WriteLine("Введена не корректная строка, " +
-                    "она не может быть пустой или состоять только из пробелов.");
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
     }
 
     class BookStorage
@@ -169,24 +153,17 @@ namespace _6_5_BookStorage
             Console.Write("Введите название:");
             title = Console.ReadLine();
 
-            if (Book.IsValidName(title) == false) // TODO  вынести в ощий метод с autor
-            {
-                Console.WriteLine("Название книги введено не правильно.");
+            if (IsValidString(title) == false)
                 return;
-            }
 
             Console.Write("Введите автора:");
             autor = Console.ReadLine();
 
-            if (Book.IsValidName(autor) == false)
-            {
-                Console.WriteLine("Имя автора книги введено не правильно.");
+            if (IsValidString(autor) == false)
                 return;
-            }
 
             Console.Write("Введите год издания:");
-
-            year = ReadInt(Console.ReadLine(), "Не могу распарсить цифры.");
+            year = ReadInt(Console.ReadLine());
 
             if (year <= DateTime.Now.Year && year >= OlderstBookYear)
             {
@@ -218,7 +195,7 @@ namespace _6_5_BookStorage
 
         public int? SearchYearPattern(int index, string searchText)
         {
-            int searchYear = ReadInt(searchText, "Не могу распарсить число. Вводите только цифры.");
+            int searchYear = ReadInt(searchText);
 
             if (searchYear >= 0)
             {
@@ -238,11 +215,8 @@ namespace _6_5_BookStorage
             Console.WriteLine("Введите строку для поиска.");
             searchString = Console.ReadLine();
 
-            if (Book.IsValidName(searchString) == false)
-            {
-                Console.WriteLine("Не корректная строка для поиска.");
+            if (IsValidString(searchString) == false)
                 return;
-            }
 
             bool isContained = false;
 
@@ -283,24 +257,16 @@ namespace _6_5_BookStorage
             ShowAllEntires();
 
             Console.WriteLine("Удаление книги. Введите индекс. ");
+            int index = ReadInt(Console.ReadLine());
 
-            int index = ReadInt();
-
-            if (Int32.TryParse(Console.ReadLine(), out index))
+            if (index >= 0 && index < _books.Count)
             {
-                if (index >= 0 && index < _books.Count)
-                {
-                    Console.WriteLine($"Книга \"{_books[index].Title}\" за авторством \"{_books[index].Autor}\" будет удалена.");
-                    _books.RemoveAt(index);
-                }
-                else
-                {
-                    Console.WriteLine("Указанный индекс выходит за рамки границ хранилища.");
-                }
+                Console.WriteLine($"Книга \"{_books[index].Title}\" за авторством \"{_books[index].Autor}\" будет удалена.");
+                _books.RemoveAt(index);
             }
             else
             {
-                Console.WriteLine();
+                Console.WriteLine("Указанный индекс выходит за рамки границ хранилища.");
             }
         }
 
@@ -354,6 +320,22 @@ namespace _6_5_BookStorage
             {
                 Console.WriteLine(errorMessage);
                 return -1;
+            }
+        }
+
+        private bool IsValidString(string name)
+        {
+            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ");
+
+            if (name == "" || name == " ")
+            {
+                Console.WriteLine("Введена не корректная строка, " +
+                    "она не может быть пустой или состоять только из пробелов.");
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
