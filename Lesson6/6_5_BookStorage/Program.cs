@@ -95,7 +95,7 @@ namespace _6_5_BookStorage
         {
             string userInput;
 
-            Console.Write("Вы хотите выйти? (n - нет, другой - да):");
+            Console.Write($"Вы хотите выйти? ({NegotiveAnswer} - нет, другой - да):");
             userInput = Console.ReadLine();
 
             if (userInput == NegotiveAnswer)
@@ -129,13 +129,13 @@ namespace _6_5_BookStorage
         public string Title { get; private set; }
         public int Year { get; private set; }
 
-        public static bool ValidateName(string name)
+        public static bool IsValidName(string name)
         {
             name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ");
 
             if (name == "" || name == " ")
             {
-                Console.WriteLine("Введено не корректная строка, " +
+                Console.WriteLine("Введена не корректная строка, " +
                     "она не может быть пустой или состоять только из пробелов.");
                 return false;
             }
@@ -178,7 +178,7 @@ namespace _6_5_BookStorage
             Console.Write("Введите название:");
             title = Console.ReadLine();
 
-            if (Book.ValidateName(title) == false)
+            if (Book.IsValidName(title) == false)
             {
                 Console.WriteLine("Название книги введено не правильно.");
                 return;
@@ -187,7 +187,7 @@ namespace _6_5_BookStorage
             Console.Write("Введите автора:");
             autor = Console.ReadLine();
 
-            if (Book.ValidateName(autor) == false)
+            if (Book.IsValidName(autor) == false)
             {
                 Console.WriteLine("Имя автора книги введено не правильно.");
                 return;
@@ -251,7 +251,7 @@ namespace _6_5_BookStorage
             Console.WriteLine("Введите строку для поиска.");
             searchString = Console.ReadLine();
 
-            if (Book.ValidateName(searchString) == false)
+            if (Book.IsValidName(searchString) == false)
             {
                 Console.WriteLine("Не корректная строка для поиска.");
                 return;
@@ -320,7 +320,7 @@ namespace _6_5_BookStorage
         {
             string userInput;
 
-            Console.Write("Вы хотите удалить все найденные книги? (y - да, другой - нет):");
+            Console.Write($"Вы хотите удалить все найденные книги? ({PositiveAnswer} - да, другой - нет):");
             userInput = Console.ReadLine();
 
             if (userInput == PositiveAnswer)
