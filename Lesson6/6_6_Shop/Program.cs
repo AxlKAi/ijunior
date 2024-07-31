@@ -1,17 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-/* 
- * Существует продавец, он имеет у себя список товаров, 
- * и при нужде, может вам его показать, 
- * также продавец может продать вам товар. 
- * После продажи товар переходит к вам, 
- * и вы можете также посмотреть свои вещи.
 
-Возможные классы – игрок, продавец, товар.
-
-Вы можете сделать так, как вы видите это.
-*/
 namespace _6_6_Shop
 {
     class Program
@@ -36,15 +26,16 @@ namespace _6_6_Shop
         const string ResetFavouritesCommand = "8";
         const string RenewAllSellerGoodsCommand = "9";
         const string ExitCommand = "0";
+        const string NegativeAnswer = "n";
 
         public void Run()
         {
             Seller seller = new Seller("Продавец", 10000);
-            Buyer buyer = new Buyer("Покупатель", 100);
+            Buyer buyer = new Buyer("Покупатель", 1000);
 
-            bool isMainLoopActive = true;
+            bool isEnd = false;
 
-            while (isMainLoopActive)
+            while (isEnd == false)
             {
                 ShowMainMenu();
                 string userInput = Console.ReadLine();
@@ -52,7 +43,7 @@ namespace _6_6_Shop
                 switch (userInput)
                 {
                     case ShowAllSellerGoodsCommand:
-                        seller.ShowAllItems();
+                        seller.ShowAllInventory();
                         break;
 
                     case BuyItemCommand:
@@ -60,7 +51,7 @@ namespace _6_6_Shop
                         break;
 
                     case ShowBuyerInventoryCommand:
-                        buyer.ShowAllItems();
+                        buyer.ShowAllInventory();
                         break;
 
                     case ReturnItemToSellerCommand:
@@ -88,7 +79,7 @@ namespace _6_6_Shop
                         break;
 
                     case ExitCommand:
-                        isMainLoopActive = !TryUserWantExit();
+                        isEnd = TryUserWantExit();
                         break;
                 }
 
@@ -102,7 +93,7 @@ namespace _6_6_Shop
             string userInput;
 
             Console.WriteLine($"Выберите что {buyer.Name} хочет купить у {seller.Name}.");
-            seller.ShowAllItems();
+            seller.ShowAllInventory();
             Console.WriteLine("Введите индекс товара");
             userInput = Console.ReadLine();
 
@@ -124,7 +115,7 @@ namespace _6_6_Shop
             Console.WriteLine("----------------------------");
             Console.WriteLine($"Добавьте товар в избранное.");
             Console.WriteLine($"Список товаров продавца.");
-            seller.ShowAllItems();
+            seller.ShowAllInventory();
 
             Console.WriteLine($"Выберите что добавить в избранное.");
             Console.WriteLine("Введите индекс товара:");
@@ -132,7 +123,7 @@ namespace _6_6_Shop
 
             if (Int32.TryParse(userInput, out itemIndex))
             {
-                buyer.AddToFavourite(seller.GetName(itemIndex));
+                buyer.AddToFavourite(seller.GetItemName(itemIndex));
             }
             else
             {
@@ -142,27 +133,27 @@ namespace _6_6_Shop
 
         private void ShowMainMenu()
         {
-            string showAllSellerGoods = "Показать все товары продовца.";
-            string buyItem = "Купить товар.";
-            string showBuyerInventory = "Показать инвентарь покупателя.";
-            string returnItemToSeller = "Вернуть товар продавцу.";
-            string showAllFavourite = "Показать избранное.";
-            string addToFovourite = "Добавить товар в желаемые покупки.";
-            string buyAllFavourites = "Купить все товары из списка покупок.";
-            string resetFavourites = "Сбросить список избранного.";
-            string renewAllSellerGoods = "Обновить товар у продавца.";
+            string showAllSellerGoodsMessage = "Показать все товары продовца.";
+            string buyItemMessage = "Купить товар.";
+            string showBuyerInventoryMessage = "Показать инвентарь покупателя.";
+            string returnItemToSellerMessage = "Продать товар покупателя продавцу.";
+            string showAllFavouriteMessage = "Показать избранное.";
+            string addToFovouriteMessage = "Добавить товар в желаемые покупки.";
+            string buyAllFavouritesMessage = "Купить все товары из списка покупок.";
+            string resetFavouritesMessage = "Сбросить список избранного.";
+            string renewAllSellerGoodsMessage = "Обновить товар у продавца.";
             string exitMenuText = "Выход.";
 
             Console.Clear();
-            Console.WriteLine($"{ShowAllSellerGoodsCommand}. {showAllSellerGoods}");
-            Console.WriteLine($"{BuyItemCommand}. {buyItem}");
-            Console.WriteLine($"{ShowBuyerInventoryCommand}. {showBuyerInventory}");
-            Console.WriteLine($"{ReturnItemToSellerCommand}. {returnItemToSeller}");
-            Console.WriteLine($"{ShowAllFavouriteCommand}. {showAllFavourite}");
-            Console.WriteLine($"{AddToFovouriteCommand}. {addToFovourite}");
-            Console.WriteLine($"{BuyAllFavouritesCommand}. {buyAllFavourites}");
-            Console.WriteLine($"{ResetFavouritesCommand}. {resetFavourites}");
-            Console.WriteLine($"{RenewAllSellerGoodsCommand}. {renewAllSellerGoods}");
+            Console.WriteLine($"{ShowAllSellerGoodsCommand}. {showAllSellerGoodsMessage}");
+            Console.WriteLine($"{BuyItemCommand}. {buyItemMessage}");
+            Console.WriteLine($"{ShowBuyerInventoryCommand}. {showBuyerInventoryMessage}");
+            Console.WriteLine($"{ReturnItemToSellerCommand}. {returnItemToSellerMessage}");
+            Console.WriteLine($"{ShowAllFavouriteCommand}. {showAllFavouriteMessage}");
+            Console.WriteLine($"{AddToFovouriteCommand}. {addToFovouriteMessage}");
+            Console.WriteLine($"{BuyAllFavouritesCommand}. {buyAllFavouritesMessage}");
+            Console.WriteLine($"{ResetFavouritesCommand}. {resetFavouritesMessage}");
+            Console.WriteLine($"{RenewAllSellerGoodsCommand}. {renewAllSellerGoodsMessage}");
             Console.WriteLine($"{ExitCommand}. {exitMenuText}");
             Console.WriteLine();
         }
@@ -170,10 +161,10 @@ namespace _6_6_Shop
         private bool TryUserWantExit()
         {
             string userInput;
-            Console.Write("Вы хотите выйти? (n - нет, другой - да):");
+            Console.Write($"Вы хотите выйти? ({NegativeAnswer} - нет, другой - да):");
             userInput = Console.ReadLine();
 
-            if (userInput == "n")
+            if (userInput == NegativeAnswer)
             {
                 return false;
             }
@@ -207,22 +198,19 @@ namespace _6_6_Shop
     {
         public Seller(string name, int money) : base(name, money)
         {
-            base._sellingCoefficient = 1f;
+            base._sellingCoefficient = 1.3f;
 
             RenewGoods();
         }
 
-        public bool TrySellProductByName(Trader buyer, string productName)
+        public void SellProductByName(Trader buyer, string productName)
         {
             int itemIndex = FindIndexByName(productName);
 
             if (itemIndex >= 0)
             {
                 this.Sell(buyer, itemIndex);
-                return true;
             }
-
-            return false;
         }
 
         public void RenewGoods()
@@ -279,7 +267,7 @@ namespace _6_6_Shop
         {
             if (_favourites.Contains(itemName))
             {
-                Console.WriteLine($"Избранные уже содержат товар {itemName}.");
+                Console.WriteLine($"В избранном уже содержится товар {itemName}.");
             }
             else
             {
@@ -297,7 +285,7 @@ namespace _6_6_Shop
         public void BuyAllFavouritesFrom(Seller seller)
         {
             foreach (string productName in _favourites)
-                seller.TrySellProductByName(this, productName);
+                seller.SellProductByName(this, productName);
 
             ResetFavourites();
         }
@@ -307,7 +295,7 @@ namespace _6_6_Shop
     {
         protected List<Item> _items = new List<Item>();
 
-        protected float _sellingCoefficient = 1f;
+        protected float _sellingCoefficient = 1.3f;
 
         public Trader(string name, int money)
         {
@@ -353,7 +341,7 @@ namespace _6_6_Shop
         }
 
         protected void TakeMoney(float value)
-        {
+        { 
             Money -= value;
         }
 
@@ -362,7 +350,7 @@ namespace _6_6_Shop
             Money += money;
         }
 
-        public string GetName(int index)
+        public string GetItemName(int index)
         {
             if (index < 0 || index >= _items.Count)
             {
@@ -374,13 +362,14 @@ namespace _6_6_Shop
             return _items[index].Name;
         }
 
-        public void ShowAllItems()
+        public void ShowAllInventory()
         {
             Console.WriteLine($"Инвентарь \"\"{Name}  Счет: {Money} денег.");
 
             for (int i = 0; i < _items.Count; i++)
             {
-                Console.WriteLine($"[{i}] {_items[i].Name} цена: {_items[i].Price.ToString("C", new CultureInfo("ru-RU"))}");
+                var sellingPrice = _items[i].Price * _sellingCoefficient;
+                Console.WriteLine($"[{i}] {_items[i].Name} цена: {sellingPrice.ToString("C", new CultureInfo("ru-RU"))}");
             }
 
             Console.WriteLine();
