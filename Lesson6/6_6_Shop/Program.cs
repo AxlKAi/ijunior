@@ -30,8 +30,8 @@ namespace _6_6_Shop
 
         public void Run()
         {
-            Seller seller = new Seller("Продавец", 10000);
-            Buyer buyer = new Buyer("Покупатель", 1000);
+            Seller seller = new Seller("Продавец", 10000, 1.3f);
+            Buyer buyer = new Buyer("Покупатель", 1000, .5f);
 
             bool isEnd = false;
 
@@ -196,10 +196,8 @@ namespace _6_6_Shop
 
     class Seller : Trader
     {
-        public Seller(string name, int money) : base(name, money)
+        public Seller(string name, int money, float sellingCoefficient) : base(name, money, sellingCoefficient)
         {
-            base._sellingCoefficient = 1.3f;
-
             RenewGoods();
         }
 
@@ -209,13 +207,13 @@ namespace _6_6_Shop
 
             if (itemIndex >= 0)
             {
-                this.Sell(buyer, itemIndex);
+                Sell(buyer, itemIndex);
             }
         }
 
         public void RenewGoods()
         {
-            base._items = new List<Item>()
+            Items = new List<Item>()
             {
                 new Item("Карандаш", 10),
                 new Item("Ручка", 15),
@@ -232,9 +230,9 @@ namespace _6_6_Shop
 
         private int FindIndexByName(string name)
         {
-            for (int i = 0; i < _items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                if (_items[i].Name == name)
+                if (Items[i].Name == name)
                     return i;
             }
 
@@ -246,10 +244,7 @@ namespace _6_6_Shop
     {
         private List<string> _favourites = new List<string>();
 
-        public Buyer(string name, int money) : base(name, money)
-        {
-            base._sellingCoefficient = .5f;
-        }
+        public Buyer(string name, int money, float sellingCoefficient) : base(name, money, sellingCoefficient) { }
 
         public void ShowAllFavourites()
         {
@@ -293,14 +288,16 @@ namespace _6_6_Shop
 
     abstract class Trader
     {
-        protected List<Item> _items = new List<Item>();
+        protected List<Item> Items = new List<Item>();
 
-        protected float _sellingCoefficient = 1.3f;
+        private float _sellingCoefficient = 1.3f;
+        private CultureInfo _cultureInfoRu = new CultureInfo("ru-RU");
 
-        public Trader(string name, int money)
+        public Trader(string name, int money, float sellingCoefficient)
         {
             Name = name;
             Money = money;
+            _sellingCoefficient = sellingCoefficient;
         }
 
         public string Name { get; private set; }
@@ -309,15 +306,15 @@ namespace _6_6_Shop
 
         public void Sell(Trader buyer, int sellingItemIndex)
         {
-            if (sellingItemIndex < 0 || sellingItemIndex >= _items.Count)
+            if (sellingItemIndex < 0 || sellingItemIndex >= Items.Count)
             {
                 Console.WriteLine($"Указанный индекс {sellingItemIndex}" +
                     $" не попадает в границы массива.");
                 return;
             }
 
-            Item sellingItem = this._items[sellingItemIndex];
-            float sellingPrice = sellingItem.Price * this._sellingCoefficient;
+            Item sellingItem = Items[sellingItemIndex];
+            float sellingPrice = sellingItem.Price * _sellingCoefficient;
 
             Console.WriteLine($"Продается {sellingItem.Name} за {sellingPrice} денег.");
 
@@ -325,8 +322,8 @@ namespace _6_6_Shop
             {
                 buyer.TakeMoney(sellingPrice);
                 buyer.PutInInventory(sellingItem);
-                this._items.Remove(sellingItem);
-                this.GiveMoney(sellingPrice);
+                Items.Remove(sellingItem);
+                GiveMoney(sellingPrice);
             }
             else
             {
@@ -335,44 +332,44 @@ namespace _6_6_Shop
             }
         }
 
-        protected void PutInInventory(Item item)
-        {
-            this._items.Add(item);
-        }
-
-        protected void TakeMoney(float value)
-        { 
-            Money -= value;
-        }
-
-        protected void GiveMoney(float money)
-        {
-            Money += money;
-        }
-
         public string GetItemName(int index)
         {
-            if (index < 0 || index >= _items.Count)
+            if (index < 0 || index >= Items.Count)
             {
                 Console.WriteLine($"Указанный индекс {index}" +
                     $" не попадает в границы массива.");
                 return "";
             }
 
-            return _items[index].Name;
+            return Items[index].Name;
         }
 
         public void ShowAllInventory()
         {
             Console.WriteLine($"Инвентарь \"\"{Name}  Счет: {Money} денег.");
 
-            for (int i = 0; i < _items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                var sellingPrice = _items[i].Price * _sellingCoefficient;
-                Console.WriteLine($"[{i}] {_items[i].Name} цена: {sellingPrice.ToString("C", new CultureInfo("ru-RU"))}");
+                var sellingPrice = Items[i].Price * _sellingCoefficient;
+                Console.WriteLine($"[{i}] {Items[i].Name} цена: {sellingPrice.ToString("C", _cultureInfoRu)}");
             }
 
             Console.WriteLine();
+        }
+
+        private void PutInInventory(Item item)
+        {
+            Items.Add(item);
+        }
+
+        private void TakeMoney(float value)
+        { 
+            Money -= value;
+        }
+
+        private void GiveMoney(float money)
+        {
+            Money += money;
         }
     }
 }
