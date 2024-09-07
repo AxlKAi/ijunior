@@ -115,6 +115,8 @@ namespace _6_5_BookStorage
         }
     }
 
+    // Леха привет
+
     class Book
     {
         public Book(string title, string autor, int year)
