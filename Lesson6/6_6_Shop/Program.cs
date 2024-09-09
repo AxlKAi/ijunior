@@ -67,7 +67,7 @@ namespace _6_6_Shop
                         break;
 
                     case BuyAllFavouritesCommand:
-                        buyer.BuyAllFavouritesFrom(seller);
+                        seller.SellAllFavourites(buyer);
                         break;
 
                     case ResetFavouritesCommand:
@@ -228,6 +228,14 @@ namespace _6_6_Shop
             Console.WriteLine($"Обновление списка товаров у {Name}.");
         }
 
+        public void SellAllFavourites(Buyer buyer)
+        {
+            foreach (string productName in buyer.Favourites)
+                SellProductByName(buyer, productName);
+
+            buyer.ResetFavourites();
+        }
+
         private int FindIndexByName(string name)
         {
             for (int i = 0; i < Items.Count; i++)
@@ -245,6 +253,8 @@ namespace _6_6_Shop
         private List<string> _favourites = new List<string>();
 
         public Buyer(string name, int money, float sellingCoefficient) : base(name, money, sellingCoefficient) { }
+
+        public IReadOnlyList<string> Favourites => _favourites;
 
         public void ShowAllFavourites()
         {
@@ -275,14 +285,6 @@ namespace _6_6_Shop
         {
             Console.WriteLine("Очищаю список избранного.");
             _favourites = new List<string>();
-        }
-
-        public void BuyAllFavouritesFrom(Seller seller)
-        {
-            foreach (string productName in _favourites)
-                seller.SellProductByName(this, productName);
-
-            ResetFavourites();
         }
     }
 
