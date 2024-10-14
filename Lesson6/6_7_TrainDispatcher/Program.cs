@@ -59,6 +59,8 @@ namespace _6_7_TrainDispatcher
             _input.OnExit += Exit;
             _input.ShowHelp += ShowHelpWindow;
             _input.SendKeySymbol += LogMessage;
+            _input.OnReturn += ReturnEventCalled;
+            _input.ShowDemo += ShowDemoWindow;
             _userInterface.CreateWindow();
 
             while (_isWorking)
@@ -87,8 +89,27 @@ namespace _6_7_TrainDispatcher
                 "sadfasdf"
             };
 
-            _userInterface.CreateWindow("Help", helpWindowText);
+            _userInterface.CreateWindow("Help", helpWindowText, 20, 10, 40, 15);
         }
+
+        private void ShowDemoWindow()
+        {
+            var helpWindowText = new List<string>
+            {
+                "demo",
+                "demo",
+                "sadfasdf",
+                "sadfasdf"
+            };
+
+            _userInterface.CreateWindow("demo", helpWindowText, 30, 5, 15, 7);
+        }
+
+        public void ReturnEventCalled()
+        {
+            _userInterface.CloseActiveWindow();
+        }
+
     }
 
     class MainInterface
@@ -100,57 +121,58 @@ namespace _6_7_TrainDispatcher
         const ConsoleColor BottomLineForegroundColor = ConsoleColor.Black;
         const ConsoleColor BottomLineBackgroundColor = ConsoleColor.White;
 
-        private string _topLine;
+        private string _topLine = "     Space - create train     F1 - About     F4 - close window ";
         private int _windowWidth;
         private int _windowHeight;
 
         private List<Window> _windows = new List<Window>();
+        private Window _activeWindow;
 
         public MainInterface()
         {
-            Console.BackgroundColor = MainWindowBackgroundColor;
-            Console.ForegroundColor = MainWindowForegroundColor;
             Console.CursorVisible = false;
-            Console.Clear();
+            _windowWidth = Console.WindowWidth;
+            _windowHeight = Console.WindowHeight;
 
-            for (int i = 0; i < Console.WindowWidth; i++)
+            for (int i = _topLine.Length; i < _windowWidth; i++)
             {
                 _topLine += " ";
             }
+
+            DrawBackground();
+        }
+
+        public void DrawBackground()
+        {
+            Console.BackgroundColor = MainWindowBackgroundColor;
+            Console.ForegroundColor = MainWindowForegroundColor;
+
+            Console.Clear();
 
             Console.ForegroundColor = TopMenuForegroundColor;
             Console.BackgroundColor = TopMenuBackgroundColor;
 
             Console.SetCursorPosition(0, 0);
-            Console.Write(_topLine);
+            Console.Write(" --------- building -------------- ");
             Console.SetCursorPosition(0, 0);
-            Console.WriteLine(" Space - create train     F1 - About     F4 - close window");
+            Console.Write(_topLine);
 
             Console.BackgroundColor = MainWindowBackgroundColor;
             Console.ForegroundColor = MainWindowForegroundColor;
-
-            _windowWidth = Console.WindowWidth;
-            _windowHeight = Console.WindowHeight;
-            Console.WriteLine($"Width:{_windowWidth}");
-            Console.WriteLine($"Height:{_windowHeight}");
         }
 
         public void CreateWindow()
         {
-
-            _windows.Add(new Window());
+            _activeWindow = new Window();
+            _windows.Add(_activeWindow);
             WriteBottomLine("Window created");
         }
 
-        public void CreateWindow(string title, List<string> text)
+        public void CreateWindow(string title, List<string> text, int x = 10, int y=4, int length=20, int height=5)
         {
-            _windows.Add(new Window(title, text));
+            _activeWindow = new Window(title, text, x, y, length, height);
+            _windows.Add(_activeWindow);
             WriteBottomLine($"{title} window created");
-        }
-
-        public void ShowHelpWindow()
-        {
-
         }
 
         public void WriteBottomLine(string s)
@@ -171,6 +193,21 @@ namespace _6_7_TrainDispatcher
 
             Console.ForegroundColor = currentForeground;
             Console.BackgroundColor = currentBackground;
+        }
+
+        public void CloseActiveWindow()
+        {
+            _windows.Remove(_activeWindow);
+            DrawBackground();
+            WriteBottomLine("Window Closed");
+
+            foreach (var window in _windows)
+            {
+                window.DrawWindow();
+            }
+
+            if (_windows.Count > 0)
+                _activeWindow = _windows[_windows.Count - 1];
         }
     }
 
@@ -202,7 +239,6 @@ namespace _6_7_TrainDispatcher
         private int _yPosition;
         private int _length;
         private int _height;
-        private int _titlePadding = 8; 
         private string _title;
 
         public Window() : this(DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
@@ -260,7 +296,7 @@ namespace _6_7_TrainDispatcher
             DrawWindow();
         }
 
-        private void DrawWindow()
+        public void DrawWindow()
         {
             ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
@@ -304,7 +340,9 @@ namespace _6_7_TrainDispatcher
     class InputSystem
     {
         public event Action OnExit;
+        public event Action OnReturn;
         public event Action ShowHelp;
+        public event Action ShowDemo;
         public event Action<string> SendKeySymbol;
 
         public void Update()
@@ -316,11 +354,15 @@ namespace _6_7_TrainDispatcher
             switch (key.Key)
             {
                 case ConsoleKey.Escape:
-                    OnExit?.Invoke();
+                    OnReturn?.Invoke();
                     break;
 
                 case ConsoleKey.F1:
                     ShowHelp?.Invoke();
+                    break;
+
+                case ConsoleKey.F2:
+                    ShowDemo?.Invoke();
                     break;
 
                 case ConsoleKey.F4:
