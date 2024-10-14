@@ -38,6 +38,7 @@ namespace _6_7_TrainDispatcher
 	- завершение работы
 
 	*/
+
     class Program
     {
         static void Main(string[] args)
@@ -52,16 +53,16 @@ namespace _6_7_TrainDispatcher
     {
         private bool _isWorking = true;
         private InputSystem _input = new InputSystem();
-        private MainInterface _userInterface = new MainInterface();
+        private WindowsManager _windowsManager;
 
         public void Run()
-        {
+        {                   
+            _windowsManager = new WindowsManager(_input);
             _input.OnExit += Exit;
             _input.ShowHelp += ShowHelpWindow;
-            _input.SendKeySymbol += LogMessage;
             _input.OnReturn += ReturnEventCalled;
             _input.ShowDemo += ShowDemoWindow;
-            _userInterface.CreateWindow();
+            _windowsManager.CreateWindow();
 
             while (_isWorking)
             {
@@ -74,11 +75,6 @@ namespace _6_7_TrainDispatcher
             _isWorking = false;
         }
 
-        private void LogMessage(string s)
-        {
-            _userInterface.WriteBottomLine(s);
-        }
-
         private void ShowHelpWindow()
         {
             var helpWindowText = new List<string>
@@ -89,7 +85,7 @@ namespace _6_7_TrainDispatcher
                 "sadfasdf"
             };
 
-            _userInterface.CreateWindow("Help", helpWindowText, 20, 10, 40, 15);
+            _windowsManager.CreateWindow("Help", helpWindowText, 20, 10, 40, 15);
         }
 
         private void ShowDemoWindow()
@@ -102,17 +98,18 @@ namespace _6_7_TrainDispatcher
                 "sadfasdf"
             };
 
-            _userInterface.CreateWindow("demo", helpWindowText, 30, 5, 15, 7);
+            _windowsManager.CreateWindow("demo", helpWindowText, 30, 5, 15, 7);
         }
 
         public void ReturnEventCalled()
         {
-            _userInterface.CloseActiveWindow();
+            _windowsManager.CloseActiveWindow();
+            _windowsManager.WriteBottomLine("Close window");
         }
 
     }
 
-    class MainInterface
+    class WindowsManager
     {
         const ConsoleColor MainWindowBackgroundColor = ConsoleColor.DarkBlue;
         const ConsoleColor MainWindowForegroundColor = ConsoleColor.Yellow;
@@ -124,12 +121,17 @@ namespace _6_7_TrainDispatcher
         private string _topLine = "     Space - create train     F1 - About     F4 - close window ";
         private int _windowWidth;
         private int _windowHeight;
+        private InputSystem _inputSystem;
 
         private List<Window> _windows = new List<Window>();
         private Window _activeWindow;
 
-        public MainInterface()
+        public WindowsManager(InputSystem inputSystem)
         {
+            _inputSystem = inputSystem;
+            _inputSystem.SendKeySymbol += WriteBottomLine;
+            _inputSystem.OnEnterPressed += OnEnterPressed;
+
             Console.CursorVisible = false;
             _windowWidth = Console.WindowWidth;
             _windowHeight = Console.WindowHeight;
@@ -142,25 +144,6 @@ namespace _6_7_TrainDispatcher
             DrawBackground();
         }
 
-        public void DrawBackground()
-        {
-            Console.BackgroundColor = MainWindowBackgroundColor;
-            Console.ForegroundColor = MainWindowForegroundColor;
-
-            Console.Clear();
-
-            Console.ForegroundColor = TopMenuForegroundColor;
-            Console.BackgroundColor = TopMenuBackgroundColor;
-
-            Console.SetCursorPosition(0, 0);
-            Console.Write(" --------- building -------------- ");
-            Console.SetCursorPosition(0, 0);
-            Console.Write(_topLine);
-
-            Console.BackgroundColor = MainWindowBackgroundColor;
-            Console.ForegroundColor = MainWindowForegroundColor;
-        }
-
         public void CreateWindow()
         {
             _activeWindow = new Window();
@@ -170,9 +153,12 @@ namespace _6_7_TrainDispatcher
 
         public void CreateWindow(string title, List<string> text, int x = 10, int y=4, int length=20, int height=5)
         {
+            //TODO disabl old window events
+            // _inputSystem = inputSystem;
             _activeWindow = new Window(title, text, x, y, length, height);
             _windows.Add(_activeWindow);
             WriteBottomLine($"{title} window created");
+            _activeWindow.OnEnterPressed += _activeWindow.AddString;
         }
 
         public void WriteBottomLine(string s)
@@ -198,17 +184,46 @@ namespace _6_7_TrainDispatcher
         public void CloseActiveWindow()
         {
             _windows.Remove(_activeWindow);
+            RenewWindows();
+
+            if (_windows.Count > 0)
+                _activeWindow = _windows[_windows.Count - 1];
+        }
+
+        public void OnEnterPressed()
+        {
+            _activeWindow.OnEnterPressed?.Invoke();
+        }
+
+        private void RenewWindows()
+        {
             DrawBackground();
-            WriteBottomLine("Window Closed");
 
             foreach (var window in _windows)
             {
                 window.DrawWindow();
             }
-
-            if (_windows.Count > 0)
-                _activeWindow = _windows[_windows.Count - 1];
         }
+
+        private void DrawBackground()
+        {
+            Console.BackgroundColor = MainWindowBackgroundColor;
+            Console.ForegroundColor = MainWindowForegroundColor;
+
+            Console.Clear();
+
+            Console.ForegroundColor = TopMenuForegroundColor;
+            Console.BackgroundColor = TopMenuBackgroundColor;
+
+            Console.SetCursorPosition(0, 0);
+            Console.Write(" --------- building -------------- ");
+            Console.SetCursorPosition(0, 0);
+            Console.Write(_topLine);
+
+            Console.BackgroundColor = MainWindowBackgroundColor;
+            Console.ForegroundColor = MainWindowForegroundColor;
+        }
+
     }
 
     class Window
@@ -233,7 +248,10 @@ namespace _6_7_TrainDispatcher
         const ConsoleColor ForegroundColor = ConsoleColor.Black;
         const ConsoleColor ShadowColor = ConsoleColor.Black;
 
+        public Action OnEnterPressed;
+
         private List<string> _lines;
+        private List<string> _rawText;
 
         private int _xPosition;
         private int _yPosition;
@@ -248,52 +266,7 @@ namespace _6_7_TrainDispatcher
         public Window(string title, List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
         {
             _title = title;
-            CreateWindow(text, x, y, length, height);
-        }
-
-        private void CreateWindow(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
-        {
-            _lines = new List<string>();
-
-            _xPosition = x;
-            _yPosition = y;
-            _length = length;
-            _height = height;
-
-            string space = "";
-            string graphicLine = "";
-            string title = "";
-
-            for (int i = 0; i < length; i++)
-            {
-                graphicLine += HorizontalSymbol;
-                space += " ";
-            }
-
-            title = UpLeftSymbol + HorizontalSymbol + TitleLeftBorder + _title + TitleRightBorder + graphicLine;
-            title = title.Remove(length + 1);
-
-            title += UpRightSymbol;            
-            _lines.Add(title);
-
-            for (int i = 0; i < height; i++)
-            {
-                string s;
-
-                if (i < text.Count)
-                    s = text[i] + space;
-                else
-                    s = space;
-
-                if (s.Length > _length)
-                    s = s.Remove(length);
-
-                _lines.Add(VerticalSymbol + s + VerticalSymbol);
-            }
-
-            _lines.Add(LowLeftSymbol + graphicLine + LowRightSymbol);
-
-            DrawWindow();
+            InitializeWindow(text, x, y, length, height);
         }
 
         public void DrawWindow()
@@ -317,6 +290,65 @@ namespace _6_7_TrainDispatcher
 
             Console.ForegroundColor = currentForeground;
             Console.BackgroundColor = currentBackground;
+        }
+
+        //TODO delete this method
+        public void AddString()
+        {
+            _rawText.Add("Enter pressed...");
+            BuildWindow();
+        }
+
+        private void InitializeWindow(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
+        {
+            _rawText = text;
+
+            _xPosition = x;
+            _yPosition = y;
+            _length = length;
+            _height = height;
+
+            BuildWindow();
+        }
+
+        private void BuildWindow()
+        {
+            _lines = new List<string>();
+
+            string space = "";
+            string graphicLine = "";
+            string title = "";
+
+            for (int i = 0; i < _length; i++)
+            {
+                graphicLine += HorizontalSymbol;
+                space += " ";
+            }
+
+            title = UpLeftSymbol + HorizontalSymbol + TitleLeftBorder + _title + TitleRightBorder + graphicLine;
+            title = title.Remove(_length + 1);
+
+            title += UpRightSymbol;
+            _lines.Add(title);
+
+            for (int i = 0; i < _height; i++)
+            {
+                string s;
+
+                if (i < _rawText.Count)
+                    s = _rawText[i] + space;
+                else
+                    s = space;
+
+                if (s.Length > _length)
+                    s = s.Remove(_length);
+
+                _lines.Add(VerticalSymbol + s + VerticalSymbol);
+            }
+
+            _lines.Add(LowLeftSymbol + graphicLine + LowRightSymbol);
+
+            DrawWindow();
         }
 
         private void DrawShadowBottomLine()
@@ -343,6 +375,7 @@ namespace _6_7_TrainDispatcher
         public event Action OnReturn;
         public event Action ShowHelp;
         public event Action ShowDemo;
+        public event Action OnEnterPressed;
         public event Action<string> SendKeySymbol;
 
         public void Update()
@@ -367,6 +400,10 @@ namespace _6_7_TrainDispatcher
 
                 case ConsoleKey.F4:
                     OnExit?.Invoke();
+                    break;
+
+                case ConsoleKey.Enter:
+                    OnEnterPressed?.Invoke();
                     break;
 
                 default:
