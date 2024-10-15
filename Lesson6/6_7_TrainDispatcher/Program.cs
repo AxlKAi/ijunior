@@ -56,18 +56,23 @@ namespace _6_7_TrainDispatcher
         private WindowsManager _windowsManager;
 
         public void Run()
-        {                   
+        {
+            InitializeApplication();
+
+            while (_isWorking)
+            {
+                _input.Update();
+            }
+        }
+
+        private void InitializeApplication()
+        {
             _windowsManager = new WindowsManager(_input);
             _input.OnExit += Exit;
             _input.ShowHelp += ShowHelpWindow;
             _input.OnReturn += ReturnEventCalled;
             _input.ShowDemo += ShowDemoWindow;
             _windowsManager.CreateWindow();
-
-            while (_isWorking)
-            {
-                _input.Update();
-            }
         }
 
         private void Exit()
@@ -104,7 +109,7 @@ namespace _6_7_TrainDispatcher
         public void ReturnEventCalled()
         {
             _windowsManager.CloseActiveWindow();
-            _windowsManager.WriteBottomLine("Close window");
+            _windowsManager.ShowBottomBorder("Close window");
         }
 
     }
@@ -129,7 +134,7 @@ namespace _6_7_TrainDispatcher
         public WindowsManager(InputSystem inputSystem)
         {
             _inputSystem = inputSystem;
-            _inputSystem.SendKeySymbol += WriteBottomLine;
+            _inputSystem.SendKeySymbol += ShowBottomBorder;
             _inputSystem.OnEnterPressed += OnEnterPressed;
 
             Console.CursorVisible = false;
@@ -141,30 +146,30 @@ namespace _6_7_TrainDispatcher
                 _topLine += " ";
             }
 
-            DrawBackground();
+            ClearBackground();
         }
 
         public void CreateWindow()
         {
             _activeWindow = new Window();
             _windows.Add(_activeWindow);
-            WriteBottomLine("Window created");
+            ShowBottomBorder("Window created");
         }
 
         public void CreateWindow(string title, List<string> text, int x = 10, int y=4, int length=20, int height=5)
         {
             foreach (var window in _windows)
-                window.ChangeColor(window.ForegroundColor, ConsoleColor.DarkGray);
+                window.SetColor(window.ForegroundColor, ConsoleColor.DarkGray);
 
             RenewWindows();
 
             _activeWindow = new Window(title, text, x, y, length, height);
             _windows.Add(_activeWindow);
-            WriteBottomLine($"{title} window created");
-            _activeWindow.OnEnterPressed += _activeWindow.AddString;
+            ShowBottomBorder($"{title} window created");
+            SubscribeWindowToEvents();
         }
 
-        public void WriteBottomLine(string s)
+        public void ShowBottomBorder(string s)
         {
             ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
@@ -186,11 +191,16 @@ namespace _6_7_TrainDispatcher
 
         public void CloseActiveWindow()
         {
+            UnscribeWindowToEvents();
             _windows.Remove(_activeWindow);
-            RenewWindows();
 
             if (_windows.Count > 0)
+            {
                 _activeWindow = _windows[_windows.Count - 1];
+                _activeWindow.SetColor(_activeWindow.ForegroundColor, ConsoleColor.Gray);
+            }
+
+            RenewWindows();
         }
 
         public void OnEnterPressed()
@@ -198,9 +208,19 @@ namespace _6_7_TrainDispatcher
             _activeWindow.OnEnterPressed?.Invoke();
         }
 
+        private void SubscribeWindowToEvents()
+        {
+            _activeWindow.OnEnterPressed += _activeWindow.AddString;
+        }
+
+        private void UnscribeWindowToEvents()
+        {
+            _activeWindow.OnEnterPressed -= _activeWindow.AddString;
+        }
+
         private void RenewWindows()
         {
-            DrawBackground();
+            ClearBackground();
 
             foreach (var window in _windows)
             {
@@ -208,13 +228,18 @@ namespace _6_7_TrainDispatcher
             }
         }
 
-        private void DrawBackground()
+        private void ClearBackground()
         {
             Console.BackgroundColor = MainWindowBackgroundColor;
             Console.ForegroundColor = MainWindowForegroundColor;
 
             Console.Clear();
 
+            ShowTopBorder();
+        }
+
+        private void ShowTopBorder()
+        {
             Console.ForegroundColor = TopMenuForegroundColor;
             Console.BackgroundColor = TopMenuBackgroundColor;
 
@@ -226,7 +251,6 @@ namespace _6_7_TrainDispatcher
             Console.BackgroundColor = MainWindowBackgroundColor;
             Console.ForegroundColor = MainWindowForegroundColor;
         }
-
     }
 
     class Window
@@ -258,7 +282,7 @@ namespace _6_7_TrainDispatcher
         private int _height;
         private string _title;
 
-        public ConsoleColor BackgrounColor { get; private set; }  = ConsoleColor.Gray;
+        public ConsoleColor BackgroundColor { get; private set; }  = ConsoleColor.Gray;
         public ConsoleColor ForegroundColor { get; private set; } = ConsoleColor.Black;
         public ConsoleColor ShadowColor { get; private set; } = ConsoleColor.Black;
 
@@ -278,7 +302,7 @@ namespace _6_7_TrainDispatcher
             ConsoleColor currentForeground = Console.ForegroundColor;
 
             Console.ForegroundColor = ForegroundColor;
-            Console.BackgroundColor = BackgrounColor;
+            Console.BackgroundColor = BackgroundColor;
             Console.SetCursorPosition(_xPosition, _yPosition);
 
             foreach (string line in _lines)
@@ -295,10 +319,10 @@ namespace _6_7_TrainDispatcher
             Console.BackgroundColor = currentBackground;
         }
 
-        public void ChangeColor(ConsoleColor foreground, ConsoleColor background)
+        public void SetColor(ConsoleColor foreground, ConsoleColor background)
         {
             ForegroundColor = foreground;
-            BackgrounColor = background;
+            BackgroundColor = background;
         }
 
         //TODO delete this method
