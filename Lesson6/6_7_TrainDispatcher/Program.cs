@@ -153,8 +153,11 @@ namespace _6_7_TrainDispatcher
 
         public void CreateWindow(string title, List<string> text, int x = 10, int y=4, int length=20, int height=5)
         {
-            //TODO disabl old window events
-            // _inputSystem = inputSystem;
+            foreach (var window in _windows)
+                window.ChangeColor(window.ForegroundColor, ConsoleColor.DarkGray);
+
+            RenewWindows();
+
             _activeWindow = new Window(title, text, x, y, length, height);
             _windows.Add(_activeWindow);
             WriteBottomLine($"{title} window created");
@@ -244,10 +247,6 @@ namespace _6_7_TrainDispatcher
         const int ShadowHorizontalPadding = 2;
         const int ShadowVerticalPadding = 2;
 
-        const ConsoleColor BackgrounColor = ConsoleColor.White;
-        const ConsoleColor ForegroundColor = ConsoleColor.Black;
-        const ConsoleColor ShadowColor = ConsoleColor.Black;
-
         public Action OnEnterPressed;
 
         private List<string> _lines;
@@ -258,6 +257,10 @@ namespace _6_7_TrainDispatcher
         private int _length;
         private int _height;
         private string _title;
+
+        public ConsoleColor BackgrounColor { get; private set; }  = ConsoleColor.Gray;
+        public ConsoleColor ForegroundColor { get; private set; } = ConsoleColor.Black;
+        public ConsoleColor ShadowColor { get; private set; } = ConsoleColor.Black;
 
         public Window() : this(DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
 
@@ -290,6 +293,12 @@ namespace _6_7_TrainDispatcher
 
             Console.ForegroundColor = currentForeground;
             Console.BackgroundColor = currentBackground;
+        }
+
+        public void ChangeColor(ConsoleColor foreground, ConsoleColor background)
+        {
+            ForegroundColor = foreground;
+            BackgrounColor = background;
         }
 
         //TODO delete this method
