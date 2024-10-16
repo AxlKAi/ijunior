@@ -65,6 +65,12 @@ namespace _6_7_TrainDispatcher
             }
         }
 
+        public void ReturnEventCalled()
+        {
+            _windowsManager.CloseActiveWindow();
+            _windowsManager.ShowBottomBorder("Close window");
+        }
+
         private void InitializeApplication()
         {
             _windowsManager = new WindowsManager(_input);
@@ -83,7 +89,7 @@ namespace _6_7_TrainDispatcher
         private void ShowHelpWindow()
         {
             var element1 = new UIelement(new List<string>() { "1", "2", "3" }, 1, 1, 10, 5);
-            var element2 = new UIelement(new List<string>() { "4", "5", "6" }, 5, 5, 10, 5);
+            var element2 = new VerticalMenu(new List<string>() { "one", "two", "three" }, 5, 5, 10, 5);
             element1.SetColor(ConsoleColor.Red, ConsoleColor.DarkGreen);
             element2.SetColor(ConsoleColor.Red, ConsoleColor.DarkBlue);
 
@@ -117,13 +123,6 @@ namespace _6_7_TrainDispatcher
             var window =
             _windowsManager.CreateWindow("demo", helpWindowText, 30, 5, 15, 7);
         }
-
-        public void ReturnEventCalled()
-        {
-            _windowsManager.CloseActiveWindow();
-            _windowsManager.ShowBottomBorder("Close window");
-        }
-
     }
 
     class WindowsManager
@@ -437,6 +436,50 @@ namespace _6_7_TrainDispatcher
         }
     }
 
+    class VerticalMenu : UIelement
+    {
+        protected ConsoleColor ForegroundMenuColor { get; private set; } = ConsoleColor.White;
+        protected ConsoleColor BackgroundMenuColor { get; private set; } = ConsoleColor.Blue;
+
+        //TODO rename all protected fields with Upper letter
+        protected int MenuPosition { get; private set; } = 0;
+
+        public VerticalMenu(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight) : base(text, x, y, length, height) { }
+
+        public override void OnUpArrowPress()
+        {
+            if (MenuPosition > 0)
+            {
+                MenuPosition--;
+                Show();
+            }
+        }
+
+        public override void OnDownArrowPress()
+        {
+            if (MenuPosition < _rawText.Count - 1)
+            {
+                MenuPosition++;
+                Show();
+            }
+        }
+
+        public override void Show()
+        {
+            base.Show();
+
+            Console.SetCursorPosition(PositionX + RootPositionX, PositionY + RootPositionY + MenuPosition);
+
+            Console.ForegroundColor = ForegroundMenuColor;
+            Console.BackgroundColor = BackgroundMenuColor;
+
+            Console.Write(_lines[MenuPosition]);
+
+            Console.ForegroundColor = ForegroundColor;
+            Console.BackgroundColor = BackgroundColor;
+        }
+    }
+
     class UIelement
     {
         protected const int DefaultX = 1;
@@ -448,6 +491,9 @@ namespace _6_7_TrainDispatcher
         protected List<string> _rawText;
         protected List<UIelement> _childElements = new List<UIelement>();
         protected UIelement _rootElement = null;
+
+        protected int RootPositionX = 0;
+        protected int RootPositionY = 0;
 
         public int PositionX { get; protected set; } = 1;
         public int PositionY { get; protected set; } = 1;
@@ -473,26 +519,17 @@ namespace _6_7_TrainDispatcher
 
         virtual public void Show()
         {
-            int rootPositionX = 0;
-            int rootPositionY = 0;
-
-            if (_rootElement != null)
-            {
-                rootPositionX = _rootElement.PositionX;
-                rootPositionY = _rootElement.PositionY;
-            }
-
             ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
 
             Console.ForegroundColor = ForegroundColor;
             Console.BackgroundColor = BackgroundColor;
-            Console.SetCursorPosition(PositionX + rootPositionX, PositionY + rootPositionY);
+            Console.SetCursorPosition(PositionX + RootPositionX, PositionY + RootPositionY);
 
             foreach (string line in _lines)
             {
                 Console.WriteLine(line);
-                Console.SetCursorPosition(PositionX + rootPositionX, Console.CursorTop);
+                Console.SetCursorPosition(PositionX + RootPositionX, Console.CursorTop);
             }
 
             Console.ForegroundColor = currentForeground;
@@ -514,6 +551,12 @@ namespace _6_7_TrainDispatcher
         virtual public void SetRoot(UIelement element)
         {
             _rootElement = element;
+
+            if (_rootElement != null)
+            {
+                RootPositionX = _rootElement.PositionX;
+                RootPositionY = _rootElement.PositionY;
+            }
         }
 
         virtual public void SetColor(ConsoleColor foreground, ConsoleColor background)
@@ -522,19 +565,54 @@ namespace _6_7_TrainDispatcher
             BackgroundColor = background;
         }
 
-        virtual public void OnLeftArrowPress() { }
+        virtual public void OnLeftArrowPress()
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnLeftArrowPress();
+        }
 
-        virtual public void OnRightArrowPress() { }
+        virtual public void OnRightArrowPress()
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnRightArrowPress();
+        }
 
-        virtual public void OnUpArrowPress() { }
+        virtual public void OnUpArrowPress() 
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnUpArrowPress();
+        }
 
-        virtual public void OnDownArrowPress() { }
+        virtual public void OnDownArrowPress()
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnDownArrowPress();
+        }
 
-        virtual public void OnEnterPress() { }
+        virtual public void OnEnterPress() 
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnEnterPress();
+        }
 
-        virtual public void OnNumberPress() { }
+        virtual public void OnNumberPress() 
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnNumberPress();
+        }
 
-        virtual public void OnLetterPress() { }
+        virtual public void OnLetterPress() 
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnLetterPress();
+        }
 
         virtual protected void Initialize()
         {
@@ -562,7 +640,6 @@ namespace _6_7_TrainDispatcher
                 _lines.Add(s);
             }
 
-            //TODO по идее этот метод надо убрать отсюда, и вызывать отдельно при необходимости
             Show();
         }
     }
@@ -606,6 +683,22 @@ namespace _6_7_TrainDispatcher
 
                 case ConsoleKey.F4:
                     OnExit?.Invoke();
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    OnLeftArrowPress?.Invoke();
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    OnRightArrowPress?.Invoke();
+                    break;
+
+                case ConsoleKey.UpArrow:
+                    OnUpArrowPress?.Invoke();
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    OnDownArrowPress?.Invoke();
                     break;
 
                 case ConsoleKey.Enter:
