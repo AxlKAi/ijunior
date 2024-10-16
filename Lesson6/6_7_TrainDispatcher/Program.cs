@@ -103,11 +103,9 @@ namespace _6_7_TrainDispatcher
 
             var window = _windowsManager.CreateWindow("Help", helpWindowText, 20, 10, 40, 15);
             window.AddChild(element1);
-            element1.SetRoot(window);
             window.AddChild(element2);
-            element2.SetRoot(window);
-            element1.Show();
-            element2.Show();
+            //element1.Show();
+            //element2.Show();
         }
 
         private void ShowDemoWindow()
@@ -121,7 +119,11 @@ namespace _6_7_TrainDispatcher
             };
 
             var window =
-            _windowsManager.CreateWindow("demo", helpWindowText, 30, 5, 15, 7);
+            _windowsManager.CreateWindow("demo", helpWindowText, 30, 5, 25, 7);
+            var input = new Input("123456", 2, 2, 10);
+            input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
+            window.AddChild(input);
+            //input.Show();
         }
     }
 
@@ -134,6 +136,7 @@ namespace _6_7_TrainDispatcher
         const ConsoleColor BottomLineForegroundColor = ConsoleColor.Black;
         const ConsoleColor BottomLineBackgroundColor = ConsoleColor.White;
 
+        //TODO change space to tab 
         private string _topLine = "     Space - create train     F1 - About     F4 - close window ";
         private int _windowWidth;
         private int _windowHeight;
@@ -149,6 +152,7 @@ namespace _6_7_TrainDispatcher
             _inputSystem.OnEnterPress += OnEnterPressed;
 
             Console.CursorVisible = false;
+
             _windowWidth = Console.WindowWidth;
             _windowHeight = Console.WindowHeight;
 
@@ -436,6 +440,64 @@ namespace _6_7_TrainDispatcher
         }
     }
 
+    class Input : UIelement
+    {
+        protected ConsoleColor ForegroundCursorColor { get; private set; } = ConsoleColor.Yellow;
+        protected ConsoleColor BackgroundCursorColor { get; private set; } = ConsoleColor.DarkGreen;
+
+        protected int CursorPosition { get; private set; } = 0;
+
+        public Input() : this("", DefaultX, DefaultY, DefaultLength) { }
+        public Input(string text, int x = DefaultX, int y = DefaultY, int length = DefaultLength) : base(new List<string>() { text }, x, y, length, 1) { }
+
+        public override void Show()
+        {
+            base.Show();
+
+            Console.SetCursorPosition(PositionX + RootPositionX + CursorPosition, PositionY + RootPositionY);
+
+            Console.ForegroundColor = ForegroundCursorColor;
+            Console.BackgroundColor = BackgroundCursorColor;
+
+            Console.Write(_lines[0][CursorPosition]);
+
+            Console.ForegroundColor = ForegroundColor;
+            Console.BackgroundColor = BackgroundColor;
+        }
+
+        public override void OnLeftArrowPress()
+        {
+            if (CursorPosition > 0)
+            {
+                CursorPosition--;
+                Show();
+            }
+        }
+
+        public override void OnRightArrowPress()
+        {
+            if (CursorPosition < _rawText[0].Length && CursorPosition < Length)
+            {
+                CursorPosition++;
+                Show();
+            }
+        }
+
+        public override void OnNumberPress(int i)
+        {
+            AddSymbol(i.ToString());
+        }
+
+        protected virtual void AddSymbol(string symbol)
+        {
+            if(_rawText[0].Length < Length)
+            {
+                _rawText[0] = _rawText[0].Substring(0, CursorPosition) + symbol + _rawText[0].Substring(CursorPosition);
+                Show();
+            }
+        }
+    }
+
     class VerticalMenu : UIelement
     {
         protected ConsoleColor ForegroundMenuColor { get; private set; } = ConsoleColor.White;
@@ -546,6 +608,8 @@ namespace _6_7_TrainDispatcher
         virtual public void AddChild(UIelement element)
         {
             _childElements.Add(element);
+            element.SetRoot(this);
+            Show();
         }
 
         virtual public void SetRoot(UIelement element)
@@ -600,11 +664,11 @@ namespace _6_7_TrainDispatcher
                     child.OnEnterPress();
         }
 
-        virtual public void OnNumberPress() 
+        virtual public void OnNumberPress(int i) 
         {
             if (_childElements != null)
                 foreach (var child in _childElements)
-                    child.OnNumberPress();
+                    child.OnNumberPress(i);
         }
 
         virtual public void OnLetterPress() 
@@ -639,8 +703,6 @@ namespace _6_7_TrainDispatcher
 
                 _lines.Add(s);
             }
-
-            Show();
         }
     }
 
@@ -655,7 +717,7 @@ namespace _6_7_TrainDispatcher
         public event Action OnUpArrowPress;
         public event Action OnDownArrowPress;
         public event Action OnEnterPress;
-        public event Action OnNumberPress;
+        public event Action<int> OnNumberPress;
         public event Action OnLetterPress;
 
         //TODO переделать на отдельно цифры и буквы
@@ -665,7 +727,7 @@ namespace _6_7_TrainDispatcher
         {
             ConsoleKeyInfo key;
 
-            key = Console.ReadKey();
+            key = Console.ReadKey(true);
 
             switch (key.Key)
             {
@@ -703,6 +765,19 @@ namespace _6_7_TrainDispatcher
 
                 case ConsoleKey.Enter:
                     OnEnterPress?.Invoke();
+                    break;
+
+                case ConsoleKey.D0:
+                case ConsoleKey.D1:
+                case ConsoleKey.D2:
+                case ConsoleKey.D3:
+                case ConsoleKey.D4:
+                case ConsoleKey.D5:
+                case ConsoleKey.D6:
+                case ConsoleKey.D7:
+                case ConsoleKey.D8:
+                case ConsoleKey.D9:
+                    OnNumberPress?.Invoke((int)key.Key-48);
                     break;
 
                 default:
