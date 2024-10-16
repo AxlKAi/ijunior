@@ -239,6 +239,8 @@ namespace _6_7_TrainDispatcher
         private void SubscribeActiveWindowToEvents()
         {
             _inputSystem.OnEnterPress += _activeWindow.OnEnterPress;
+            _inputSystem.OnDeletePress += _activeWindow.OnDeletePress;
+            _inputSystem.OnBackspacePress += _activeWindow.OnBackspacePress;
             _inputSystem.OnLeftArrowPress += _activeWindow.OnLeftArrowPress;
             _inputSystem.OnRightArrowPress += _activeWindow.OnRightArrowPress;
             _inputSystem.OnUpArrowPress += _activeWindow.OnUpArrowPress;
@@ -250,6 +252,8 @@ namespace _6_7_TrainDispatcher
         private void UnscribeActiveWindowToEvents()
         {
             _inputSystem.OnEnterPress -= _activeWindow.OnEnterPress;
+            _inputSystem.OnDeletePress -= _activeWindow.OnDeletePress;
+            _inputSystem.OnBackspacePress -= _activeWindow.OnBackspacePress;
             _inputSystem.OnLeftArrowPress -= _activeWindow.OnLeftArrowPress;
             _inputSystem.OnRightArrowPress -= _activeWindow.OnRightArrowPress;
             _inputSystem.OnUpArrowPress -= _activeWindow.OnUpArrowPress;
@@ -450,6 +454,10 @@ namespace _6_7_TrainDispatcher
         public Input() : this("", DefaultX, DefaultY, DefaultLength) { }
         public Input(string text, int x = DefaultX, int y = DefaultY, int length = DefaultLength) : base(new List<string>() { text }, x, y, length, 1) { }
 
+        //TODO добавить проверки на число
+
+        //TODO добавить проверки на буквы через regular expresseion
+
         public override void Show()
         {
             base.Show();
@@ -476,7 +484,7 @@ namespace _6_7_TrainDispatcher
 
         public override void OnRightArrowPress()
         {
-            if (CursorPosition < _rawText[0].Length && CursorPosition < Length)
+            if (CursorPosition < _rawText[0].Length && CursorPosition < Length - 1)
             {
                 CursorPosition++;
                 Show();
@@ -488,11 +496,49 @@ namespace _6_7_TrainDispatcher
             AddSymbol(i.ToString());
         }
 
+        public override void OnDeletePress()
+        {
+            if(_rawText[0].Length > 0)
+            {
+                _rawText[0] = _rawText[0].Remove(CursorPosition, 1);
+
+                if(_rawText[0].Length > 0 && CursorPosition > _rawText[0].Length - 1)
+                {
+                    CursorPosition = _rawText[0].Length - 1;
+                }
+                else if (_rawText[0].Length == 0)
+                {
+                    CursorPosition = 0;
+                }
+
+                Initialize();
+                Show();
+            }
+        }
+
+        public override void OnBackspacePress()
+        {
+            if(CursorPosition > 0 && _rawText[0].Length > 1)
+            {
+                _rawText[0] = _rawText[0].Remove(CursorPosition-1, 1);
+                CursorPosition--;
+
+                Initialize();
+                Show();
+            }
+        }
+
+        public override void OnLetterPress(string str)
+        {
+            AddSymbol(str);
+        }
+
         protected virtual void AddSymbol(string symbol)
         {
             if(_rawText[0].Length < Length)
             {
                 _rawText[0] = _rawText[0].Substring(0, CursorPosition) + symbol + _rawText[0].Substring(CursorPosition);
+                Initialize();
                 Show();
             }
         }
@@ -657,6 +703,20 @@ namespace _6_7_TrainDispatcher
                     child.OnDownArrowPress();
         }
 
+        virtual public void OnDeletePress()
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnDeletePress();
+        }
+
+        virtual public void OnBackspacePress()
+        {
+            if (_childElements != null)
+                foreach (var child in _childElements)
+                    child.OnBackspacePress();
+        }
+
         virtual public void OnEnterPress() 
         {
             if (_childElements != null)
@@ -671,11 +731,11 @@ namespace _6_7_TrainDispatcher
                     child.OnNumberPress(i);
         }
 
-        virtual public void OnLetterPress() 
+        virtual public void OnLetterPress(string str) 
         {
             if (_childElements != null)
                 foreach (var child in _childElements)
-                    child.OnLetterPress();
+                    child.OnLetterPress(str);
         }
 
         virtual protected void Initialize()
@@ -716,9 +776,11 @@ namespace _6_7_TrainDispatcher
         public event Action OnRightArrowPress;
         public event Action OnUpArrowPress;
         public event Action OnDownArrowPress;
+        public event Action OnDeletePress;
         public event Action OnEnterPress;
+        public event Action OnBackspacePress;
         public event Action<int> OnNumberPress;
-        public event Action OnLetterPress;
+        public event Action<string> OnLetterPress;
 
         //TODO переделать на отдельно цифры и буквы
         public event Action<string> SendKeySymbol;
@@ -763,6 +825,14 @@ namespace _6_7_TrainDispatcher
                     OnDownArrowPress?.Invoke();
                     break;
 
+                case ConsoleKey.Delete:
+                    OnDeletePress?.Invoke();
+                    break;
+
+                case ConsoleKey.Backspace:
+                    OnBackspacePress?.Invoke();
+                    break;
+
                 case ConsoleKey.Enter:
                     OnEnterPress?.Invoke();
                     break;
@@ -781,7 +851,7 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 default:
-                    SendKeySymbol?.Invoke(key.Key.ToString());
+                    OnLetterPress?.Invoke(key.KeyChar.ToString());
                     break;
             }
         }
