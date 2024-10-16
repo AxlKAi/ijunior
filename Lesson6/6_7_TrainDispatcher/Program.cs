@@ -69,9 +69,9 @@ namespace _6_7_TrainDispatcher
         {
             _windowsManager = new WindowsManager(_input);
             _input.OnExit += Exit;
-            _input.ShowHelp += ShowHelpWindow;
+            _input.OnF1Press += ShowHelpWindow;
             _input.OnReturn += ReturnEventCalled;
-            _input.ShowDemo += ShowDemoWindow;
+            _input.OnF2Press += ShowDemoWindow;
             _windowsManager.CreateWindow();
         }
 
@@ -82,6 +82,11 @@ namespace _6_7_TrainDispatcher
 
         private void ShowHelpWindow()
         {
+            var element1 = new UIelement(new List<string>() { "1", "2", "3" }, 1, 1, 10, 5);
+            var element2 = new UIelement(new List<string>() { "4", "5", "6" }, 5, 5, 10, 5);
+            element1.SetColor(ConsoleColor.Red, ConsoleColor.DarkGreen);
+            element2.SetColor(ConsoleColor.Red, ConsoleColor.DarkBlue);
+
             var helpWindowText = new List<string>
             {
                 "sadfasdf",
@@ -90,7 +95,13 @@ namespace _6_7_TrainDispatcher
                 "sadfasdf"
             };
 
-            _windowsManager.CreateWindow("Help", helpWindowText, 20, 10, 40, 15);
+            var window = _windowsManager.CreateWindow("Help", helpWindowText, 20, 10, 40, 15);
+            window.AddChild(element1);
+            element1.SetRoot(window);
+            window.AddChild(element2);
+            element2.SetRoot(window);
+            element1.Show();
+            element2.Show();
         }
 
         private void ShowDemoWindow()
@@ -103,6 +114,7 @@ namespace _6_7_TrainDispatcher
                 "sadfasdf"
             };
 
+            var window =
             _windowsManager.CreateWindow("demo", helpWindowText, 30, 5, 15, 7);
         }
 
@@ -135,7 +147,7 @@ namespace _6_7_TrainDispatcher
         {
             _inputSystem = inputSystem;
             _inputSystem.SendKeySymbol += ShowBottomBorder;
-            _inputSystem.OnEnterPressed += OnEnterPressed;
+            _inputSystem.OnEnterPress += OnEnterPressed;
 
             Console.CursorVisible = false;
             _windowWidth = Console.WindowWidth;
@@ -149,24 +161,30 @@ namespace _6_7_TrainDispatcher
             ClearBackground();
         }
 
-        public void CreateWindow()
+        public Window CreateWindow()
         {
             _activeWindow = new Window();
             _windows.Add(_activeWindow);
             ShowBottomBorder("Window created");
+            return _activeWindow;
         }
 
-        public void CreateWindow(string title, List<string> text, int x = 10, int y=4, int length=20, int height=5)
+        public Window CreateWindow(string title, List<string> text, int x = 10, int y = 4, int length = 20, int height = 5)
         {
+            UnscribeActiveWindowToEvents();
+
             foreach (var window in _windows)
+            {
                 window.SetColor(window.ForegroundColor, ConsoleColor.DarkGray);
+            }
 
             RenewWindows();
 
             _activeWindow = new Window(title, text, x, y, length, height);
             _windows.Add(_activeWindow);
             ShowBottomBorder($"{title} window created");
-            SubscribeWindowToEvents();
+            SubscribeActiveWindowToEvents();
+            return _activeWindow;
         }
 
         public void ShowBottomBorder(string s)
@@ -191,16 +209,23 @@ namespace _6_7_TrainDispatcher
 
         public void CloseActiveWindow()
         {
-            UnscribeWindowToEvents();
+            UnscribeActiveWindowToEvents();
             _windows.Remove(_activeWindow);
 
             if (_windows.Count > 0)
             {
                 _activeWindow = _windows[_windows.Count - 1];
                 _activeWindow.SetColor(_activeWindow.ForegroundColor, ConsoleColor.Gray);
+                SubscribeActiveWindowToEvents();
             }
 
             RenewWindows();
+        }
+
+        public void AddWindowElement(Window window, UIelement windowsElement)
+        {
+            //TODO &&&& ????
+            //window.
         }
 
         public void OnEnterPressed()
@@ -208,14 +233,26 @@ namespace _6_7_TrainDispatcher
             _activeWindow.OnEnterPressed?.Invoke();
         }
 
-        private void SubscribeWindowToEvents()
+        private void SubscribeActiveWindowToEvents()
         {
-            _activeWindow.OnEnterPressed += _activeWindow.AddString;
+            _inputSystem.OnEnterPress += _activeWindow.OnEnterPress;
+            _inputSystem.OnLeftArrowPress += _activeWindow.OnLeftArrowPress;
+            _inputSystem.OnRightArrowPress += _activeWindow.OnRightArrowPress;
+            _inputSystem.OnUpArrowPress += _activeWindow.OnUpArrowPress;
+            _inputSystem.OnDownArrowPress += _activeWindow.OnDownArrowPress;
+            _inputSystem.OnNumberPress += _activeWindow.OnNumberPress;
+            _inputSystem.OnLetterPress += _activeWindow.OnLetterPress;
         }
 
-        private void UnscribeWindowToEvents()
+        private void UnscribeActiveWindowToEvents()
         {
-            _activeWindow.OnEnterPressed -= _activeWindow.AddString;
+            _inputSystem.OnEnterPress -= _activeWindow.OnEnterPress;
+            _inputSystem.OnLeftArrowPress -= _activeWindow.OnLeftArrowPress;
+            _inputSystem.OnRightArrowPress -= _activeWindow.OnRightArrowPress;
+            _inputSystem.OnUpArrowPress -= _activeWindow.OnUpArrowPress;
+            _inputSystem.OnDownArrowPress -= _activeWindow.OnDownArrowPress;
+            _inputSystem.OnNumberPress -= _activeWindow.OnNumberPress;
+            _inputSystem.OnLetterPress -= _activeWindow.OnLetterPress;
         }
 
         private void RenewWindows()
@@ -224,7 +261,7 @@ namespace _6_7_TrainDispatcher
 
             foreach (var window in _windows)
             {
-                window.DrawWindow();
+                window.Show();
             }
         }
 
@@ -253,7 +290,9 @@ namespace _6_7_TrainDispatcher
         }
     }
 
-    class Window
+
+    //TODO сделать наследником WindowsElement ??
+    class Window : UIelement
     {
         const string UpLeftSymbol = "╔";
         const string LowLeftSymbol = "╚";
@@ -264,27 +303,15 @@ namespace _6_7_TrainDispatcher
         const string TitleLeftBorder = "[ ";
         const string TitleRightBorder = " ]";
 
-        const int DefaultX = 10;
-        const int DefaultY = 4;
-        const int DefaultLength = 40;
-        const int DefaultHeight = 8;
         const int ShadowHorizontalPadding = 2;
         const int ShadowVerticalPadding = 2;
 
+        //TODO перенести события в базовый класс
         public Action OnEnterPressed;
 
-        private List<string> _lines;
-        private List<string> _rawText;
+        public string Title { get; protected set; }
 
-        private int _xPosition;
-        private int _yPosition;
-        private int _length;
-        private int _height;
-        private string _title;
-
-        public ConsoleColor BackgroundColor { get; private set; }  = ConsoleColor.Gray;
-        public ConsoleColor ForegroundColor { get; private set; } = ConsoleColor.Black;
-        public ConsoleColor ShadowColor { get; private set; } = ConsoleColor.Black;
+        public ConsoleColor ShadowColor { get; protected set; } = ConsoleColor.Black;
 
         public Window() : this(DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
 
@@ -292,31 +319,40 @@ namespace _6_7_TrainDispatcher
 
         public Window(string title, List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
         {
-            _title = title;
-            InitializeWindow(text, x, y, length, height);
+            Title = title;
+            _rawText = text;
+
+            PositionX = x;
+            PositionY = y;
+            Length = length;
+            Height = height;
+
+            Initialize();
         }
 
-        public void DrawWindow()
+        override public void Show()
         {
             ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
 
             Console.ForegroundColor = ForegroundColor;
             Console.BackgroundColor = BackgroundColor;
-            Console.SetCursorPosition(_xPosition, _yPosition);
+            Console.SetCursorPosition(PositionX, PositionY);
 
             foreach (string line in _lines)
             {
                 Console.Write(line);
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop + 1);
                 DrawShadowSymbol();
-                Console.SetCursorPosition(_xPosition, Console.CursorTop);
+                Console.SetCursorPosition(PositionX, Console.CursorTop);
             }
 
             DrawShadowBottomLine();
 
             Console.ForegroundColor = currentForeground;
             Console.BackgroundColor = currentBackground;
+
+            ShowChildElements();
         }
 
         public void SetColor(ConsoleColor foreground, ConsoleColor background)
@@ -326,25 +362,13 @@ namespace _6_7_TrainDispatcher
         }
 
         //TODO delete this method
-        public void AddString()
+        override public void OnEnterPress()
         {
             _rawText.Add("Enter pressed...");
-            BuildWindow();
+            Initialize();
         }
 
-        private void InitializeWindow(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
-        {
-            _rawText = text;
-
-            _xPosition = x;
-            _yPosition = y;
-            _length = length;
-            _height = height;
-
-            BuildWindow();
-        }
-
-        private void BuildWindow()
+        override protected void Initialize()
         {
             _lines = new List<string>();
 
@@ -352,19 +376,19 @@ namespace _6_7_TrainDispatcher
             string graphicLine = "";
             string title = "";
 
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < Length; i++)
             {
                 graphicLine += HorizontalSymbol;
                 space += " ";
             }
 
-            title = UpLeftSymbol + HorizontalSymbol + TitleLeftBorder + _title + TitleRightBorder + graphicLine;
-            title = title.Remove(_length + 1);
+            title = UpLeftSymbol + HorizontalSymbol + TitleLeftBorder + Title + TitleRightBorder + graphicLine;
+            title = title.Remove(Length + 1);
 
             title += UpRightSymbol;
             _lines.Add(title);
 
-            for (int i = 0; i < _height; i++)
+            for (int i = 0; i < Height; i++)
             {
                 string s;
 
@@ -373,22 +397,22 @@ namespace _6_7_TrainDispatcher
                 else
                     s = space;
 
-                if (s.Length > _length)
-                    s = s.Remove(_length);
+                if (s.Length > Length)
+                    s = s.Remove(Length);
 
                 _lines.Add(VerticalSymbol + s + VerticalSymbol);
             }
 
             _lines.Add(LowLeftSymbol + graphicLine + LowRightSymbol);
 
-            DrawWindow();
+            Show();
         }
 
         private void DrawShadowBottomLine()
         {
-            Console.SetCursorPosition(_xPosition + ShadowHorizontalPadding, _yPosition + _height + ShadowVerticalPadding);
+            Console.SetCursorPosition(PositionX + ShadowHorizontalPadding, PositionY + Height + ShadowVerticalPadding);
 
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < Length; i++)
                 DrawShadowSymbol();
         }
 
@@ -400,15 +424,164 @@ namespace _6_7_TrainDispatcher
             Console.Write(shadowSprite);
             Console.BackgroundColor = currentBackground;
         }
+
+        private void ShowChildElements()
+        {
+            if (_childElements.Count == 0)
+                return;
+
+            foreach (var element in _childElements)
+            {
+                element.Show();
+            }
+        }
+    }
+
+    class UIelement
+    {
+        protected const int DefaultX = 1;
+        protected const int DefaultY = 1;
+        protected const int DefaultLength = 5;
+        protected const int DefaultHeight = 5;
+
+        protected List<string> _lines;
+        protected List<string> _rawText;
+        protected List<UIelement> _childElements = new List<UIelement>();
+        protected UIelement _rootElement = null;
+
+        public int PositionX { get; protected set; } = 1;
+        public int PositionY { get; protected set; } = 1;
+        public int Length { get; protected set; } = 5;
+        public int Height { get; protected set; } = 5;
+
+        public ConsoleColor BackgroundColor { get; protected set; } = ConsoleColor.Gray;
+        public ConsoleColor ForegroundColor { get; protected set; } = ConsoleColor.Black;
+
+        public UIelement() : this(new List<string>()) { }
+
+        public UIelement(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
+        {
+            _rawText = text;
+
+            PositionX = x;
+            PositionY = y;
+            Length = length;
+            Height = height;
+
+            Initialize();
+        }
+
+        virtual public void Show()
+        {
+            int rootPositionX = 0;
+            int rootPositionY = 0;
+
+            if (_rootElement != null)
+            {
+                rootPositionX = _rootElement.PositionX;
+                rootPositionY = _rootElement.PositionY;
+            }
+
+            ConsoleColor currentBackground = Console.BackgroundColor;
+            ConsoleColor currentForeground = Console.ForegroundColor;
+
+            Console.ForegroundColor = ForegroundColor;
+            Console.BackgroundColor = BackgroundColor;
+            Console.SetCursorPosition(PositionX + rootPositionX, PositionY + rootPositionY);
+
+            foreach (string line in _lines)
+            {
+                Console.WriteLine(line);
+                Console.SetCursorPosition(PositionX + rootPositionX, Console.CursorTop);
+            }
+
+            Console.ForegroundColor = currentForeground;
+            Console.BackgroundColor = currentBackground;
+        }
+
+        virtual public void ChangeContent(List<string> text)
+        {
+            _rawText = text;
+
+            Initialize();
+        }
+
+        virtual public void AddChild(UIelement element)
+        {
+            _childElements.Add(element);
+        }
+
+        virtual public void SetRoot(UIelement element)
+        {
+            _rootElement = element;
+        }
+
+        virtual public void SetColor(ConsoleColor foreground, ConsoleColor background)
+        {
+            ForegroundColor = foreground;
+            BackgroundColor = background;
+        }
+
+        virtual public void OnLeftArrowPress() { }
+
+        virtual public void OnRightArrowPress() { }
+
+        virtual public void OnUpArrowPress() { }
+
+        virtual public void OnDownArrowPress() { }
+
+        virtual public void OnEnterPress() { }
+
+        virtual public void OnNumberPress() { }
+
+        virtual public void OnLetterPress() { }
+
+        virtual protected void Initialize()
+        {
+            _lines = new List<string>();
+
+            string space = "";
+
+            for (int i = 0; i < Length; i++)
+            {
+                space += " ";
+            }
+
+            for (int i = 0; i < Height; i++)
+            {
+                string s;
+
+                if (i < _rawText.Count)
+                    s = _rawText[i] + space;
+                else
+                    s = space;
+
+                if (s.Length > Length)
+                    s = s.Remove(Length);
+
+                _lines.Add(s);
+            }
+
+            //TODO по идее этот метод надо убрать отсюда, и вызывать отдельно при необходимости
+            Show();
+        }
     }
 
     class InputSystem
     {
         public event Action OnExit;
         public event Action OnReturn;
-        public event Action ShowHelp;
-        public event Action ShowDemo;
-        public event Action OnEnterPressed;
+        public event Action OnF1Press;
+        public event Action OnF2Press;
+        public event Action OnLeftArrowPress;
+        public event Action OnRightArrowPress;
+        public event Action OnUpArrowPress;
+        public event Action OnDownArrowPress;
+        public event Action OnEnterPress;
+        public event Action OnNumberPress;
+        public event Action OnLetterPress;
+
+        //TODO переделать на отдельно цифры и буквы
         public event Action<string> SendKeySymbol;
 
         public void Update()
@@ -424,11 +597,11 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 case ConsoleKey.F1:
-                    ShowHelp?.Invoke();
+                    OnF1Press?.Invoke();
                     break;
 
                 case ConsoleKey.F2:
-                    ShowDemo?.Invoke();
+                    OnF2Press?.Invoke();
                     break;
 
                 case ConsoleKey.F4:
@@ -436,7 +609,7 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 case ConsoleKey.Enter:
-                    OnEnterPressed?.Invoke();
+                    OnEnterPress?.Invoke();
                     break;
 
                 default:
