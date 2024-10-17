@@ -86,6 +86,7 @@ namespace _6_7_TrainDispatcher
 
             var trainListText = new List<string>
             {
+                "                            Создать новый поезд",
                 "777    Москва-Варкута                                     777                  775                  купе ",
                 "888    Пермь-Казань                                       777                  775                  сидячий",
                 "999    Питер-Уфа                                          777                  775                  плацкарт",
@@ -94,6 +95,27 @@ namespace _6_7_TrainDispatcher
             var window = _windowsManager.CreateWindow("Поезда", trainWindowText, 3, 3, 110, 15);
             var trainsList = new VerticalMenu(trainListText, 2,3,106,12);
             window.AddChild(trainsList);
+            var handlers = new List<Action<EventArguments>>();
+            handlers.Add(CreateTrainWindow);
+            window.SetHandlers(handlers);
+        }
+
+        private void CreateTrainWindow(EventArguments arguments)
+        {
+            var window = _windowsManager.CreateWindow("Новый поезд.", new List<string>(), 25, 5, 75, 20);
+            var directionListText = new List<string>()
+            {
+                "Москва-Варкута",
+                "Пермь-Казань",
+                "Питер-Уфа",
+                "Москва-Варкута",
+                "Пермь-Казань",
+                "Питер-Уфа",
+                "Москва-Варкута",
+                "Пермь-Казань",
+                "Питер-Уфа",
+            };
+            var list = new VerticalMenu(directionListText,3,2,44,11);
         }
 
         private void ExitEventCalled()
@@ -142,13 +164,13 @@ namespace _6_7_TrainDispatcher
             var input = new Input("123456", 2, 2, 10);
             input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
             input.SetNumbersOnly();
-            input.SetHandlers(new List<Action<string>>() { ShowResultScreen });
+            input.SetHandlers(new List<Action<EventArguments>>() { ShowResultScreen });
             window.AddChild(input);
         }
 
-        private void ShowResultScreen(string message)
+        private void ShowResultScreen(EventArguments message)
         {
-            var window = _windowsManager.CreateWindow("result", new List<string>() { $" Congratulations!", $" {message} is entered" }, 50, 15, 35, 5);
+            var window = _windowsManager.CreateWindow("result", new List<string>() { $" Congratulations!", $" {message.Message} is entered" }, 50, 15, 35, 5);
             window.SetColor(ConsoleColor.Green, ConsoleColor.Red);
             window.Show();
         }

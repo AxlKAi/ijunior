@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace _6_7_TrainDispatcher
 {
-
-
     class WindowsManager
     {
         const ConsoleColor MainWindowBackgroundColor = ConsoleColor.DarkBlue;
@@ -15,7 +13,7 @@ namespace _6_7_TrainDispatcher
         const ConsoleColor BottomLineBackgroundColor = ConsoleColor.White;
 
         //TODO change space to tab 
-        private string _topLine = "     Space - create train     F1 - About     F4 - close window ";
+        private string _topLine = "   F5 - View trains     F1 - About     F4 - close window ";
         private int _windowWidth;
         private int _windowHeight;
         private InputSystem _inputSystem;
@@ -440,7 +438,11 @@ namespace _6_7_TrainDispatcher
                 return;
 
             if (Handlers.Count > 0)
-                Handlers[0]?.Invoke(RawText[0]);
+            {
+                var message = new EventArguments();
+                message.Message = RawText[0];
+                Handlers[0]?.Invoke(message);
+            }
         }
 
         protected virtual void AddSymbol(string symbol)
@@ -509,7 +511,7 @@ namespace _6_7_TrainDispatcher
         protected List<string> RawText;
         protected List<UIelement> ChildElements = new List<UIelement>();
         protected UIelement RootElement = null;
-        protected List<Action<string>> Handlers;
+        protected List<Action<EventArguments>> Handlers;
 
         protected int RootPositionX = 0;
         protected int RootPositionY = 0;
@@ -587,7 +589,7 @@ namespace _6_7_TrainDispatcher
             BackgroundColor = background;
         }
 
-        virtual public void SetHandlers(List<Action<string>> handlers)
+        virtual public void SetHandlers(List<Action<EventArguments>> handlers)
         {
             Handlers = handlers;
         }
