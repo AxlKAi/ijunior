@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _6_7_TrainDispatcher
 {
@@ -122,8 +123,16 @@ namespace _6_7_TrainDispatcher
             _windowsManager.CreateWindow("demo", helpWindowText, 30, 5, 25, 7);
             var input = new Input("123456", 2, 2, 10);
             input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
+            input.SetNumbersOnly();
+            input.SetHandlers(new List<Action<string>>() { ShowResultScreen });
             window.AddChild(input);
-            //input.Show();
+        }
+
+        private void ShowResultScreen(string message)
+        {
+            var window = _windowsManager.CreateWindow("result", new List<string>() { $" Congratulations!", $" {message} is entered" }, 50, 15, 35, 5);
+            window.SetColor(ConsoleColor.Green, ConsoleColor.Red);
+            window.Show();
         }
     }
 
@@ -369,12 +378,15 @@ namespace _6_7_TrainDispatcher
         }
 
         //TODO delete this method
+        /*
         override public void OnEnterPress()
         {
             _rawText.Add("Enter pressed...");
             Initialize();
-        }
 
+
+        }
+        */
         override protected void Initialize()
         {
             _lines = new List<string>();
@@ -451,6 +463,11 @@ namespace _6_7_TrainDispatcher
 
         protected int CursorPosition { get; private set; } = 0;
 
+        protected bool IsNumberOnly { get; private set; } = false;
+        protected bool IsLettersOnly { get; private set; } = false;
+
+        private List<Action<string>> _handlers;
+
         public Input() : this("", DefaultX, DefaultY, DefaultLength) { }
         public Input(string text, int x = DefaultX, int y = DefaultY, int length = DefaultLength) : base(new List<string>() { text }, x, y, length, 1) { }
 
@@ -473,6 +490,23 @@ namespace _6_7_TrainDispatcher
             Console.BackgroundColor = BackgroundColor;
         }
 
+        public void SetLettersOnly()
+        {
+            IsNumberOnly = false;
+            IsLettersOnly = true;
+        }
+
+        public void SetNumbersOnly()
+        {
+            IsNumberOnly = true;
+            IsLettersOnly = false;
+        }
+
+        public void SetHandlers(List<Action<string>> handlers)
+        {
+            _handlers = handlers;
+        }
+
         public override void OnLeftArrowPress()
         {
             if (CursorPosition > 0)
@@ -493,7 +527,8 @@ namespace _6_7_TrainDispatcher
 
         public override void OnNumberPress(int i)
         {
-            AddSymbol(i.ToString());
+            if(IsLettersOnly == false)
+                AddSymbol(i.ToString());
         }
 
         public override void OnDeletePress()
@@ -518,7 +553,7 @@ namespace _6_7_TrainDispatcher
 
         public override void OnBackspacePress()
         {
-            if(CursorPosition > 0 && _rawText[0].Length > 1)
+            if(CursorPosition > 0 && _rawText[0].Length >= 1)
             {
                 _rawText[0] = _rawText[0].Remove(CursorPosition-1, 1);
                 CursorPosition--;
@@ -530,7 +565,22 @@ namespace _6_7_TrainDispatcher
 
         public override void OnLetterPress(string str)
         {
-            AddSymbol(str);
+            if (IsNumberOnly)
+                return;
+
+            System.Text.RegularExpressions.Regex.IsMatch(str, @"^[a-zA-Z]+$");
+            
+            if(str.Length == 1) 
+                AddSymbol(str);
+        }
+
+        public override void OnEnterPress()
+        {
+            if (_handlers == null)
+                return;
+
+            if (_handlers.Count > 0)
+                _handlers[0]?.Invoke(_rawText[0]);
         }
 
         protected virtual void AddSymbol(string symbol)
