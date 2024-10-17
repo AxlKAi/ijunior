@@ -72,7 +72,28 @@ namespace _6_7_TrainDispatcher
             _input.OnF1Press += ShowHelpWindow;
             _input.OnReturn += ReturnEventCalled;
             _input.OnF2Press += ShowDemoWindow;
-            _windowsManager.CreateWindow();
+
+            CreateMainTrainViewWindow();
+        }
+
+        private void CreateMainTrainViewWindow()
+        {
+            var trainWindowText = new List<string>
+            {
+                "",
+                " №      Направление                                    Всего мест           Продано билетов      Тип вагона",
+            };
+
+            var trainListText = new List<string>
+            {
+                "777    Москва-Варкута                                     777                  775                  купе ",
+                "888    Пермь-Казань                                       777                  775                  сидячий",
+                "999    Питер-Уфа                                          777                  775                  плацкарт",
+            };
+
+            var window = _windowsManager.CreateWindow("Поезда", trainWindowText, 3, 3, 110, 15);
+            var trainsList = new VerticalMenu(trainListText, 2,3,106,12);
+            window.AddChild(trainsList);
         }
 
         private void ExitEventCalled()

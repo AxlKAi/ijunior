@@ -2,6 +2,13 @@ using System;
 
 namespace _6_7_TrainDispatcher
 {
+
+    class EventArguments
+    {
+        public string Message;
+        public int DigitalData;
+    }
+
     class InputSystem
     {
         public event Action OnExit;
@@ -16,7 +23,7 @@ namespace _6_7_TrainDispatcher
         public event Action OnEnterPress;
         public event Action OnBackspacePress;
         public event Action<int> OnNumberPress;
-        public event Action<string> OnLetterPress;
+        public event Action<EventArguments> OnLetterPress;
 
         //TODO переделать на отдельно цифры и буквы
         public event Action<string> SendKeySymbol;
@@ -87,7 +94,10 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 default:
-                    OnLetterPress?.Invoke(key.KeyChar.ToString());
+                    //TODO make one line
+                    var mes = new EventArguments();
+                    mes.Message = key.KeyChar.ToString();
+                    OnLetterPress?.Invoke(mes);
                     break;
             }
         }

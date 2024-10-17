@@ -54,7 +54,8 @@ namespace _6_7_TrainDispatcher
 
         public Window CreateWindow(string title, List<string> text, int x = 10, int y = 4, int length = 20, int height = 5)
         {
-            UnscribeActiveWindowToEvents();
+            if(_activeWindow!=null)
+                UnscribeActiveWindowToEvents();
 
             foreach (var window in _windows)
             {
@@ -422,15 +423,15 @@ namespace _6_7_TrainDispatcher
             }
         }
 
-        public override void OnLetterPress(string str)
+        public override void OnLetterPress(EventArguments message)
         {
             if (IsNumberOnly)
                 return;
 
-            System.Text.RegularExpressions.Regex.IsMatch(str, @"^[a-zA-Z]+$");
+            System.Text.RegularExpressions.Regex.IsMatch(message.Message, @"^[a-zA-Z]+$");
             
-            if(str.Length == 1) 
-                AddSymbol(str);
+            if(message.Message.Length == 1) 
+                AddSymbol(message.Message);
         }
 
         public override void OnEnterPress()
@@ -647,11 +648,11 @@ namespace _6_7_TrainDispatcher
                     child.OnNumberPress(i);
         }
 
-        virtual public void OnLetterPress(string str) 
+        virtual public void OnLetterPress(EventArguments message) 
         {
             if (ChildElements != null)
                 foreach (var child in ChildElements)
-                    child.OnLetterPress(str);
+                    child.OnLetterPress(message);
         }
 
         virtual protected void Initialize()
