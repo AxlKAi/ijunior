@@ -17,6 +17,7 @@ namespace _6_7_TrainDispatcher
         private int _windowWidth;
         private int _windowHeight;
         private InputSystem _inputSystem;
+        private string _lastLog;
 
         private List<Window> _windows = new List<Window>();
         private Window _activeWindow;
@@ -24,7 +25,7 @@ namespace _6_7_TrainDispatcher
         public WindowsManager(InputSystem inputSystem)
         {
             _inputSystem = inputSystem;
-            _inputSystem.SendKeySymbol += ShowBottomBorder;
+            _inputSystem.SendKeySymbol += ShowLog;
 
             Console.CursorVisible = false;
 
@@ -39,21 +40,11 @@ namespace _6_7_TrainDispatcher
             ClearBackground();
         }
 
-        /*
-        public Window CreateWindow()
-        {
-            _activeWindow = new Window();
-            _windows.Add(_activeWindow);
-            ShowBottomBorder("Window created");
-            return _activeWindow;
-        }
-        */
-
         public Window CreateWindow(string title, List<string> text, int x = 10, int y = 4, int length = 20, int height = 5)
         {
             foreach (var window in _windows)
             {
-                window.SetColor(window.ForegroundColor, ConsoleColor.DarkGray);
+                window.SetActive(false);
                 RenewWindows();
             }
 
@@ -66,12 +57,11 @@ namespace _6_7_TrainDispatcher
 
             _activeWindow = newWindow;
             _windows.Add(_activeWindow);
-            ShowBottomBorder($"{title} window created");
             SubscribeActiveWindowToEvents();
             return _activeWindow;
         }
 
-        public void ShowBottomBorder(string s)
+        public void ShowLog(string s)
         {
             ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
@@ -86,6 +76,7 @@ namespace _6_7_TrainDispatcher
 
             Console.SetCursorPosition(0, _windowHeight - 1);
             Console.Write(s);
+            _lastLog = s;
 
             Console.ForegroundColor = currentForeground;
             Console.BackgroundColor = currentBackground;
@@ -99,7 +90,7 @@ namespace _6_7_TrainDispatcher
             if (_windows.Count > 0)
             {
                 _activeWindow = _windows[_windows.Count - 1];
-                _activeWindow.SetColor(_activeWindow.ForegroundColor, ConsoleColor.Gray);
+                _activeWindow.SetActive(true);
                 SubscribeActiveWindowToEvents();
             }
 
@@ -146,6 +137,8 @@ namespace _6_7_TrainDispatcher
             {
                 window.Show();
             }
+
+            ShowLog(_lastLog);
         }
 
         private void ClearBackground()
@@ -195,11 +188,11 @@ namespace _6_7_TrainDispatcher
 
         public ConsoleColor ShadowColor { get; protected set; } = ConsoleColor.Black;
 
-        //public Window() : this(DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
+        public Window() : this("", new List<string>(), DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
 
-        // public Window(int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight) : this("", new List<string>(), x, y, length, height) { }
+        public Window(int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight) : this("", new List<string>(), x, y, length, height) { }
 
-        public Window(string title, List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
+        public Window(string title, List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight) : base(text, x, y, length, height)
         {
             Title = title;
             RawText = text;
@@ -217,8 +210,12 @@ namespace _6_7_TrainDispatcher
             ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
 
+            if (IsActive)
+                Console.BackgroundColor = BackgroundColor;
+            else
+                Console.BackgroundColor = NonActiveColor;
+
             Console.ForegroundColor = ForegroundColor;
-            Console.BackgroundColor = BackgroundColor;
             Console.SetCursorPosition(PositionX, PositionY);
 
             foreach (string line in Lines)
@@ -443,6 +440,17 @@ namespace _6_7_TrainDispatcher
             {
                 var message = new EventArguments();
                 message.Message = RawText[0];
+
+                if(IsNumberOnly)
+                {
+                    bool result = Int32.TryParse(RawText[0], out var number);
+
+                    if (result)
+                        message.DigitalData = number;
+                    else
+                        message.DigitalData = 0;
+                }
+
                 Handlers[0]?.Invoke(message);
             }
         }
@@ -452,6 +460,10 @@ namespace _6_7_TrainDispatcher
             if (RawText[0].Length < Length)
             {
                 RawText[0] = RawText[0].Substring(0, CursorPosition) + symbol + RawText[0].Substring(CursorPosition);
+                
+                if(CursorPosition<Length-1) 
+                    CursorPosition++;
+
                 Initialize();
                 Show();
             }
@@ -466,6 +478,7 @@ namespace _6_7_TrainDispatcher
         //TODO rename all protected fields with Upper letter
         protected int MenuPosition { get; private set; } = 0;
 
+        public VerticalMenu() : this(new List<string>(), DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
         public VerticalMenu(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight) : base(text, x, y, length, height) { }
 
         public override void OnUpArrowPress()
@@ -536,11 +549,13 @@ namespace _6_7_TrainDispatcher
         public int PositionY { get; protected set; } = 1;
         public int Length { get; protected set; } = 5;
         public int Height { get; protected set; } = 5;
+        public bool IsActive { get; protected set; } = true;
 
         public ConsoleColor BackgroundColor { get; protected set; } = ConsoleColor.Gray;
         public ConsoleColor ForegroundColor { get; protected set; } = ConsoleColor.Black;
+        public ConsoleColor NonActiveColor { get; protected set; } = ConsoleColor.DarkGray;
 
-        public UIelement() : this(new List<string>()) { }
+        //public UIelement() : this(new List<string>()) { }
 
         public UIelement(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
         {
@@ -556,11 +571,16 @@ namespace _6_7_TrainDispatcher
 
         virtual public void Show()
         {
-            ConsoleColor currentBackground = Console.BackgroundColor;
             ConsoleColor currentForeground = Console.ForegroundColor;
+            ConsoleColor currentBackground = Console.BackgroundColor; ;
 
             Console.ForegroundColor = ForegroundColor;
-            Console.BackgroundColor = BackgroundColor;
+
+            if (IsActive)
+                Console.BackgroundColor = BackgroundColor;
+            else
+                Console.BackgroundColor = NonActiveColor;
+
             Console.SetCursorPosition(PositionX + RootPositionX, PositionY + RootPositionY);
 
             foreach (string line in Lines)
@@ -607,6 +627,15 @@ namespace _6_7_TrainDispatcher
         virtual public void SetHandlers(List<Action<EventArguments>> handlers)
         {
             Handlers = handlers;
+        }
+
+        virtual public void SetActive(bool isActive)
+        {
+            IsActive = isActive;
+
+            if (ChildElements != null)
+                foreach (var child in ChildElements)
+                    child.SetActive(isActive);
         }
 
         virtual public void OnLeftArrowPress()
