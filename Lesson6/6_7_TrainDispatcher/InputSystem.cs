@@ -2,7 +2,7 @@ using System;
 
 namespace _6_7_TrainDispatcher
 {
-
+    //TODO по моему он не нужен...
     class EventArguments
     {
         public string Message;

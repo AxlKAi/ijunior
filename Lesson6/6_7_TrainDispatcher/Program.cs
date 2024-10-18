@@ -73,10 +73,10 @@ namespace _6_7_TrainDispatcher
             _input.OnReturn += ReturnEventCalled;
             _input.OnF2Press += ShowDemoWindow;
 
-            CreateMainTrainViewWindow();
+            ShowMainWindow();
         }
 
-        private void CreateMainTrainViewWindow()
+        private void ShowMainWindow()
         {
             var trainWindowText = new List<string>
             {
@@ -93,14 +93,19 @@ namespace _6_7_TrainDispatcher
             };
 
             var window = _windowsManager.CreateWindow("Поезда", trainWindowText, 3, 3, 110, 15);
-            var trainsList = new VerticalMenu(trainListText, 2,3,106,12);
+            var trainsList = new VerticalMenu(trainListText, 2, 3, 106, 12);
             window.AddChild(trainsList);
             var handlers = new List<Action<EventArguments>>();
-            handlers.Add(CreateTrainWindow);
-            window.SetHandlers(handlers);
+            handlers.Add(ShowCreateTrainWindow);
+
+            if (trainListText.Count > 1)
+                for (int i = 1; i < trainListText.Count; i++)
+                    handlers.Add(ShowExistTrainWindow);
+
+            trainsList.SetHandlers(handlers);
         }
 
-        private void CreateTrainWindow(EventArguments arguments)
+        private void ShowCreateTrainWindow(EventArguments arguments)
         {
             var window = _windowsManager.CreateWindow("Новый поезд.", new List<string>(), 25, 5, 75, 20);
             var directionListText = new List<string>()
@@ -115,7 +120,16 @@ namespace _6_7_TrainDispatcher
                 "Пермь-Казань",
                 "Питер-Уфа",
             };
-            var list = new VerticalMenu(directionListText,3,2,44,11);
+
+            var list = new VerticalMenu(directionListText, 3, 2, 44, 11);
+            window.AddChild(list);
+        }
+
+        private void ShowExistTrainWindow(EventArguments arguments)
+        {
+            var window = _windowsManager.CreateWindow("Существующий поезд.", new List<string>(), 3, 10, 110, 5);
+            var text = new UIelement(new List<string>() { arguments.Message }, 2, 2, 107, 1);
+            window.AddChild(text);
         }
 
         private void ExitEventCalled()

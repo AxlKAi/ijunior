@@ -25,9 +25,6 @@ namespace _6_7_TrainDispatcher
         {
             _inputSystem = inputSystem;
             _inputSystem.SendKeySymbol += ShowBottomBorder;
-            
-            //TODO delete ?
-            //_inputSystem.OnEnterPress += OnEnterPressed;
 
             Console.CursorVisible = false;
 
@@ -42,6 +39,7 @@ namespace _6_7_TrainDispatcher
             ClearBackground();
         }
 
+        /*
         public Window CreateWindow()
         {
             _activeWindow = new Window();
@@ -49,20 +47,24 @@ namespace _6_7_TrainDispatcher
             ShowBottomBorder("Window created");
             return _activeWindow;
         }
+        */
 
         public Window CreateWindow(string title, List<string> text, int x = 10, int y = 4, int length = 20, int height = 5)
         {
-            if(_activeWindow!=null)
-                UnscribeActiveWindowToEvents();
-
             foreach (var window in _windows)
             {
                 window.SetColor(window.ForegroundColor, ConsoleColor.DarkGray);
+                RenewWindows();
             }
 
-            RenewWindows();
+            var newWindow = new Window(title, text, x, y, length, height);
 
-            _activeWindow = new Window(title, text, x, y, length, height);
+            if (_activeWindow != null)
+            {
+                UnscribeActiveWindowToEvents();
+            }
+
+            _activeWindow = newWindow;
             _windows.Add(_activeWindow);
             ShowBottomBorder($"{title} window created");
             SubscribeActiveWindowToEvents();
@@ -193,9 +195,9 @@ namespace _6_7_TrainDispatcher
 
         public ConsoleColor ShadowColor { get; protected set; } = ConsoleColor.Black;
 
-        public Window() : this(DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
+        //public Window() : this(DefaultX, DefaultY, DefaultLength, DefaultHeight) { }
 
-        public Window(int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight) : this("", new List<string>(), x, y, length, height) { }
+        // public Window(int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight) : this("", new List<string>(), x, y, length, height) { }
 
         public Window(string title, List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
         {
@@ -385,17 +387,17 @@ namespace _6_7_TrainDispatcher
 
         public override void OnNumberPress(int i)
         {
-            if(IsLettersOnly == false)
+            if (IsLettersOnly == false)
                 AddSymbol(i.ToString());
         }
 
         public override void OnDeletePress()
         {
-            if(RawText[0].Length > 0)
+            if (RawText[0].Length > 0)
             {
                 RawText[0] = RawText[0].Remove(CursorPosition, 1);
 
-                if(RawText[0].Length > 0 && CursorPosition > RawText[0].Length - 1)
+                if (RawText[0].Length > 0 && CursorPosition > RawText[0].Length - 1)
                 {
                     CursorPosition = RawText[0].Length - 1;
                 }
@@ -411,9 +413,9 @@ namespace _6_7_TrainDispatcher
 
         public override void OnBackspacePress()
         {
-            if(CursorPosition > 0 && RawText[0].Length >= 1)
+            if (CursorPosition > 0 && RawText[0].Length >= 1)
             {
-                RawText[0] = RawText[0].Remove(CursorPosition-1, 1);
+                RawText[0] = RawText[0].Remove(CursorPosition - 1, 1);
                 CursorPosition--;
 
                 Initialize();
@@ -427,8 +429,8 @@ namespace _6_7_TrainDispatcher
                 return;
 
             System.Text.RegularExpressions.Regex.IsMatch(message.Message, @"^[a-zA-Z]+$");
-            
-            if(message.Message.Length == 1) 
+
+            if (message.Message.Length == 1)
                 AddSymbol(message.Message);
         }
 
@@ -447,7 +449,7 @@ namespace _6_7_TrainDispatcher
 
         protected virtual void AddSymbol(string symbol)
         {
-            if(RawText[0].Length < Length)
+            if (RawText[0].Length < Length)
             {
                 RawText[0] = RawText[0].Substring(0, CursorPosition) + symbol + RawText[0].Substring(CursorPosition);
                 Initialize();
@@ -497,6 +499,19 @@ namespace _6_7_TrainDispatcher
 
             Console.ForegroundColor = ForegroundColor;
             Console.BackgroundColor = BackgroundColor;
+        }
+
+        public override void OnEnterPress()
+        {
+            if (Handlers == null)
+                return;
+
+            if (Handlers.Count > 0 && MenuPosition < Handlers.Count)
+            {
+                var message = new EventArguments();
+                message.Message = RawText[MenuPosition];
+                Handlers[MenuPosition]?.Invoke(message);
+            }
         }
     }
 
@@ -608,7 +623,7 @@ namespace _6_7_TrainDispatcher
                     child.OnRightArrowPress();
         }
 
-        virtual public void OnUpArrowPress() 
+        virtual public void OnUpArrowPress()
         {
             if (ChildElements != null)
                 foreach (var child in ChildElements)
@@ -636,21 +651,21 @@ namespace _6_7_TrainDispatcher
                     child.OnBackspacePress();
         }
 
-        virtual public void OnEnterPress() 
+        virtual public void OnEnterPress()
         {
             if (ChildElements != null)
                 foreach (var child in ChildElements)
                     child.OnEnterPress();
         }
 
-        virtual public void OnNumberPress(int i) 
+        virtual public void OnNumberPress(int i)
         {
             if (ChildElements != null)
                 foreach (var child in ChildElements)
                     child.OnNumberPress(i);
         }
 
-        virtual public void OnLetterPress(EventArguments message) 
+        virtual public void OnLetterPress(EventArguments message)
         {
             if (ChildElements != null)
                 foreach (var child in ChildElements)
