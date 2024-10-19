@@ -523,6 +523,7 @@ namespace _6_7_TrainDispatcher
             {
                 var message = new EventArguments();
                 message.Message = RawText[MenuPosition];
+                message.DigitalData = MenuPosition;
                 Handlers[MenuPosition]?.Invoke(message);
             }
         }

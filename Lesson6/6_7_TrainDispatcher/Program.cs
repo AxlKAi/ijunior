@@ -85,45 +85,39 @@ namespace _6_7_TrainDispatcher
             _directions.Add(new Direction("Пермь", "Екатеринбурк"));
             _directions.Add(new Direction("Москва", "Подольск"));
 
-            foreach (Van van in Enum.GetValues(typeof(VanType)))
+            foreach (VanType van in Enum.GetValues(typeof(VanType)))
             {
-                _vanTypesListing.Add(van.Name);
+                _vanTypesListing.Add(new Van(van).Name);
             }
-
-            for (VanType vanType = 0; (int)vanType < VanType; fruit++)
-            {
-                DoSomething(fruit);
-            }
-
-            foreach (T value in Enum.GetValues(typeof(T)))
-            {
-                //..
-            }
-
 
             var train1 = new Train(111);
             train1.SetDirections(_directions[0]);
-            train1.SetVansBySellSeats(VanType.Сompartment, 254);
+            train1.SetVanType(VanType.Сompartment);
+            train1.SellSeats(254);
             _trains.Add(train1);
 
             var train2 = new Train(222);
             train2.SetDirections(_directions[1]);
-            train2.SetVansBySellSeats(VanType.Siting, 350);
+            train2.SetVanType(VanType.Siting);
+            train2.SellSeats(350);
             _trains.Add(train2);
 
             var train3 = new Train(333);
             train3.SetDirections(_directions[2]);
-            train3.SetVansBySellSeats(VanType.SecondClass, 400);
+            train3.SetVanType(VanType.SecondClass);
+            train3.SellSeats(400);
             _trains.Add(train3);
 
             var train4 = new Train(444);
             train4.SetDirections(_directions[3]);
-            train4.SetVansBySellSeats(VanType.Siting, 357);
+            train4.SetVanType(VanType.Siting);
+            train4.SellSeats(357);
             _trains.Add(train4);
 
             var train5 = new Train(555);
             train5.SetDirections(_directions[4]);
-            train5.SetVansBySellSeats(VanType.SecondClass, 410);
+            train5.SetVanType(VanType.SecondClass);
+            train5.SellSeats(410);
             _trains.Add(train5);
 
             ShowMainWindow();
@@ -218,7 +212,9 @@ namespace _6_7_TrainDispatcher
             var list = new VerticalMenu(_vanTypesListing, listPaddingLeft, listPaddingTop, listLenght, _vanTypesListing.Count);
             var handlers = new List<Action<EventArguments>>();
 
-            handlers.Add(ShowSellTicketsWindow);
+            foreach(var unit in _vanTypesListing)
+                handlers.Add(ShowSellTicketsWindow);
+
             list.SetHandlers(handlers);
             window.AddChild(list);
         }
@@ -226,7 +222,51 @@ namespace _6_7_TrainDispatcher
 
         private void ShowNewTrainWindow(EventArguments arguments)
         {
+            int leftColumn = 15;
+            int rightColumn = 40;
 
+            List<string> outputText = new List<string>() 
+            {
+                " Cоздан поезд :",
+                ""
+            };
+
+            outputText.AddRange(_newTrain.ToList(leftColumn, rightColumn));
+
+            int windowLength = leftColumn + rightColumn + 2;
+            int windowTop = 8;
+            int windowLeft = 35;
+
+            int textPaddingTop = 2;
+            int textPaddingLeft = 2;
+            int textLength = outputText[1].Length;
+
+            int buttonPaddingTop = 2;
+            int buttonPaddingLeft = 16;
+            List<string> buttonText = new List<string>() {"[   ОК   ]"};
+            int buttonLength = buttonText[0].Length;
+
+            int windowHeight = outputText.Count + buttonPaddingTop + 3;
+
+            _trains.Add(_newTrain);
+            _windowsManager.ShowLog($"Сохранен новый поезд : {_newTrain.ToString()}");
+
+            var window = _windowsManager.CreateWindow("Сохранен поезд", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
+            window.SetColor(ConsoleColor.Red, ConsoleColor.DarkGreen);
+
+            var text = new UIelement(outputText, textPaddingTop, textPaddingLeft, textLength, outputText.Count);
+
+            var button = new VerticalMenu(buttonText, buttonPaddingLeft, buttonPaddingTop, buttonLength);
+            button.SetColor(ConsoleColor.White, ConsoleColor.Blue);
+
+            var handlers = new List<Action<EventArguments>>();
+            handlers.Add(ShowSelectDirectionWindow);
+            button.SetHandlers(handlers);
+
+            window.AddChild(text);
+            window.AddChild(button);
+
+            _newTrain = new Train();
         }
 
         private void ShowExistTrainWindow(EventArguments arguments)
@@ -254,22 +294,18 @@ namespace _6_7_TrainDispatcher
 
             var window = _windowsManager.CreateWindow("Номер поезда", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
 
-            var trainNumberText = new List<string>();
-            trainNumberText.Add("");
-            trainNumberText.Add("Введите номер");
-
             var text = new UIelement(new List<string>() { "Номер поезда: " }, textPaddingTop, textPaddingLeft, textLength, 1);
 
-            var input = new Input("", inputPaddingLeft, inputPaddingTop, inputLength);
-            input.SetNumbersOnly();
-            input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
+            var button = new Input("", inputPaddingLeft, inputPaddingTop, inputLength);
+            button.SetNumbersOnly();
+            button.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
             
             var handlers = new List<Action<EventArguments>>();
             handlers.Add(ShowSelectDirectionWindow);
-            input.SetHandlers(handlers);
+            button.SetHandlers(handlers);
 
             window.AddChild(text);
-            window.AddChild(input);
+            window.AddChild(button);
         }
 
         private void ShowSelectHomeTownWindow(EventArguments arguments)
@@ -297,13 +333,10 @@ namespace _6_7_TrainDispatcher
             int inputPaddingLeft = 19;
             int inputLength = 3;
 
-            _windowsManager.ShowLog($"XXXX {arguments.Message}");
+            _newTrain.SetVanType((VanType)arguments.DigitalData);
+            _windowsManager.ShowLog($"Тип вагона №{arguments.DigitalData} {arguments.Message} ");
 
             var window = _windowsManager.CreateWindow("Билетов продано", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
-
-            var trainNumberText = new List<string>();
-            trainNumberText.Add("");
-            trainNumberText.Add("Введите номер");
 
             var text = new UIelement(new List<string>() { "Билетов продано: " }, textPaddingTop, textPaddingLeft, textLength, 1);
 
@@ -382,6 +415,8 @@ namespace _6_7_TrainDispatcher
         public Direction Direction { get; private set; }
         public int Number { get; private set; }
 
+        public VanType VanType { get; private set; }
+
         private List<Van> _vans;
 
         public Train() : this(++LastTrainNumber) { }
@@ -430,14 +465,19 @@ namespace _6_7_TrainDispatcher
             Direction = direction;
         }
 
-        public void SetVansBySellSeats(VanType type, int seatsSold)
+        public void SetVanType(VanType type)
+        {
+            VanType = type;
+        }
+
+        public void SellSeats(int seatsSold)
         {
             int seats = seatsSold;
             _vans = new List<Van>();
 
             while (seats > 0)
             {
-                var van = new Van(type);
+                var van = new Van(VanType);
                 _vans.Add(van);
 
                 if (van.TotalSeats <= seats)
@@ -462,19 +502,41 @@ namespace _6_7_TrainDispatcher
             int vanTypeLength = 12;
             string separator = " | ";
 
-            string trainOut = separator + Unify(Number.ToString(), numberLength) + separator;
-            trainOut += Unify(Direction.ToString(), directionLength) + separator;
-            trainOut += Unify(GetTotalSeats().ToString(), totalSeatsLength) + separator;
-            trainOut += Unify(GetSeatsSold().ToString(), soldSeatsLength) + separator;
-            trainOut += Unify(_vans[0].Name, vanTypeLength) + separator;
+            string trainOut = separator + StrafeLeft(Number.ToString(), numberLength) + separator;
+            trainOut += StrafeLeft(Direction.ToString(), directionLength) + separator;
+            trainOut += StrafeLeft(GetTotalSeats().ToString(), totalSeatsLength) + separator;
+            trainOut += StrafeLeft(GetSeatsSold().ToString(), soldSeatsLength) + separator;
+            trainOut += StrafeLeft(_vans[0].Name, vanTypeLength) + separator;
 
             return trainOut;
         }
 
-        private string Unify(string str, int length)
+        public List<string> ToList(int leftLength, int rightLength)
+        {
+            var result = new List<string>();
+            string separator = " | ";
+
+            result.Add(StrafeLeft("Поезд №" ,leftLength) + separator + StrafeRight(Number.ToString(),rightLength));
+            result.Add(StrafeLeft("Направление", leftLength) + separator + StrafeRight(Direction.ToString(), rightLength));
+            result.Add(StrafeLeft("Тип вагона", leftLength) + separator + StrafeRight(_vans[0]?.Name, rightLength));
+            result.Add(StrafeLeft("Всего мест", leftLength) + separator + StrafeRight(GetTotalSeats().ToString(), rightLength));
+            result.Add(StrafeLeft("Мест продано", leftLength) + separator + StrafeRight(GetSeatsSold().ToString(), rightLength));
+
+            return result;
+        }
+
+        private string StrafeLeft(string str, int length)
         {
             if (str.Length <= length)
                 return str.PadRight(length);
+            else
+                return str.Remove(length);
+        }
+
+        private string StrafeRight(string str, int length)
+        {
+            if (str.Length <= length)
+                return str.PadLeft(length);
             else
                 return str.Remove(length);
         }
