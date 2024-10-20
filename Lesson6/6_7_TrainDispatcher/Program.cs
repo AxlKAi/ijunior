@@ -162,6 +162,45 @@ namespace _6_7_TrainDispatcher
             trainsList.SetHandlers(handlers);
         }
 
+        private void ShowExistTrainWindow(EventArguments arguments)
+        {
+            //TODO сделать дизайн окна
+            var window = _windowsManager.CreateWindow("Существующий поезд.", new List<string>(), 3, 10, 110, 5);
+            var text = new UIelement(new List<string>() { arguments.Message }, 2, 2, 107, 1);
+            window.AddChild(text);
+        }
+
+        private void ShowTrainNumberWindow(EventArguments arguments)
+        {
+            int windowLength = 19;
+            int windowTop = 18;
+            int windowLeft = 5;
+            int windowHeight = 3;
+
+            int textPaddingTop = 2;
+            int textPaddingLeft = 2;
+            int textLength = 15;
+
+            int inputPaddingTop = 2;
+            int inputPaddingLeft = 16;
+            int inputLength = 3;
+
+            var window = _windowsManager.CreateWindow("Номер поезда", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
+
+            var text = new UIelement(new List<string>() { "Номер поезда: " }, textPaddingTop, textPaddingLeft, textLength, 1);
+
+            var button = new Input("", inputPaddingLeft, inputPaddingTop, inputLength);
+            button.SetNumbersOnly();
+            button.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
+
+            var handlers = new List<Action<EventArguments>>();
+            handlers.Add(ShowSelectDirectionWindow);
+            button.SetHandlers(handlers);
+
+            window.AddChild(text);
+            window.AddChild(button);
+        }
+
         private void ShowSelectDirectionWindow(EventArguments arguments)
         {
             int windowLength = 46;
@@ -206,6 +245,7 @@ namespace _6_7_TrainDispatcher
             int listPaddingLeft = 2;
             int listLenght = windowLength - 4;
 
+            _newTrain.SetDirections(_directions[arguments.DigitalData]);
             _windowsManager.ShowLog($"Направление поезда {arguments.Message}");
 
             var window = _windowsManager.CreateWindow("Тип вагона.", new List<string>(), windowLeft, windowTop, windowLength, _vanTypesListing.Count + windowHeightPadding);
@@ -219,6 +259,39 @@ namespace _6_7_TrainDispatcher
             window.AddChild(list);
         }
 
+        private void ShowSellTicketsWindow(EventArguments arguments)
+        {
+            int windowLength = 22;
+            int windowTop = 19;
+            int windowLeft = 35;
+            int windowHeight = 3;
+
+            int textPaddingTop = 2;
+            int textPaddingLeft = 2;
+            int textLength = 17;
+
+            int inputPaddingTop = 2;
+            int inputPaddingLeft = 19;
+            int inputLength = 3;
+
+            _newTrain.SetVanType((VanType)arguments.DigitalData);
+            _windowsManager.ShowLog($"Тип вагона №{arguments.DigitalData} {arguments.Message} ");
+
+            var window = _windowsManager.CreateWindow("Билетов продано", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
+
+            var text = new UIelement(new List<string>() { "Билетов продано: " }, textPaddingTop, textPaddingLeft, textLength, 1);
+
+            var input = new Input("", inputPaddingLeft, inputPaddingTop, inputLength);
+            input.SetNumbersOnly();
+            input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
+
+            var handlers = new List<Action<EventArguments>>();
+            handlers.Add(ShowNewTrainWindow);
+            input.SetHandlers(handlers);
+
+            window.AddChild(text);
+            window.AddChild(input);
+        }
 
         private void ShowNewTrainWindow(EventArguments arguments)
         {
@@ -269,44 +342,9 @@ namespace _6_7_TrainDispatcher
             _newTrain = new Train();
         }
 
-        private void ShowExistTrainWindow(EventArguments arguments)
-        {
-            //TODO сделать дизайн окна
-            var window = _windowsManager.CreateWindow("Существующий поезд.", new List<string>(), 3, 10, 110, 5);
-            var text = new UIelement(new List<string>() { arguments.Message }, 2, 2, 107, 1);
-            window.AddChild(text);
-        }
 
-        private void ShowTrainNumberWindow(EventArguments arguments)
-        {
-            int windowLength = 19;
-            int windowTop = 18;
-            int windowLeft = 5;
-            int windowHeight = 3;
 
-            int textPaddingTop = 2;
-            int textPaddingLeft = 2;
-            int textLength = 15;
 
-            int inputPaddingTop = 2;
-            int inputPaddingLeft = 16;
-            int inputLength = 3;
-
-            var window = _windowsManager.CreateWindow("Номер поезда", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
-
-            var text = new UIelement(new List<string>() { "Номер поезда: " }, textPaddingTop, textPaddingLeft, textLength, 1);
-
-            var button = new Input("", inputPaddingLeft, inputPaddingTop, inputLength);
-            button.SetNumbersOnly();
-            button.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
-            
-            var handlers = new List<Action<EventArguments>>();
-            handlers.Add(ShowSelectDirectionWindow);
-            button.SetHandlers(handlers);
-
-            window.AddChild(text);
-            window.AddChild(button);
-        }
 
         private void ShowSelectHomeTownWindow(EventArguments arguments)
         {
@@ -318,39 +356,7 @@ namespace _6_7_TrainDispatcher
             window.AddChild(input);
         }
 
-        private void ShowSellTicketsWindow(EventArguments arguments)
-        {
-            int windowLength = 22;
-            int windowTop = 19;
-            int windowLeft = 35;
-            int windowHeight = 3;
 
-            int textPaddingTop = 2;
-            int textPaddingLeft = 2;
-            int textLength = 17;
-
-            int inputPaddingTop = 2;
-            int inputPaddingLeft = 19;
-            int inputLength = 3;
-
-            _newTrain.SetVanType((VanType)arguments.DigitalData);
-            _windowsManager.ShowLog($"Тип вагона №{arguments.DigitalData} {arguments.Message} ");
-
-            var window = _windowsManager.CreateWindow("Билетов продано", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
-
-            var text = new UIelement(new List<string>() { "Билетов продано: " }, textPaddingTop, textPaddingLeft, textLength, 1);
-
-            var input = new Input("", inputPaddingLeft, inputPaddingTop, inputLength);
-            input.SetNumbersOnly();
-            input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
-
-            var handlers = new List<Action<EventArguments>>();
-            handlers.Add(ShowNewTrainWindow);
-            input.SetHandlers(handlers);
-
-            window.AddChild(text);
-            window.AddChild(input);
-        }
 
         private void ExitEventCalled()
         {
