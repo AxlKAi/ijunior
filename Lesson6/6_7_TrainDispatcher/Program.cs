@@ -144,7 +144,7 @@ namespace _6_7_TrainDispatcher
             var trainListText = new List<string>();
             trainListText.Add("     ...... Создать новый поезд ......");
 
-            foreach(var train in _trains)
+            foreach (var train in _trains)
             {
                 trainListText.Add(train.ToString());
             }
@@ -252,7 +252,7 @@ namespace _6_7_TrainDispatcher
             var list = new VerticalMenu(_vanTypesListing, listPaddingLeft, listPaddingTop, listLenght, _vanTypesListing.Count);
             var handlers = new List<Action<EventArguments>>();
 
-            foreach(var unit in _vanTypesListing)
+            foreach (var unit in _vanTypesListing)
                 handlers.Add(ShowSellTicketsWindow);
 
             list.SetHandlers(handlers);
@@ -298,7 +298,7 @@ namespace _6_7_TrainDispatcher
             int leftColumn = 15;
             int rightColumn = 40;
 
-            List<string> outputText = new List<string>() 
+            List<string> outputText = new List<string>()
             {
                 " Cоздан поезд :",
                 ""
@@ -316,7 +316,7 @@ namespace _6_7_TrainDispatcher
 
             int buttonPaddingTop = 2;
             int buttonPaddingLeft = 16;
-            List<string> buttonText = new List<string>() {"[   ОК   ]"};
+            List<string> buttonText = new List<string>() { "[   ОК   ]" };
             int buttonLength = buttonText[0].Length;
 
             int windowHeight = outputText.Count + buttonPaddingTop + 3;
@@ -366,6 +366,27 @@ namespace _6_7_TrainDispatcher
         public void ReturnEventCalled()
         {
             _windowsManager.CloseActiveWindow();
+        }
+
+        public void ContinueEvent()
+            //сюда приходить eventArguments
+        {
+            // окна можно добавить в отдельные поля, и управлять ими из switch
+            // то есть я не открываю из одного окра другое, а просто вызываю этот метод
+            // а он уже что надо открывает
+
+            switch (true)
+            {
+                case true:
+                    // _newTrain.SetDirections(_directions[arguments.DigitalData]);
+                    break;
+
+                case false: 
+                    // тут, в зависимости от перехода на конкретный этап мы управляем окнами. 
+                    break;
+
+            }
+
         }
 
         private void ShowHelpWindow()
@@ -522,7 +543,7 @@ namespace _6_7_TrainDispatcher
             var result = new List<string>();
             string separator = " | ";
 
-            result.Add(StrafeLeft("Поезд №" ,leftLength) + separator + StrafeRight(Number.ToString(),rightLength));
+            result.Add(StrafeLeft("Поезд №", leftLength) + separator + StrafeRight(Number.ToString(), rightLength));
             result.Add(StrafeLeft("Направление", leftLength) + separator + StrafeRight(Direction.ToString(), rightLength));
             result.Add(StrafeLeft("Тип вагона", leftLength) + separator + StrafeRight(_vans[0]?.Name, rightLength));
             result.Add(StrafeLeft("Всего мест", leftLength) + separator + StrafeRight(GetTotalSeats().ToString(), rightLength));
