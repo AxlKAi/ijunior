@@ -99,19 +99,19 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 case State.TrainNumber:
-                    SetSelectDestinationState(eventArguments);
+                    SetVanTypeState(eventArguments);
                     break;
 
                 case State.SelectDestination:
-                    van
+                    SetVanTypeState(eventArguments);
                     break;
 
                 case State.SelectVanType:
-                    // _newTrain.SetDirections(_directions[arguments.DigitalData]);
+                    SetSellTicketsState(eventArguments);
                     break;
 
                 case State.SellTickets:
-                    // _newTrain.SetDirections(_directions[arguments.DigitalData]);
+                    SetNewTrainState(eventArguments);
                     break;
 
                 case State.ViewNewTrain:
@@ -121,6 +121,9 @@ namespace _6_7_TrainDispatcher
 
         }
 
+
+        //TODO перенести в эти методы обработку event, его не надо передавать 
+        //в создаваемое окно
         public void ReturnEventCalled()
         {
             _windowsManager.CloseActiveWindow();
@@ -150,6 +153,17 @@ namespace _6_7_TrainDispatcher
         {
             _currentState = State.SelectVanType;
             ShowVanTypeWindow(eventArguments);
+        }
+
+        private void SetSellTicketsState(EventArguments eventArguments)
+        {
+            _currentState = State.SelectVanType;
+            ShowSellTicketsWindow(eventArguments);
+        }
+
+        private void SetNewTrainState(EventArguments eventArguments)
+        {
+
         }
 
         private void SetDefaults()
@@ -317,7 +331,7 @@ namespace _6_7_TrainDispatcher
 
             if (directionListText.Count > 1)
                 for (int i = 1; i < directionListText.Count; i++)
-                    handlers.Add();
+                    handlers.Add(ProductionEvent);
 
             list.SetHandlers(handlers);
             window.AddChild(list);
@@ -341,7 +355,7 @@ namespace _6_7_TrainDispatcher
             var handlers = new List<Action<EventArguments>>();
 
             foreach (var unit in _vanTypesListing)
-                handlers.Add(ShowSellTicketsWindow);
+                handlers.Add(ProductionEvent);
 
             list.SetHandlers(handlers);
             window.AddChild(list);
