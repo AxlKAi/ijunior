@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _6_7_TrainDispatcher
 {
@@ -19,7 +20,9 @@ namespace _6_7_TrainDispatcher
         private InputSystem _inputSystem;
         private string _lastLog;
 
-        private List<Window> _windows = new List<Window>();
+        private int _lastWindowIndex = 0;
+        private Dictionary<string, Window> _windows = new Dictionary<string, Window>();
+
         private Window _activeWindow;
 
         public WindowsManager(InputSystem inputSystem)
@@ -40,15 +43,25 @@ namespace _6_7_TrainDispatcher
             ClearBackground();
         }
 
-        public Window CreateWindow(string title, List<string> text, int x = 10, int y = 4, int length = 20, int height = 5)
+        public Window CreateWindow(string title, List<string> text, int x = 10, int y = 4, int length = 20, int height = 5, string windowTag = "")
         {
-            foreach (var window in _windows)
+            if(windowTag == "")
             {
-                window.SetActive(false);
+                windowTag = (++_lastWindowIndex).ToString();
+            }
+
+            foreach (KeyValuePair<string, Window> window in _windows)
+            {
+            // do something with window.Value or window.Key
+                window.Value.SetActive(false);
+
+                //TODO по хорошему тут надо не все окна перерисовывать, 
+                // а только последнее активное делать серым
                 RenewWindows();
             }
 
             var newWindow = new Window(title, text, x, y, length, height);
+            CollectWindow(windowTag, newWindow);
 
             if (_activeWindow != null)
             {
@@ -56,9 +69,45 @@ namespace _6_7_TrainDispatcher
             }
 
             _activeWindow = newWindow;
-            _windows.Add(_activeWindow);
             SubscribeActiveWindowToEvents();
+
             return _activeWindow;
+        }
+
+        public void CollectWindow(string windowTag, Window window)
+        {
+            if(window != null)
+                _windows.Add(windowTag, window);
+        }
+
+        public Window GetWindow(string windowTag)
+        {
+            if (_windows.ContainsKey(windowTag))
+                return _windows[windowTag];
+            else
+                return null;
+        }
+
+        public void CloseWindow(string windowTag)
+        {
+            //TODO Тут надо добавить обработчик события закрытия окна !!!
+
+            if (_windows.ContainsKey(windowTag))
+                _windows.Remove(windowTag);
+
+            RenewWindows();
+        }
+
+        public void CloseWindow(Window window)
+        {
+            //TODO Тут надо добавить обработчик события закрытия окна !!!
+
+            var windowKey = _windows.FirstOrDefault(x => x.Value == window).Key;
+
+            if (windowKey != null)
+                _windows.Remove(windowKey);
+
+            RenewWindows();
         }
 
         public void ShowLog(string s)
@@ -85,22 +134,16 @@ namespace _6_7_TrainDispatcher
         public void CloseActiveWindow()
         {
             UnscribeActiveWindowToEvents();
-            _windows.Remove(_activeWindow);
+            CloseWindow(_activeWindow);
 
             if (_windows.Count > 0)
             {
-                _activeWindow = _windows[_windows.Count - 1];
+                _activeWindow = _windows.Values.Last(); 
                 _activeWindow.SetActive(true);
                 SubscribeActiveWindowToEvents();
             }
 
             RenewWindows();
-        }
-
-        public void AddWindowElement(Window window, UIelement windowsElement)
-        {
-            //TODO &&&& ????
-            //window.
         }
 
         private void SubscribeActiveWindowToEvents()
@@ -131,11 +174,15 @@ namespace _6_7_TrainDispatcher
 
         private void RenewWindows()
         {
+                //TODO по хорошему нужен отдельный метод, гне надо не все окна перерисовывать, 
+                // а только последнее активное делать серым
             ClearBackground();
 
-            foreach (var window in _windows)
+            foreach (KeyValuePair<string, Window> window in _windows)
             {
-                window.Show();
+                // do something with window.Value or window.Key
+                window.Value.Show();
+
             }
 
             ShowLog(_lastLog);
