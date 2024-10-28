@@ -45,14 +45,14 @@ namespace _6_7_TrainDispatcher
 
         public Window CreateWindow(string title, List<string> text, int x = 10, int y = 4, int length = 20, int height = 5, string windowTag = "")
         {
-            if(windowTag == "")
+            if (windowTag == "")
             {
                 windowTag = (++_lastWindowIndex).ToString();
             }
 
             foreach (KeyValuePair<string, Window> window in _windows)
             {
-            // do something with window.Value or window.Key
+                // do something with window.Value or window.Key
                 window.Value.SetActive(false);
 
                 //TODO по хорошему тут надо не все окна перерисовывать, 
@@ -76,7 +76,7 @@ namespace _6_7_TrainDispatcher
 
         public void CollectWindow(string windowTag, Window window)
         {
-            if(window != null)
+            if (window != null)
                 _windows.Add(windowTag, window);
         }
 
@@ -88,20 +88,16 @@ namespace _6_7_TrainDispatcher
                 return null;
         }
 
-        public void CloseWindow(string windowTag)
+        private void DestroyWindow(string windowTag)
         {
-            //TODO Тут надо добавить обработчик события закрытия окна !!!
-
             if (_windows.ContainsKey(windowTag))
                 _windows.Remove(windowTag);
 
             RenewWindows();
         }
 
-        public void CloseWindow(Window window)
+        private void DestroyWindow(Window window)
         {
-            //TODO Тут надо добавить обработчик события закрытия окна !!!
-
             var windowKey = _windows.FirstOrDefault(x => x.Value == window).Key;
 
             if (windowKey != null)
@@ -133,17 +129,61 @@ namespace _6_7_TrainDispatcher
 
         public void CloseActiveWindow()
         {
-            UnscribeActiveWindowToEvents();
-            CloseWindow(_activeWindow);
+            if (_activeWindow == null)
+                return;
 
+            _activeWindow.OnClose();
+            UnscribeActiveWindowToEvents();
+            DestroyWindow(_activeWindow);
+            SetActiveWindowIfExistOne();
+            RenewWindows();
+        }
+
+        private void SetActiveWindowIfExistOne()
+        {
             if (_windows.Count > 0)
             {
-                _activeWindow = _windows.Values.Last(); 
+                _activeWindow = _windows.Values.Last();
                 _activeWindow.SetActive(true);
                 SubscribeActiveWindowToEvents();
             }
+        }
 
-            RenewWindows();
+        public void CloseEverythingExcept(string windowTag)
+        {
+            // находим есть ли окно с таким тегом
+            //если нет, то удаляем все окна вообще
+            if (_windows.ContainsKey(windowTag))
+            {
+                // понять закрывается ли активное окно ?
+                if (_activeWindow == _windows[windowTag])
+                {
+                    //если закрываем,
+                    //то отписываем от событий
+                    //и вызываем событие OnClose
+                    //закрываем все окна кроме указанного
+                    CloseActiveWindow();
+
+                    foreach (KeyValuePair<string, Window> window in _windows)
+                    {
+                        if (window.Key != windowTag)
+                            DestroyWindow(window.Key);
+                    }
+
+                    //если осталось хоть одно окно, делаем его актывным
+                    SetActiveWindowIfExistOne();
+
+                } asdkfhasdi
+
+                //если не закрываем
+                //закрываем все окна кроме указанного
+                //если в массиве остались окна, делаем активным ближайшее к пользователю    
+
+            }
+            else
+            {
+                _windows = new Dictionary<string, Window>();
+            }
         }
 
         private void SubscribeActiveWindowToEvents()
@@ -174,8 +214,8 @@ namespace _6_7_TrainDispatcher
 
         private void RenewWindows()
         {
-                //TODO по хорошему нужен отдельный метод, гне надо не все окна перерисовывать, 
-                // а только последнее активное делать серым
+            //TODO по хорошему нужен отдельный метод, гне надо не все окна перерисовывать, 
+            // а только последнее активное делать серым
             ClearBackground();
 
             foreach (KeyValuePair<string, Window> window in _windows)
@@ -286,17 +326,6 @@ namespace _6_7_TrainDispatcher
             ForegroundColor = foreground;
             BackgroundColor = background;
         }
-
-        //TODO delete this method
-        /*
-        override public void OnEnterPress()
-        {
-            _rawText.Add("Enter pressed...");
-            Initialize();
-
-
-        }
-        */
 
         override protected void Initialize()
         {
@@ -480,15 +509,15 @@ namespace _6_7_TrainDispatcher
 
         public override void OnEnterPress()
         {
-            if (Handlers == null)
+            if (OnEnterHandlers == null)
                 return;
 
-            if (Handlers.Count > 0)
+            if (OnEnterHandlers.Count > 0)
             {
                 var message = new EventArguments();
                 message.Message = RawText[0];
 
-                if(IsNumberOnly)
+                if (IsNumberOnly)
                 {
                     bool result = Int32.TryParse(RawText[0], out var number);
 
@@ -498,7 +527,7 @@ namespace _6_7_TrainDispatcher
                         message.DigitalData = 0;
                 }
 
-                Handlers[0]?.Invoke(message);
+                OnEnterHandlers[0]?.Invoke(message);
             }
         }
 
@@ -507,8 +536,8 @@ namespace _6_7_TrainDispatcher
             if (RawText[0].Length < Length)
             {
                 RawText[0] = RawText[0].Substring(0, CursorPosition) + symbol + RawText[0].Substring(CursorPosition);
-                
-                if(CursorPosition<Length-1) 
+
+                if (CursorPosition < Length - 1)
                     CursorPosition++;
 
                 Initialize();
@@ -563,15 +592,15 @@ namespace _6_7_TrainDispatcher
 
         public override void OnEnterPress()
         {
-            if (Handlers == null)
+            if (OnEnterHandlers == null)
                 return;
 
-            if (Handlers.Count > 0 && MenuPosition < Handlers.Count)
+            if (OnEnterHandlers.Count > 0 && MenuPosition < OnEnterHandlers.Count)
             {
                 var message = new EventArguments();
                 message.Message = RawText[MenuPosition];
                 message.DigitalData = MenuPosition;
-                Handlers[MenuPosition]?.Invoke(message);
+                OnEnterHandlers[MenuPosition]?.Invoke(message);
             }
         }
     }
@@ -587,11 +616,11 @@ namespace _6_7_TrainDispatcher
         protected List<string> RawText;
         protected List<UIelement> ChildElements = new List<UIelement>();
         protected UIelement RootElement = null;
-        protected List<Action<EventArguments>> Handlers;
+        protected List<Action<EventArguments>> OnEnterHandlers;
+        protected List<Action> OnCloseHandlers;
 
         protected int RootPositionX = 0;
         protected int RootPositionY = 0;
-
 
         public int PositionX { get; protected set; } = 1;
         public int PositionY { get; protected set; } = 1;
@@ -602,8 +631,6 @@ namespace _6_7_TrainDispatcher
         public ConsoleColor BackgroundColor { get; protected set; } = ConsoleColor.Gray;
         public ConsoleColor ForegroundColor { get; protected set; } = ConsoleColor.Black;
         public ConsoleColor NonActiveColor { get; protected set; } = ConsoleColor.DarkGray;
-
-        //public UIelement() : this(new List<string>()) { }
 
         public UIelement(List<string> text, int x = DefaultX, int y = DefaultY, int length = DefaultLength, int height = DefaultHeight)
         {
@@ -672,9 +699,14 @@ namespace _6_7_TrainDispatcher
             BackgroundColor = background;
         }
 
-        virtual public void SetHandlers(List<Action<EventArguments>> handlers)
+        virtual public void SetOnEnterHandlers(List<Action<EventArguments>> handlers)
         {
-            Handlers = handlers;
+            OnEnterHandlers = handlers;
+        }
+
+        virtual public void SetOnCloseHandlers(List<Action> handlers)
+        {
+            OnCloseHandlers = handlers;
         }
 
         virtual public void SetActive(bool isActive)
@@ -747,6 +779,17 @@ namespace _6_7_TrainDispatcher
             if (ChildElements != null)
                 foreach (var child in ChildElements)
                     child.OnLetterPress(message);
+        }
+
+        virtual public void OnClose()
+        {
+            if (ChildElements != null)
+                foreach (var child in ChildElements)
+                    child.OnClose();
+
+            if (OnCloseHandlers != null)
+                foreach (var handler in OnCloseHandlers)
+                    handler?.Invoke();
         }
 
         virtual protected void Initialize()

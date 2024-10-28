@@ -81,7 +81,7 @@ namespace _6_7_TrainDispatcher
             }
         }
 
-        public void ProductionEvent(EventArguments eventArguments)
+        private void ProductionEvent(EventArguments eventArguments)
         //сюда приходить eventArguments
         {
             // окна можно добавить в отдельные поля, и управлять ими из switch
@@ -99,7 +99,7 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 case State.TrainNumber:
-                    SetVanTypeState(eventArguments);
+                    SetDestinationState(eventArguments);
                     break;
 
                 case State.SelectDestination:
@@ -115,24 +115,92 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 case State.ViewNewTrain:
-                    // _newTrain.SetDirections(_directions[arguments.DigitalData]);
+                    close everything except
                     break;
             }
 
         }
 
+        private void ReturnEvent()
+        {
+            //TODO это событие вызывается только в важных окнах
+            //влияющих на статус машины состояний
+            switch (_currentState)
+            {
+                /*
+                case State.Initialize:
+                    SetViewTrainsState();
+                    break;
+                */
+                case State.ViewTrains:
+                    ExitEventCalled();
+                    break;
 
-        //TODO перенести в эти методы обработку event, его не надо передавать 
-        //в создаваемое окно
-        public void ReturnEventCalled()
+                case State.TrainNumber:
+                    ReturnViewTrainsState();
+                    break;
+
+                case State.SelectDestination:
+                    ReturnTrainNumberState();
+                    break;
+
+                case State.SelectVanType:
+                    ReturnSelectDestinationState();
+                    break;
+
+                case State.SellTickets:
+                    ReturnSelectVanTypeState();
+                    break;
+
+                case State.ViewNewTrain:
+                    ReturnViewTrainsState();
+                    break;
+            }            
+        }
+
+        private void CloseWindow()
         {
             _windowsManager.CloseActiveWindow();
+        }
+
+        private void HelpEvent()
+        {
+            switch (_currentState)
+            {
+                /*
+                case State.Initialize:
+                    SetViewTrainsState();
+                    break;
+                */
+                case State.ViewTrains:
+                    ShowHelpWindow(new List<string>() { nameof(State.ViewTrains) });
+                    break;
+
+                case State.TrainNumber:
+                    ShowHelpWindow(new List<string>() { nameof(State.TrainNumber) });
+                    break;
+
+                case State.SelectDestination:
+                    ShowHelpWindow(new List<string>() { nameof(State.SelectDestination) });
+                    break;
+
+                case State.SelectVanType:
+                    ShowHelpWindow(new List<string>() { nameof(State.SelectVanType) });
+                    break;
+
+                case State.SellTickets:
+                    ShowHelpWindow(new List<string>() { nameof(State.SellTickets) });
+                    break;
+
+                case State.ViewNewTrain:
+                    ShowHelpWindow(new List<string>() { nameof(State.ViewNewTrain) });
+                    break;
+            }
         }
 
         private void SetViewTrainsState()
         {
             _currentState = State.ViewTrains;
-
             ShowMainWindow();
         }
 
@@ -157,22 +225,29 @@ namespace _6_7_TrainDispatcher
 
         private void SetSellTicketsState(EventArguments eventArguments)
         {
-            _currentState = State.SelectVanType;
+            _newTrain.SetVanType((VanType)eventArguments.DigitalData);
+            _currentState = State.SellTickets;
             ShowSellTicketsWindow(eventArguments);
         }
 
         private void SetNewTrainState(EventArguments eventArguments)
         {
+            _newTrain.SellSeats(eventArguments.DigitalData);
+            ShowNewTrainWindow(eventArguments);
+        }
 
+        private void SubscribeEvents()
+        {
+            _input.OnExit += ExitEventCalled;
+            _input.OnF1Press += HelpEvent;
+            _input.OnEscPress += CloseWindow;
+            _input.OnF2Press += ShowDemoWindow;
         }
 
         private void SetDefaults()
         {
             _windowsManager = new WindowsManager(_input);
-            _input.OnExit += ExitEventCalled;
-            _input.OnF1Press += ShowHelpWindow;
-            _input.OnReturn += ReturnEventCalled;
-            _input.OnF2Press += ShowDemoWindow;
+            SubscribeEvents();
 
             _directions.Add(new Direction("Москва", "Варкута"));
             _directions.Add(new Direction("Пермь", "Казань"));
@@ -223,6 +298,26 @@ namespace _6_7_TrainDispatcher
             ProductionEvent(initEvent);
         }
 
+        private void ReturnViewTrainsState() 
+        {
+            _currentState = State.ViewTrains;
+        }
+
+        private void ReturnTrainNumberState() 
+        {
+            _currentState = State.TrainNumber;
+        }
+
+        private void ReturnSelectDestinationState()
+        {
+            _currentState = State.SelectDestination;
+        }
+
+        private void ReturnSelectVanTypeState()
+        {
+            _currentState = State.SelectVanType;
+        }
+
         private void ShowMainWindow()
         {
             //TODO тут красиво будет если передавать объект класса настроек
@@ -260,7 +355,9 @@ namespace _6_7_TrainDispatcher
                 for (int i = 1; i < trainListText.Count; i++)
                     handlers.Add(ShowExistTrainWindow);
 
-            trainsList.SetHandlers(handlers);
+            trainsList.SetOnEnterHandlers(handlers);
+
+            window.SetOnCloseHandlers(new List<Action>() { ReturnEvent });
         }
 
         private void ShowExistTrainWindow(EventArguments arguments)
@@ -296,10 +393,12 @@ namespace _6_7_TrainDispatcher
 
             var handlers = new List<Action<EventArguments>>();
             handlers.Add(ProductionEvent);
-            button.SetHandlers(handlers);
+            button.SetOnEnterHandlers(handlers);
 
             window.AddChild(text);
             window.AddChild(button);
+
+            window.SetOnCloseHandlers(new List<Action>() { ReturnEvent });
         }
 
         private void ShowSelectDirectionWindow(EventArguments arguments)
@@ -333,8 +432,10 @@ namespace _6_7_TrainDispatcher
                 for (int i = 1; i < directionListText.Count; i++)
                     handlers.Add(ProductionEvent);
 
-            list.SetHandlers(handlers);
+            list.SetOnEnterHandlers(handlers);
             window.AddChild(list);
+
+            window.SetOnCloseHandlers(new List<Action>() { ReturnEvent });
         }
 
         private void ShowVanTypeWindow(EventArguments arguments)
@@ -357,8 +458,9 @@ namespace _6_7_TrainDispatcher
             foreach (var unit in _vanTypesListing)
                 handlers.Add(ProductionEvent);
 
-            list.SetHandlers(handlers);
+            list.SetOnEnterHandlers(handlers);
             window.AddChild(list);
+            window.SetOnCloseHandlers(new List<Action>() { ReturnEvent });
         }
 
         private void ShowSellTicketsWindow(EventArguments arguments)
@@ -376,7 +478,12 @@ namespace _6_7_TrainDispatcher
             int inputPaddingLeft = 19;
             int inputLength = 3;
 
-            _newTrain.SetVanType((VanType)arguments.DigitalData);
+            //TODO delete
+            //_newTrain.SetVanType((VanType)arguments.DigitalData);
+
+            //TODO убрать вообще из всех методов SHOW ту часть что отвечает 
+            // за создание нового поезда
+
             _windowsManager.ShowLog($"Тип вагона №{arguments.DigitalData} {arguments.Message} ");
 
             var window = _windowsManager.CreateWindow("Билетов продано", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
@@ -388,11 +495,12 @@ namespace _6_7_TrainDispatcher
             input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
 
             var handlers = new List<Action<EventArguments>>();
-            handlers.Add(ShowNewTrainWindow);
-            input.SetHandlers(handlers);
+            handlers.Add(ProductionEvent);
+            input.SetOnEnterHandlers(handlers);
 
             window.AddChild(text);
             window.AddChild(input);
+            window.SetOnCloseHandlers(new List<Action>() { ReturnEvent });
         }
 
         private void ShowNewTrainWindow(EventArguments arguments)
@@ -436,10 +544,11 @@ namespace _6_7_TrainDispatcher
 
             var handlers = new List<Action<EventArguments>>();
             handlers.Add(ShowSelectDirectionWindow);
-            button.SetHandlers(handlers);
+            button.SetOnEnterHandlers(handlers);
 
             window.AddChild(text);
             window.AddChild(button);
+            window.SetOnCloseHandlers(new List<Action>() { ReturnEvent });
 
             _newTrain = new Train();
         }
@@ -465,24 +574,9 @@ namespace _6_7_TrainDispatcher
             _isWorking = false;
         }
 
-        private void ShowHelpWindow()
+        private void ShowHelpWindow(List<string> text)
         {
-            var element1 = new UIelement(new List<string>() { "1", "2", "3" }, 1, 1, 10, 5);
-            var element2 = new VerticalMenu(new List<string>() { "one", "two", "three" }, 5, 5, 10, 5);
-            element1.SetColor(ConsoleColor.Red, ConsoleColor.DarkGreen);
-            element2.SetColor(ConsoleColor.Red, ConsoleColor.DarkBlue);
-
-            var helpWindowText = new List<string>
-            {
-                "sadfasdf",
-                "sadfasdf",
-                "sadfasdf",
-                "sadfasdf"
-            };
-
-            var window = _windowsManager.CreateWindow("Help", helpWindowText, 20, 10, 40, 15);
-            window.AddChild(element1);
-            window.AddChild(element2);
+            var window = _windowsManager.CreateWindow("Help", text, 20, 10, 40, 15);
         }
 
         private void ShowDemoWindow()
@@ -500,7 +594,7 @@ namespace _6_7_TrainDispatcher
             var input = new Input("123456", 2, 2, 10);
             input.SetColor(ConsoleColor.White, ConsoleColor.DarkBlue);
             input.SetNumbersOnly();
-            input.SetHandlers(new List<Action<EventArguments>>() { ShowResultScreen });
+            input.SetOnEnterHandlers(new List<Action<EventArguments>>() { ShowResultScreen });
             window.AddChild(input);
         }
 

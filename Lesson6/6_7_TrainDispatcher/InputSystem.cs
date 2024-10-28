@@ -12,7 +12,8 @@ namespace _6_7_TrainDispatcher
     class InputSystem
     {
         public event Action OnExit;
-        public event Action OnReturn;
+        //TODO по идее OnReturn не нужен
+        public event Action OnEscPress;
         public event Action OnF1Press;
         public event Action OnF2Press;
         public event Action OnLeftArrowPress;
@@ -37,7 +38,7 @@ namespace _6_7_TrainDispatcher
             switch (key.Key)
             {
                 case ConsoleKey.Escape:
-                    OnReturn?.Invoke();
+                    OnEscPress?.Invoke();
                     break;
 
                 case ConsoleKey.F1:
