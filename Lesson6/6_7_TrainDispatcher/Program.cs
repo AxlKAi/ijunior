@@ -115,7 +115,7 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 case State.ViewNewTrain:
-                    close everything except
+                    ReturnViewTrainsState();
                     break;
             }
 
@@ -201,39 +201,44 @@ namespace _6_7_TrainDispatcher
         private void SetViewTrainsState()
         {
             _currentState = State.ViewTrains;
-            ShowMainWindow();
+            ShowTrainsListWindow();
         }
 
         private void SetTrainNumberState(EventArguments eventArguments)
         {
             _currentState = State.TrainNumber;
-
             ShowTrainNumberWindow(eventArguments);
         }
 
         private void SetDestinationState(EventArguments eventArguments)
         {
+            _newTrain = new Train(eventArguments.DigitalData);
             _currentState = State.SelectDestination;
             ShowSelectDirectionWindow(eventArguments);
         }
 
         private void SetVanTypeState(EventArguments eventArguments)
         {
+            _newTrain.SetDirections(_directions[eventArguments.DigitalData]);
             _currentState = State.SelectVanType;
             ShowVanTypeWindow(eventArguments);
         }
 
         private void SetSellTicketsState(EventArguments eventArguments)
         {
-            _newTrain.SetVanType((VanType)eventArguments.DigitalData);
             _currentState = State.SellTickets;
+            _newTrain.SetVanType((VanType)eventArguments.DigitalData);
             ShowSellTicketsWindow(eventArguments);
         }
 
         private void SetNewTrainState(EventArguments eventArguments)
         {
+            _currentState = State.ViewNewTrain;
             _newTrain.SellSeats(eventArguments.DigitalData);
             ShowNewTrainWindow(eventArguments);
+            _trains.Add(_newTrain);
+            _windowsManager.ShowLog($"Сохранен новый поезд : {_newTrain.ToString()}");
+            _newTrain = new Train();
         }
 
         private void SubscribeEvents()
@@ -301,6 +306,7 @@ namespace _6_7_TrainDispatcher
         private void ReturnViewTrainsState() 
         {
             _currentState = State.ViewTrains;
+            _windowsManager.CloseAllWindows();
         }
 
         private void ReturnTrainNumberState() 
@@ -318,7 +324,7 @@ namespace _6_7_TrainDispatcher
             _currentState = State.SelectVanType;
         }
 
-        private void ShowMainWindow()
+        private void ShowTrainsListWindow()
         {
             //TODO тут красиво будет если передавать объект класса настроек
             //я таким образом стандартизирую имена параметров, и лучше 
@@ -411,7 +417,6 @@ namespace _6_7_TrainDispatcher
             int listPaddingLeft = 2;
             int listLenght = windowLength - 4;
 
-            _newTrain = new Train(arguments.DigitalData);
             _windowsManager.ShowLog($"Номер будующего поезда {arguments.DigitalData}");
 
             var window = _windowsManager.CreateWindow("Выбор направления.", new List<string>(), windowLeft, windowTop, windowLength, _directions.Count + windowHeightPadding);
@@ -448,7 +453,6 @@ namespace _6_7_TrainDispatcher
             int listPaddingLeft = 2;
             int listLenght = windowLength - 4;
 
-            _newTrain.SetDirections(_directions[arguments.DigitalData]);
             _windowsManager.ShowLog($"Направление поезда {arguments.Message}");
 
             var window = _windowsManager.CreateWindow("Тип вагона.", new List<string>(), windowLeft, windowTop, windowLength, _vanTypesListing.Count + windowHeightPadding);
@@ -511,7 +515,8 @@ namespace _6_7_TrainDispatcher
             List<string> outputText = new List<string>()
             {
                 " Cоздан поезд :",
-                ""
+                "",
+                _newTrain.ToString()
             };
 
             outputText.AddRange(_newTrain.ToList(leftColumn, rightColumn));
@@ -531,9 +536,6 @@ namespace _6_7_TrainDispatcher
 
             int windowHeight = outputText.Count + buttonPaddingTop + 3;
 
-            _trains.Add(_newTrain);
-            _windowsManager.ShowLog($"Сохранен новый поезд : {_newTrain.ToString()}");
-
             var window = _windowsManager.CreateWindow("Сохранен поезд", new List<string>(), windowLeft, windowTop, windowLength, windowHeight);
             window.SetColor(ConsoleColor.Red, ConsoleColor.DarkGreen);
 
@@ -549,8 +551,6 @@ namespace _6_7_TrainDispatcher
             window.AddChild(text);
             window.AddChild(button);
             window.SetOnCloseHandlers(new List<Action>() { ReturnEvent });
-
-            _newTrain = new Train();
         }
 
 
@@ -566,8 +566,6 @@ namespace _6_7_TrainDispatcher
             window.AddChild(text);
             window.AddChild(input);
         }
-
-
 
         private void ExitEventCalled()
         {

@@ -135,12 +135,16 @@ namespace _6_7_TrainDispatcher
             _activeWindow.OnClose();
             UnscribeActiveWindowToEvents();
             DestroyWindow(_activeWindow);
+            _activeWindow = null;
             SetActiveWindowIfExistOne();
             RenewWindows();
         }
 
         private void SetActiveWindowIfExistOne()
         {
+            if (_activeWindow != null)
+                return;
+
             if (_windows.Count > 0)
             {
                 _activeWindow = _windows.Values.Last();
@@ -149,45 +153,48 @@ namespace _6_7_TrainDispatcher
             }
         }
 
+        public void CloseAllWindows()
+        {
+            foreach (KeyValuePair<string, Window> window in _windows)
+            {
+                if (window.Value != _activeWindow)
+                    DestroyWindow(window.Key);
+            }
+        }
+
+
+        //TODO по моему мне этот метод не нужен вообще
         public void CloseEverythingExcept(string windowTag)
         {
-            // находим есть ли окно с таким тегом
-            //если нет, то удаляем все окна вообще
             if (_windows.ContainsKey(windowTag))
             {
-                // понять закрывается ли активное окно ?
-                if (_activeWindow == _windows[windowTag])
+                /*
+                if (_windows[windowTag] != _activeWindow)
                 {
-                    //если закрываем,
-                    //то отписываем от событий
-                    //и вызываем событие OnClose
-                    //закрываем все окна кроме указанного
-                    CloseActiveWindow();
-
-                    foreach (KeyValuePair<string, Window> window in _windows)
-                    {
-                        if (window.Key != windowTag)
+                    UnscribeActiveWindowToEvents();
+                    DestroyWindow(_activeWindow);
+                    _activeWindow = null;
+                }
+                */
+                foreach (KeyValuePair<string, Window> window in _windows)
+                {
+                    if (window.Key != windowTag)
+                        if (window.Value != _activeWindow)
                             DestroyWindow(window.Key);
-                    }
-
-                    //если осталось хоть одно окно, делаем его актывным
-                    SetActiveWindowIfExistOne();
-
-                } asdkfhasdi
-
-                //если не закрываем
-                //закрываем все окна кроме указанного
-                //если в массиве остались окна, делаем активным ближайшее к пользователю    
-
+                }
             }
             else
             {
+                //CloseActiveWindow();
                 _windows = new Dictionary<string, Window>();
             }
         }
 
         private void SubscribeActiveWindowToEvents()
         {
+            if (_activeWindow == null)
+                return;
+
             _inputSystem.OnEnterPress += _activeWindow.OnEnterPress;
             _inputSystem.OnDeletePress += _activeWindow.OnDeletePress;
             _inputSystem.OnBackspacePress += _activeWindow.OnBackspacePress;
@@ -201,6 +208,9 @@ namespace _6_7_TrainDispatcher
 
         private void UnscribeActiveWindowToEvents()
         {
+            if (_activeWindow == null)
+                return;
+
             _inputSystem.OnEnterPress -= _activeWindow.OnEnterPress;
             _inputSystem.OnDeletePress -= _activeWindow.OnDeletePress;
             _inputSystem.OnBackspacePress -= _activeWindow.OnBackspacePress;
