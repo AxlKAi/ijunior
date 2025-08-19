@@ -91,31 +91,31 @@ namespace _6_7_TrainDispatcher
             switch (_currentState)
             {
                 case State.Initialize:
-                    SetViewTrainsState();
+                    SetStateViewTrains();
                     break;
 
                 case State.ViewTrains:
-                    SetTrainNumberState(eventArguments);
+                    SetStateTrainNumber(eventArguments);
                     break;
 
                 case State.TrainNumber:
-                    SetDestinationState(eventArguments);
+                    SetStateSelectDestination(eventArguments);
                     break;
 
                 case State.SelectDestination:
-                    SetVanTypeState(eventArguments);
+                    SetStateVanType(eventArguments);
                     break;
 
                 case State.SelectVanType:
-                    SetSellTicketsState(eventArguments);
+                    SetStateSellTickets(eventArguments);
                     break;
 
                 case State.SellTickets:
-                    SetNewTrainState(eventArguments);
+                    SetStateNewTrain(eventArguments);
                     break;
 
                 case State.ViewNewTrain:
-                    ReturnViewTrainsState();
+                    ReturnToStateViewTrains();
                     break;
             }
 
@@ -137,23 +137,23 @@ namespace _6_7_TrainDispatcher
                     break;
 
                 case State.TrainNumber:
-                    ReturnViewTrainsState();
+                    ReturnToStateViewTrains();
                     break;
 
                 case State.SelectDestination:
-                    ReturnTrainNumberState();
+                    ReturnToStateTrainNumber();
                     break;
 
                 case State.SelectVanType:
-                    ReturnSelectDestinationState();
+                    ReturnToStateSelectDestination();
                     break;
 
                 case State.SellTickets:
-                    ReturnSelectVanTypeState();
+                    ReturnToStateSelectVanType();
                     break;
 
                 case State.ViewNewTrain:
-                    ReturnViewTrainsState();
+                    ReturnToStateViewTrains();
                     break;
             }            
         }
@@ -198,40 +198,40 @@ namespace _6_7_TrainDispatcher
             }
         }
 
-        private void SetViewTrainsState()
+        private void SetStateViewTrains()
         {
             _currentState = State.ViewTrains;
             ShowTrainsListWindow();
         }
 
-        private void SetTrainNumberState(EventArguments eventArguments)
+        private void SetStateTrainNumber(EventArguments eventArguments)
         {
             _currentState = State.TrainNumber;
             ShowTrainNumberWindow(eventArguments);
         }
 
-        private void SetDestinationState(EventArguments eventArguments)
+        private void SetStateSelectDestination(EventArguments eventArguments)
         {
             _newTrain = new Train(eventArguments.DigitalData);
             _currentState = State.SelectDestination;
             ShowSelectDirectionWindow(eventArguments);
         }
 
-        private void SetVanTypeState(EventArguments eventArguments)
+        private void SetStateVanType(EventArguments eventArguments)
         {
             _newTrain.SetDirections(_directions[eventArguments.DigitalData]);
             _currentState = State.SelectVanType;
             ShowVanTypeWindow(eventArguments);
         }
 
-        private void SetSellTicketsState(EventArguments eventArguments)
+        private void SetStateSellTickets(EventArguments eventArguments)
         {
             _currentState = State.SellTickets;
             _newTrain.SetVanType((VanType)eventArguments.DigitalData);
             ShowSellTicketsWindow(eventArguments);
         }
 
-        private void SetNewTrainState(EventArguments eventArguments)
+        private void SetStateNewTrain(EventArguments eventArguments)
         {
             _currentState = State.ViewNewTrain;
             _newTrain.SellSeats(eventArguments.DigitalData);
@@ -303,23 +303,23 @@ namespace _6_7_TrainDispatcher
             ProductionEvent(initEvent);
         }
 
-        private void ReturnViewTrainsState() 
+        private void ReturnToStateViewTrains() 
         {
             _currentState = State.ViewTrains;
             _windowsManager.CloseAllWindows();
         }
 
-        private void ReturnTrainNumberState() 
+        private void ReturnToStateTrainNumber() 
         {
             _currentState = State.TrainNumber;
         }
 
-        private void ReturnSelectDestinationState()
+        private void ReturnToStateSelectDestination()
         {
             _currentState = State.SelectDestination;
         }
 
-        private void ReturnSelectVanTypeState()
+        private void ReturnToStateSelectVanType()
         {
             _currentState = State.SelectVanType;
         }
