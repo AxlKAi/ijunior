@@ -14,10 +14,6 @@ namespace _6_7_TrainDispatcher
 Шаги создания поезда должны быть в строгой последовательности не зависящем от выбора пользователя.
 Диспетчер содержит все созданные поезда и перед выбором в консольном меню показать короткую информацию каждого поезда.
 
-Город
-	Название
-	id - у городов может быть одинаковое название
-
 Вагон
 	id
 	тип (Сидячий вагон / Плацкартный вагон / Общий вагон / Купейный вагон)
@@ -28,48 +24,67 @@ namespace _6_7_TrainDispatcher
 	id
 	Город 1
 	Город 2
-	Вагонов List
+	Количество Вагонов 
+    Тип вагонов
 	Пассажиров кол-во {Property}
-	- показать поезд
 
-Диспетчер
+Диспетчер - это модель, а класс Application это view-ха которая отвечает за ввод и вывод
 	Поезда List
-	- создание поезда (направление, билеты продать, )
-	- завершение работы
-
+	TryAddTownArriwed
+    TryAddTown
+    SetNewTrainVanType
+    TryTakeNumberOfPlaces
+    TryCreateNewTrain
+    ShowAllTrains
 	*/
-    public enum State { Initialize, ViewTrains, TrainNumber, SelectDestination, SelectVanType, SellTickets, ViewNewTrain }
+
+    public enum State { Initialize, ViewTrains, TrainNumber, SelectDestination, SelectVanType, SellTickets, CreateNewTrain }
 
     class Program
     {
-
         static void Main(string[] args)
         {
-            Dispatcher application = new Dispatcher();
+            Application application = new Application();
 
             application.Run();
         }
     }
 
+    class Application 
+    {
+        private bool _isWorking = true;
+        Dispatcher dispatcher = new Dispatcher();
+        private State _currentState = State.Initialize;
+
+        public void Run()
+        {
+            switch (_currentState)
+            {
+                case State.Initialize:
+                    break;
+                case State.ViewTrains:
+                    break;
+                case State.SelectDestination:
+                    break;
+                case State.TrainNumber:
+                    break;
+                case State.SelectVanType:
+                    break;
+                case State.SellTickets:
+                    break;
+                case State.CreateNewTrain:
+                    break;
+            }
+        }
+    }
+
+
     class Dispatcher
     {
-        private const string TrainsWindowTag = "main";
-        private const string DirectionsWindowTag = "directions";
-        private const string NewDirectionsWindowTag = "newDirection";
-        private const string HomeTownWindow = "homeTown";
-        private const string DestinationTownWindow = "destinationTown";
-        private const string VanTypeWindow = "vanType";
-        private const string SellTicketWindow = "sellTickets";
-        private const string NewTrainWindow = "winScreen";
-
         private List<Train> _trains = new List<Train>();
-        private List<Direction> _directions = new List<Direction>();
-        private bool _isWorking = true;
-        private InputSystem _input = new InputSystem();
-        private WindowsManager _windowsManager;
         private Train _newTrain = new Train();
         private List<string> _vanTypesListing = new List<string>();
-        private State _currentState = State.Initialize;
+        private int _lastTrainNumber = 0;
 
         public void Run()
         {
@@ -114,7 +129,7 @@ namespace _6_7_TrainDispatcher
                     SetStateNewTrain(eventArguments);
                     break;
 
-                case State.ViewNewTrain:
+                case State.CreateNewTrain:
                     ReturnToStateViewTrains();
                     break;
             }
@@ -152,7 +167,7 @@ namespace _6_7_TrainDispatcher
                     ReturnToStateSelectVanType();
                     break;
 
-                case State.ViewNewTrain:
+                case State.CreateNewTrain:
                     ReturnToStateViewTrains();
                     break;
             }            
@@ -192,8 +207,8 @@ namespace _6_7_TrainDispatcher
                     ShowHelpWindow(new List<string>() { nameof(State.SellTickets) });
                     break;
 
-                case State.ViewNewTrain:
-                    ShowHelpWindow(new List<string>() { nameof(State.ViewNewTrain) });
+                case State.CreateNewTrain:
+                    ShowHelpWindow(new List<string>() { nameof(State.CreateNewTrain) });
                     break;
             }
         }
@@ -233,7 +248,7 @@ namespace _6_7_TrainDispatcher
 
         private void SetStateNewTrain(EventArguments eventArguments)
         {
-            _currentState = State.ViewNewTrain;
+            _currentState = State.CreateNewTrain;
             _newTrain.SellSeats(eventArguments.DigitalData);
             ShowNewTrainWindow(eventArguments);
             _trains.Add(_newTrain);
