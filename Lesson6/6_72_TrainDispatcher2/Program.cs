@@ -28,7 +28,7 @@ namespace _6_7_TrainDispatcher
     Тип вагонов
 	Пассажиров кол-во {Property}
 
-Диспетчер - это модель, а класс Application это view-ха которая отвечает за ввод и вывод
+Диспетчер - это модель, а класс Application это view-ха + controller, которая отвечает за ввод и вывод
 	Поезда List
 	TryAddTownArriwed
     TryAddTown
@@ -53,8 +53,8 @@ namespace _6_7_TrainDispatcher
     class Application
     {
         private bool _isWorking = true;
-        Dispatcher dispatcher = new Dispatcher();
         private ApplicationState _currentState = ApplicationState.Initialize;
+        Dispatcher _dispatcher = new Dispatcher();
 
         public void Run()
         {
@@ -63,19 +63,28 @@ namespace _6_7_TrainDispatcher
                 switch (_currentState)
                 {
                     case ApplicationState.Initialize:
+                        Initialize();
                         break;
+
                     case ApplicationState.ViewTrains:
+                        ViewTrains();
                         break;
+
                     case ApplicationState.ShowStartMenu:
                         break;
+
                     case ApplicationState.SelectDestination:
                         break;
+
                     case ApplicationState.InitializeNewTrain:
                         break;
+
                     case ApplicationState.SelectVanType:
                         break;
+
                     case ApplicationState.SellTickets:
                         break;
+
                     case ApplicationState.CreateNewTrain:
                         break;
                 }
@@ -84,12 +93,23 @@ namespace _6_7_TrainDispatcher
 
         private void Initialize()
         {
+            Console.Clear();
+            Console.WriteLine("--------- Диспетчер поездов ---------");
+            Console.WriteLine();
 
+            _currentState = ApplicationState.ViewTrains;
         }
 
         private void ViewTrains()
         {
+            Console.WriteLine("Расписание поездов:");
 
+            foreach (Train train in _dispatcher.Trains)
+            {
+                Console.WriteLine($"N={train.Number}, {train.DepartureCity}-{train.ArrivalCity} мест куплено:{train.SeatsOccupiedCount}");
+            }
+
+            _currentState = ApplicationState.ShowStartMenu;
         }
 
         private void ShowStartMenu()
@@ -126,16 +146,20 @@ namespace _6_7_TrainDispatcher
 
     class Dispatcher
     {
-        private List<Train> _trains = new List<Train>();
-        private Train _newTrain;
-        private List<string> _vanTypesListing = new List<string>();
-        private int _lastTrainNumber = 0;
+        private readonly List<Train> _trains = new List<Train>();
+        public IReadOnlyList<Train> Trains => _trains;
+
+        private Train _creatingTrain;
+        private int _newTrainNumber = 1;
 
         public Dispatcher()
         {
-            _lastTrainNumber++;
-            _newTrain = new Train(_lastTrainNumber);
+            _trains.Add(new Train(_newTrainNumber++, "Москва", "Барнаул", 250, VanType.SecondClass));
+            _trains.Add(new Train(_newTrainNumber++, "Ленинград", "Сталинград", 250, VanType.Сompartment));
+            _trains.Add(new Train(_newTrainNumber++, "Каспийск", "Шерегеш", 250, VanType.Siting));
         }
+
+
     }
 
     class Train
@@ -150,6 +174,16 @@ namespace _6_7_TrainDispatcher
         public Train(int number)
         {
             Number = number;
+        }
+
+        public Train(int number, string departureCity, string arrivalCity, int seatsOccupies, VanType vanType)
+        {
+            //TODO добавить проверки через ментоды Set
+            Number = number;
+            DepartureCity = departureCity;
+            ArrivalCity = arrivalCity;
+            SeatsOccupiedCount = seatsOccupies;
+            VanType = vanType;
         }
 
         public int GetTotalSeats()
