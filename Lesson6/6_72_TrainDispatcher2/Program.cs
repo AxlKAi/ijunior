@@ -38,7 +38,7 @@ namespace _6_7_TrainDispatcher
     ShowAllTrains
 	*/
 
-    public enum ApplicationState { Initialize, ViewTrains, ShowStartMenu, InitializeNewTrain, SelectDestination, SelectVanType, SellTickets, CreateNewTrain }
+    public enum ApplicationState { Initialize, ViewTrains, ShowStartMenu, InitializeNewTrain, EnterArrivalTown, EnterDestinationTown, SelectVanType, SellTickets, CreateNewTrain, ExitProgram }
 
     class Program
     {
@@ -71,21 +71,35 @@ namespace _6_7_TrainDispatcher
                         break;
 
                     case ApplicationState.ShowStartMenu:
-                        break;
-
-                    case ApplicationState.SelectDestination:
+                        ShowStartMenu();
                         break;
 
                     case ApplicationState.InitializeNewTrain:
+                        InitializeNewTrain();
+                        break;
+
+                    case ApplicationState.EnterDestinationTown:
+                        EnterDestinationsTowns();
+                        break;
+
+                    case ApplicationState.EnterArrivalTown:
+                        EnterDestinationsTowns();
                         break;
 
                     case ApplicationState.SelectVanType:
+                        SelectVanType();
                         break;
 
                     case ApplicationState.SellTickets:
+                        SellTickets();
                         break;
 
                     case ApplicationState.CreateNewTrain:
+                        CreateNewTrain();
+                        break;
+
+                    case ApplicationState.ExitProgram:
+                        ExitProgram();
                         break;
                 }
             }
@@ -114,15 +128,43 @@ namespace _6_7_TrainDispatcher
 
         private void ShowStartMenu()
         {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("-- выберите один из пунктов --------------");
+            Console.WriteLine("  1 - Добавить поезд");
+            Console.WriteLine("  0 - Выход из программы");
+            Console.WriteLine();
 
+            string input = Console.ReadLine();
+
+            if (input == "1")
+            {
+                _currentState = ApplicationState.InitializeNewTrain;
+            }
+            else if (input == "0")
+            {
+                _currentState = ApplicationState.ExitProgram;
+            }
+            else
+            {
+                Console.WriteLine("Неверный ввод. Программа завершена.");
+            }
         }
 
         private void InitializeNewTrain() 
-        { 
-        
+        {
+            Console.WriteLine();
+            Console.WriteLine("Меню создания нового поезда:");
+            Console.WriteLine();
+            Console.WriteLine($"Будет создан поезд с номером {_dispatcher.NewTrainNumber}");
         }
 
-        private void EnterDestinationsTowns()
+        private void EnterDestinationTown()
+        {
+
+        }
+
+        private void EnterArrivalTown()
         {
 
         }
@@ -141,6 +183,12 @@ namespace _6_7_TrainDispatcher
         {
 
         }
+
+        private void ExitProgram()
+        {
+            _isWorking = false;
+            Console.WriteLine("До скорых встреч!..");
+        }
     }
 
 
@@ -149,17 +197,41 @@ namespace _6_7_TrainDispatcher
         private readonly List<Train> _trains = new List<Train>();
         public IReadOnlyList<Train> Trains => _trains;
 
-        private Train _creatingTrain;
-        private int _newTrainNumber = 1;
+
+        public int NewTrainNumber { get; private set; } = 1;
+        private Train _creatingTrain = null;
 
         public Dispatcher()
         {
-            _trains.Add(new Train(_newTrainNumber++, "Москва", "Барнаул", 250, VanType.SecondClass));
-            _trains.Add(new Train(_newTrainNumber++, "Ленинград", "Сталинград", 250, VanType.Сompartment));
-            _trains.Add(new Train(_newTrainNumber++, "Каспийск", "Шерегеш", 250, VanType.Siting));
+            _trains.Add(new Train(NewTrainNumber++, "Москва", "Барнаул", 250, VanType.SecondClass));
+            _trains.Add(new Train(NewTrainNumber++, "Ленинград", "Сталинград", 250, VanType.Сompartment));
+            _trains.Add(new Train(NewTrainNumber++, "Каспийск", "Шерегеш", 250, VanType.Siting));
         }
 
+        public void InitializeNewTrain()
+        {
+            _creatingTrain = new Train(NewTrainNumber++);
+        }
 
+        public void SetNewTrainArrivalTown()
+        {
+
+        }
+
+        public void SetNewTrainDestinationTown()
+        {
+
+        }
+
+        private bool CheckTownNameValidity()
+        {
+
+        }
+
+        public bool TryCreateNewTrain(out string message)
+        {
+            return true;
+        }
     }
 
     class Train
@@ -207,6 +279,7 @@ namespace _6_7_TrainDispatcher
             return isTownNameValid;
         }
 
+        // TODO !!! валидацию из поезда убрать !!!!
         public bool TrySetArrivalCity(string name, out string logMessage)
         {
             if (CheckTownNameValidity(name))
@@ -242,31 +315,26 @@ namespace _6_7_TrainDispatcher
         }
     }
 
-    public enum VanType
+    public abstract class Van
     {
-        Сompartment,
-        SecondClass,
-        Siting,
-    }
+        //public const int СompartmentSeatsAmmount = 36;
+        //public const int SecondClassSeatsAmmount = 50;
+        //public const int SitingSeatsAmmount = 70;
 
-    class Van
-    {
-        public const VanType DefaultType = VanType.Сompartment;
+        public string VanTypeTitle { get; private set; }
+        public int TotalSeats { get; private set; }
 
-        public const int СompartmentSeatsAmmount = 36;
-        public const int SecondClassSeatsAmmount = 50;
-        public const int SitingSeatsAmmount = 70;
-
-        public VanType Type { get; private set; }
-        public int TotalSeats { get; private set; } = 0;
-        public string Name { get; private set; }
-
-        public Van() : this(DefaultType) { }
-
-        public Van(VanType Type)
+        protected Van(int seatCount, string wagonType)
         {
-            switch (Type)
-            {
+            TotalSeats = seatCount;
+            VanTypeTitle = wagonType;
+        }
+
+        public virtual void ShowInfo()
+        {
+            Console.WriteLine($"Тип вагона: {VanTypeTitle}, Количество мест: {TotalSeats}");
+        
+            /*
                 case VanType.Сompartment:
                     TotalSeats = СompartmentSeatsAmmount;
                     Name = "Купе";
@@ -281,7 +349,8 @@ namespace _6_7_TrainDispatcher
                     TotalSeats = SitingSeatsAmmount;
                     Name = "Сидячий";
                     break;
-            }
+            */
+
         }
     }
 }
